@@ -7,8 +7,8 @@
  */
 
 
-#ifndef LIB_A_IIMPC_IIM_PROTOCOL_COMMUNICATE_
-#define LIB_A_IIMPC_IIM_PROTOCOL_COMMUNICATE_
+#ifndef LIB_A_IMMPC_IIM_PROTOCOL_COMMUNICATE_
+#define LIB_A_IMMPC_IIM_PROTOCOL_COMMUNICATE_
 
 
 /*#### |Begin| --> Секция - "Include" ########################################*/
@@ -207,6 +207,12 @@ immpc_9dof_main_raw_pack_s;
 
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
+extern void
+IMMPC_GetTypeMessage(
+	uint8_t *pData,
+	size_t 	buffSize,
+	uint8_t *pMessageIDReturn,
+	uint8_t *pMessagePackReturn);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
@@ -217,7 +223,7 @@ immpc_9dof_main_raw_pack_s;
 /*#### |Begin| --> Секция - "Include - подмодули" ############################*/
 /*#### |End  | <-- Секция - "Include - подмодули" ############################*/
 
-#endif  /* LIB_A_IIMPC_IIM_PROTOCOL_COMMUNICATE_ */
+#endif  /* LIB_A_IMMPC_IIM_PROTOCOL_COMMUNICATE_ */
 
 /*############################################################################*/
 /*################################ END OF FILE ###############################*/

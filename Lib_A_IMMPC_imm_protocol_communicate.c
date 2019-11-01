@@ -8,7 +8,7 @@
 
 
 /*#### |Begin| --> Секция - "Include" ########################################*/
-#include "Lib_A_IIMPC_imm_protocol_communicate.h"
+#include "Lib_A_IMMPC_imm_protocol_communicate.h"
 /*#### |End  | <-- Секция - "Include" ########################################*/
 
 
@@ -69,7 +69,7 @@ IMMPC_GetCRC_Generic(
 	uint16_t len)
 {
 	return (CRC_XOR_CCITT_Poly0x1021_Crc16(
-				pData[2u],
+				(uint8_t*)&pData[2u],
 				len - 4u));
 }
 
