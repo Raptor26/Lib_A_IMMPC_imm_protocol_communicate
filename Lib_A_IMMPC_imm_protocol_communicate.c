@@ -44,7 +44,120 @@ IMMPC_GetTypeMessage(
 	uint8_t *pMessageIDReturn,
 	uint8_t *pMessagePackReturn)
 {
+	*pMessageIDReturn = IMMPC_MESSAGE_ID_UNKNOWN;
+	*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s;
+
+	/* Минимальное количество данных необходимое для поиска */
+	if (buffSize < 4u)
+	{
+		/* выход из функции */
+		return;
+	}
+
+	/* Поиск */
+	for (uint16_t i = 0; i < (uint16_t) buffSize - 2u; i++)
+	{
+
+		/* Поиск в потоке данных символы StartFrame */
+		if(	(*(pData + i) == (uint8_t) ((IIMPC_START_FRAME >> 8) & 0xFF)) &&
+			(*(pData + i + 1) == (uint8_t) (IIMPC_START_FRAME & 0xFF)))
+		{
+
+			/* Посмотреть какой ID сообщения */
+			switch(*(pData + i + 2))
+			{
+				case IMMPC_MESSAGE_ID_9DOF_PACK_MAIN:
+					/* запрос на получение данных */
+					if(*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST == IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+					{
+						if(*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS == IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
+						{
+							*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s;
+						}
+						else
+						{
+							*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s;
+						}
+					}
+					/* ответ на запрос */
+					else
+					{
+						if(*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS == IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
+						{
+							*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_main_calib_request_cmd_s;
+						}
+						else
+						{
+							*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_main_raw_request_cmd_s;
+						}
+					}
+					break;
+
+				case IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE:
+					/* запрос на получение данных */
+					if(*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST == IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+					{
+						if(*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS == IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
+						{
+							*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_reserve_calib_pack_s;
+						}
+						else
+						{
+							*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s;
+						}
+					}
+					/* ответ на запрос */
+					else
+					{
+						if(*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS == IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
+						{
+							*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_reserve_calib_request_cmd_s;
+						}
+						else
+						{
+							*pMessagePackReturn =  IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s;
+						}
+					}
+					break;
+
+				case IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX:
+					/* запрос на получение данных */
+					if(*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST == IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+					{
+
+					}
+					/* ответ на запрос */
+					else
+					{
+
+					}
+					break;
+
+				case IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX:
+					break;
+
+				case IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX:
+					break;
+
+				case IMMPC_MESSAGE_ID_3DOF_PACK_MAIN:
+					break;
+
+				default:
+					/* выход из функции */
+					return;
+			}
+
+			/* запись идентификатора пакета */
+			*pMessageIDReturn = *(pData + i + 2);
+
+			return;
+		}
+	}
+
+
+
 	/* Найти в потоке данных символы StartFrame */
+	if
 
 	/* Посмотреть какой ID сообщения */
 
@@ -90,7 +203,7 @@ static uint16_t
 IMMPC_GetCRC_9dof_main_raw_pack(
 	immpc_9dof_main_raw_pack_s *pPack_s)
 {
-	retrun (IMMPC_GetCRC_Generic(
+	return (IMMPC_GetCRC_Generic(
 				(uint8_t*) pPack_s,
 				(uint16_t) (sizeof(immpc_9dof_main_raw_pack_s))));
 }
