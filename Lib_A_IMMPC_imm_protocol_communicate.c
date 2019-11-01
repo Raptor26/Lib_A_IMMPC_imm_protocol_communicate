@@ -132,7 +132,7 @@ IMMPC_IsPackValid_9dof_main_raw_pack(
 	immpc_9dof_main_raw_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_9dof_main_raw_pack_s(pPack_s);
+		IMMPC_GetCRC_9dof_main_raw_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
