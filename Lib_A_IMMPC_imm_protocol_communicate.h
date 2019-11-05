@@ -133,10 +133,10 @@
 
 #define IIMPC_START_FRAME								((uint16_t)0xAAAA)
 
-#define IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS             0b10000000
-#define IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS            0b01000000
-#define IIMPC_PACK_REQUESTS_BITS_READ_MEAS              0b00100000
-#define IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST        0b00010000
+#define IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS             (0b10000000)
+#define IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS            (0b01000000)
+#define IIMPC_PACK_REQUESTS_BITS_READ_MEAS              (0b00100000)
+#define IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST        (0b00010000)
 
 #define IIMPC_PACK_REQUESTS_BITS_SET_CALIB_MEAS(var)    (var | IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
 #define IIMPC_PACK_REQUESTS_BITS_SET_RAW_MEAS(var)      (var & (~IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS))
@@ -176,12 +176,12 @@ typedef enum
 	IMMPC_MESSAGE_PACK_mag3dof_calib_pack_s,
 	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_read_pack_s,
 	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
-	IMMPC_MESSAGE_PACK_acc3dof_reserv_calibmatrix_read_pack_s,
-	IMMPC_MESSAGE_PACK_acc3dof_reserv_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
+	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_read_pack_s,
+	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
 	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_read_pack_s,
 	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
-	IMMPC_MESSAGE_PACK_gyr3dof_reserv_calibmatrix_read_pack_s,
-	IMMPC_MESSAGE_PACK_gyr3dof_reserv_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
+	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_read_pack_s,
+	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
 	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_read_pack_s,
 	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
 	/* запросы */
@@ -189,17 +189,18 @@ typedef enum
 	IMMPC_MESSAGE_PACK_9dof_main_calib_request_cmd_s,
 	IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s,
 	IMMPC_MESSAGE_PACK_9dof_reserve_calib_request_cmd_s,
-	IMMPC_MESSAGE_PACK_acc3dof_main_calib_matrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_acc3dof_reserve_calib_matrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_gyr3dof_main_calib_matrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calib_matrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_mag3dof_calib_matrix_request_cmd_s,
+	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_request_cmd_s,
+	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_request_cmd_s,
+	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_request_cmd_s,
+	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_request_cmd_s,
+	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_request_cmd_s,
 	IMMPC_MESSAGE_PACK_mag3dof_raw_request_cmd_s,
 	IMMPC_MESSAGE_PACK_mag3dof_calib_request_cmd_s,
 	/* команды */
 	IMMPC_MESSAGE_PACK_write_all_calib_matrix_in_eeprom_cmd_s /* запись данных в в EEPROM ИИМ */
 } immpc_message_struct_e;
 
+/* заголовок пакета */
 typedef struct
 {
 	uint16_t 	startFrame;
@@ -214,6 +215,7 @@ __attribute__((__packed__))
 #endif
 immpc_head_s;
 
+/* пакет "сырых" данных основных измерителей */
 typedef struct
 {
 	immpc_head_s headMessage_s;
@@ -234,6 +236,7 @@ __attribute__((__packed__))
 #endif
 immpc_9dof_main_raw_pack_s;
 
+/* пакет калиброванных данных основных измерителей */
 typedef struct
 {
 	immpc_head_s headMessage_s;
@@ -253,6 +256,80 @@ __attribute__((__packed__))
 #error "Please, define compiler"
 #endif
 immpc_9dof_main_calib_pack_s;
+
+/* пакет "сырых" данных резервных измерителей */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	int16_t acc_a[3u];
+	int16_t gyr_a[3u];
+	int16_t mag_a[3u];
+
+	int16_t accTemp_a[3u];
+	int16_t gyrTemp_a[3u];
+	int16_t magSelfTest_a[3u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_9dof_reserve_raw_pack_s;
+
+/* пакет калиброванных данных резервных измерителей */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	float acc[3u];
+	float gyr[3u];
+	float mag[3u];
+
+	float accTemp[3u];
+	float gyrTemp[3u];
+	int16_t magSelfTest_a[3u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_9dof_reserve_calib_pack_s;
+
+/* пакет "сырых" данных магнитометра */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	int16_t mag_a[3u];
+	int16_t magSelfTest_a[3u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_mag3dof_raw_pack_s;
+
+/* пакет калиброванных данных магнитометра */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	int16_t mag[3u];
+	int16_t magSelfTest[3u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_mag3dof_calib_pack_s;
 
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
 
