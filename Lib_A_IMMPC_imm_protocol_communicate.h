@@ -197,7 +197,7 @@ typedef enum
 	IMMPC_MESSAGE_PACK_mag3dof_raw_request_cmd_s,
 	IMMPC_MESSAGE_PACK_mag3dof_calib_request_cmd_s,
 	/* команды */
-	IMMPC_MESSAGE_PACK_write_all_calib_matrix_in_eeprom_cmd_s /* запись данных в в EEPROM ИИМ */
+	IMMPC_MESSAGE_PACK_write_all_calibmatrix_in_eeprom_cmd_s /* запись данных в в EEPROM ИИМ */
 } immpc_message_struct_e;
 
 /* заголовок пакета */
@@ -330,6 +330,81 @@ __attribute__((__packed__))
 #error "Please, define compiler"
 #endif
 immpc_mag3dof_calib_pack_s;
+
+/* пакет калибровочной матрицы основных акселерометров */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	double matrix[3u][4u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_acc3dof_main_calibmatrix_pack_s;
+
+/* пакет калибровочной матрицы резервных акселерометров */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	double matrix[3u][4u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_acc3dof_reserve_calibmatrix_pack_s;
+
+/* пакет калибровочной матрицы основных гироскопов */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	double matrix[3u][4u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_gyr3dof_main_calibmatrix_pack_s;
+
+/* пакет калибровочной матрицы резервных гироскопов */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	double matrix[3u][4u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_gyr3dof_reserve_calibmatrix_pack_s;
+
+/* пакет калибровочной матрицы магнитометров */
+typedef struct
+{
+	immpc_head_s headMessage_s;
+	double matrix[3u][4u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+__attribute__((__packed__))
+#else
+#error "Please, define compiler"
+#endif
+immpc_mag3dof_calibmatrix_pack_s;
 
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
 

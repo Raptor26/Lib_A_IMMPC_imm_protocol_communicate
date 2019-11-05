@@ -17,6 +17,50 @@
 
 
 /*#### |Begin| --> Секция - "Локальные переменные" ###########################*/
+static
+immpc_9dof_main_raw_pack_s
+IMMPC_9DOF_main_raw_pack_s;
+
+static
+immpc_9dof_main_calib_pack_s
+IMMPC_9DOF_main_calib_pack_s;
+
+static
+immpc_9dof_reserve_raw_pack_s
+IMMPC_9DOF_reserve_raw_pack_s;
+
+static
+immpc_9dof_reserve_calib_pack_s
+IMMPC_9DOF_reserve_calib_pack_s;
+
+static
+immpc_mag3dof_raw_pack_s
+IMMPC_MAG3DOF_raw_pack_s;
+
+static
+immpc_mag3dof_calib_pack_s
+IMMPC_MAG3DOF_calib_pack_s;
+
+static
+immpc_acc3dof_main_calibmatrix_pack_s
+IMMPC_ACC3DOF_main_calibmatrix_pack_s;
+
+static
+immpc_acc3dof_reserve_calibmatrix_pack_s
+IMMPC_ACC3DOF_reserve_calibmatrix_pack_s;
+
+static
+immpc_gyr3dof_main_calibmatrix_pack_s
+IMMPC_GYR3DOF_main_calibmatrix_pack_s;
+
+static
+immpc_gyr3dof_reserve_calibmatrix_pack_s
+IMMPC_GYR3DOF_reserve_calibmatrix_pack_s;
+
+static
+immpc_mag3dof_calibmatrix_pack_s
+IMMPC_MAG3DOF_calibmatrix_pack_s;
+
 /*#### |End  | <-- Секция - "Локальные переменные" ###########################*/
 
 
@@ -122,10 +166,107 @@ IMMPC_IsPackValid_mag3dof_calib_pack(
 
 /* Пакет mag3dof_calib_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
+/* Пакет immpc_acc3dof_main_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+static uint16_t
+IMMPC_GetCRC_acc3dof_main_calibmatrix_pack(
+	immpc_acc3dof_main_calibmatrix_pack_s *pPack_s);
+
+static void
+IMMPC_WriteCRC_acc3dof_main_calibmatrix_pack(
+	immpc_acc3dof_main_calibmatrix_pack_s *pPack_s);
+
+static size_t
+IMMPC_IsPackValid_acc3dof_main_calibmatrix_pack(
+	immpc_acc3dof_main_calibmatrix_pack_s *pPack_s);
+
+/* Пакет immpc_acc3dof_main_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_acc3dof_reserve_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+static uint16_t
+IMMPC_GetCRC_acc3dof_reserve_calibmatrix_pack(
+	immpc_acc3dof_reserve_calibmatrix_pack_s *pPack_s);
+
+static void
+IMMPC_WriteCRC_acc3dof_reserve_calibmatrix_pack(
+	immpc_acc3dof_reserve_calibmatrix_pack_s *pPack_s);
+
+static size_t
+IMMPC_IsPackValid_acc3dof_reserve_calibmatrix_pack(
+	immpc_acc3dof_reserve_calibmatrix_pack_s *pPack_s);
+
+/* Пакет immpc_acc3dof_reserve_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_gyr3dof_main_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+static uint16_t
+IMMPC_GetCRC_gyr3dof_main_calibmatrix_pack(
+	immpc_gyr3dof_main_calibmatrix_pack_s *pPack_s);
+
+static void
+IMMPC_WriteCRC_gyr3dof_main_calibmatrix_pack(
+	immpc_gyr3dof_main_calibmatrix_pack_s *pPack_s);
+
+static size_t
+IMMPC_IsPackValid_gyr3dof_main_calibmatrix_pack(
+	immpc_gyr3dof_main_calibmatrix_pack_s *pPack_s);
+
+/* Пакет immpc_gyr3dof_main_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_gyr3dof_reserve_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+static uint16_t
+IMMPC_GetCRC_gyr3dof_reserve_calibmatrix_pack(
+	immpc_gyr3dof_reserve_calibmatrix_pack_s *pPack_s);
+
+static void
+IMMPC_WriteCRC_gyr3dof_reserve_calibmatrix_pack(
+	immpc_gyr3dof_reserve_calibmatrix_pack_s *pPack_s);
+
+static size_t
+IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack(
+	immpc_gyr3dof_reserve_calibmatrix_pack_s *pPack_s);
+
+/* Пакет immpc_gyr3dof_reserve_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_mag3dof_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+static uint16_t
+IMMPC_GetCRC_mag3dof_calibmatrix_pack(
+	immpc_mag3dof_calibmatrix_pack_s *pPack_s);
+
+static void
+IMMPC_WriteCRC_mag3dof_calibmatrix_pack(
+	immpc_mag3dof_calibmatrix_pack_s *pPack_s);
+
+static size_t
+IMMPC_IsPackValid_mag3dof_calibmatrix_pack(
+	immpc_mag3dof_calibmatrix_pack_s *pPack_s);
+
+/* Пакет immpc_mag3dof_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
 /*#### |End  | <-- Секция - "Прототипы локальных функций" ####################*/
 
 
 /*#### |Begin| --> Секция - "Описание глобальных функций" ####################*/
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief    Функция выполняет поиск типа сообщения
+ *
+ * @param[in]	*pData: 	Указатель на область памяти, в которой содержатся
+ * 							данные
+ *
+ * @param[in]	buffSize: 	Количество данных
+ *
+ * @param[out]	*pMessageIDReturn: 	Указатель на область памяти, в которой содержится
+ * 									идентификатор сообщения
+ *
+ * @param[out]	*pMessagePackReturn: 	Указатель на область памяти, в которой содержится
+ * 										тип сообщения
+ */
 void
 IMMPC_GetTypeMessage(
 	uint8_t *pData,
@@ -135,7 +276,7 @@ IMMPC_GetTypeMessage(
 {
 	/* присвоение стартовых значений */
 	*pMessageIDReturn = IMMPC_MESSAGE_ID_UNKNOWN;
-	*pMessagePackReturn = IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s;
+	*pMessagePackReturn = IMMPC_MESSAGE_PACK_UNKNOWN;
 
 	/* Минимальное количество данных необходимое для поиска */
 	if (buffSize < 4u)
@@ -347,7 +488,7 @@ IMMPC_GetTypeMessage(
 					if(	((*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS) == IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS) &&
 						((*(pData + i + 3) & IIMPC_PACK_REQUESTS_BITS_READ_MEAS) == IIMPC_PACK_REQUESTS_BITS_READ_MEAS))
 					{
-						*pMessagePackReturn = IMMPC_MESSAGE_PACK_write_all_calib_matrix_in_eeprom_cmd_s;
+						*pMessagePackReturn = IMMPC_MESSAGE_PACK_write_all_calibmatrix_in_eeprom_cmd_s;
 					}
 					break;
 
@@ -818,6 +959,695 @@ IMMPC_IsPackValid_mag3dof_calib_pack(
 	}
 }
 /* Пакет mag3dof_calib_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_acc3dof_main_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief    Функция выполняет вычисление контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных
+ *
+ * @return 	Вычисленная сумма пакета данных
+ */
+static uint16_t
+IMMPC_GetCRC_acc3dof_main_calibmatrix_pack(
+	immpc_acc3dof_main_calibmatrix_pack_s *pPack_s)
+{
+	return (IMMPC_GetCRC_Generic(
+				(uint8_t*) pPack_s,
+				(uint16_t) (sizeof(immpc_acc3dof_main_calibmatrix_pack_s))));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief 	Функция выполняет запись контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in,out]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 								пакет данных.
+ * 								@note 	Контрольная сумма записывается в конец
+ * 										пакета данных
+ */
+static void
+IMMPC_WriteCRC_acc3dof_main_calibmatrix_pack(
+	immpc_acc3dof_main_calibmatrix_pack_s *pPack_s)
+{
+	pPack_s->crc =
+		IMMPC_GetCRC_Generic(
+			(uint8_t*) pPack_s,
+			(uint16_t) (sizeof(immpc_acc3dof_main_calibmatrix_pack_s)));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief Функция проверяет валидность пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных.
+ *
+ * @return 	Если пакет данных валиден, то возвращает "1", иначе "0"
+ */
+static size_t
+IMMPC_IsPackValid_acc3dof_main_calibmatrix_pack(
+	immpc_acc3dof_main_calibmatrix_pack_s *pPack_s)
+{
+	uint16_t crc =
+		IMMPC_GetCRC_acc3dof_main_calibmatrix_pack_s(pPack_s);
+
+	if (crc == pPack_s->crc)
+	{
+		return (1u);
+	}
+	else
+	{
+		return (0u);
+	}
+}
+/* Пакет immpc_acc3dof_main_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_acc3dof_reserve_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief    Функция выполняет вычисление контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных
+ *
+ * @return 	Вычисленная сумма пакета данных
+ */
+static uint16_t
+IMMPC_GetCRC_acc3dof_reserve_calibmatrix_pack(
+	immpc_acc3dof_reserve_calibmatrix_pack_s *pPack_s)
+{
+	return (IMMPC_GetCRC_Generic(
+				(uint8_t*) pPack_s,
+				(uint16_t) (sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s))));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief 	Функция выполняет запись контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in,out]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 								пакет данных.
+ * 								@note 	Контрольная сумма записывается в конец
+ * 										пакета данных
+ */
+static void
+IMMPC_WriteCRC_acc3dof_reserve_calibmatrix_pack(
+	immpc_acc3dof_reserve_calibmatrix_pack_s *pPack_s)
+{
+	pPack_s->crc =
+		IMMPC_GetCRC_Generic(
+			(uint8_t*) pPack_s,
+			(uint16_t) (sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s)));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief Функция проверяет валидность пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных.
+ *
+ * @return 	Если пакет данных валиден, то возвращает "1", иначе "0"
+ */
+static size_t
+IMMPC_IsPackValid_acc3dof_reserve_calibmatrix_pack(
+	immpc_acc3dof_reserve_calibmatrix_pack_s *pPack_s)
+{
+	uint16_t crc =
+		IMMPC_GetCRC_acc3dof_reserve_calibmatrix_pack_s(pPack_s);
+
+	if (crc == pPack_s->crc)
+	{
+		return (1u);
+	}
+	else
+	{
+		return (0u);
+	}
+}
+/* Пакет immpc_acc3dof_reserve_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_gyr3dof_main_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief    Функция выполняет вычисление контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных
+ *
+ * @return 	Вычисленная сумма пакета данных
+ */
+static uint16_t
+IMMPC_GetCRC_gyr3dof_main_calibmatrix_pack(
+	immpc_gyr3dof_main_calibmatrix_pack_s *pPack_s)
+{
+	return (IMMPC_GetCRC_Generic(
+				(uint8_t*) pPack_s,
+				(uint16_t) (sizeof(immpc_gyr3dof_main_calibmatrix_pack_s))));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief 	Функция выполняет запись контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in,out]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 								пакет данных.
+ * 								@note 	Контрольная сумма записывается в конец
+ * 										пакета данных
+ */
+static void
+IMMPC_WriteCRC_gyr3dof_main_calibmatrix_pack(
+	immpc_gyr3dof_main_calibmatrix_pack_s *pPack_s)
+{
+	pPack_s->crc =
+		IMMPC_GetCRC_Generic(
+			(uint8_t*) pPack_s,
+			(uint16_t) (sizeof(immpc_gyr3dof_main_calibmatrix_pack_s)));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief Функция проверяет валидность пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных.
+ *
+ * @return 	Если пакет данных валиден, то возвращает "1", иначе "0"
+ */
+static size_t
+IMMPC_IsPackValid_gyr3dof_main_calibmatrix_pack(
+	immpc_gyr3dof_main_calibmatrix_pack_s *pPack_s)
+{
+	uint16_t crc =
+		IMMPC_GetCRC_gyr3dof_main_calibmatrix_pack_s(pPack_s);
+
+	if (crc == pPack_s->crc)
+	{
+		return (1u);
+	}
+	else
+	{
+		return (0u);
+	}
+}
+/* Пакет immpc_gyr3dof_main_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_gyr3dof_reserve_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief    Функция выполняет вычисление контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных
+ *
+ * @return 	Вычисленная сумма пакета данных
+ */
+static uint16_t
+IMMPC_GetCRC_gyr3dof_reserve_calibmatrix_pack(
+	immpc_gyr3dof_reserve_calibmatrix_pack_s *pPack_s)
+{
+	return (IMMPC_GetCRC_Generic(
+				(uint8_t*) pPack_s,
+				(uint16_t) (sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s))));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief 	Функция выполняет запись контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in,out]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 								пакет данных.
+ * 								@note 	Контрольная сумма записывается в конец
+ * 										пакета данных
+ */
+static void
+IMMPC_WriteCRC_gyr3dof_reserve_calibmatrix_pack(
+	immpc_gyr3dof_reserve_calibmatrix_pack_s *pPack_s)
+{
+	pPack_s->crc =
+		IMMPC_GetCRC_Generic(
+			(uint8_t*) pPack_s,
+			(uint16_t) (sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s)));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief Функция проверяет валидность пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных.
+ *
+ * @return 	Если пакет данных валиден, то возвращает "1", иначе "0"
+ */
+static size_t
+IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack(
+	immpc_gyr3dof_reserve_calibmatrix_pack_s *pPack_s)
+{
+	uint16_t crc =
+		IMMPC_GetCRC_gyr3dof_reserve_calibmatrix_pack_s(pPack_s);
+
+	if (crc == pPack_s->crc)
+	{
+		return (1u);
+	}
+	else
+	{
+		return (0u);
+	}
+}
+/* Пакет immpc_gyr3dof_reserve_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Пакет immpc_mag3dof_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief    Функция выполняет вычисление контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных
+ *
+ * @return 	Вычисленная сумма пакета данных
+ */
+static uint16_t
+IMMPC_GetCRC_mag3dof_calibmatrix_pack(
+	immpc_mag3dof_calibmatrix_pack_s *pPack_s)
+{
+	return (IMMPC_GetCRC_Generic(
+				(uint8_t*) pPack_s,
+				(uint16_t) (sizeof(immpc_mag3dof_calibmatrix_pack_s))));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief 	Функция выполняет запись контрольной суммы пакета данных (калиброванных)
+ *
+ * @param[in,out]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 								пакет данных.
+ * 								@note 	Контрольная сумма записывается в конец
+ * 										пакета данных
+ */
+static void
+IMMPC_WriteCRC_mag3dof_calibmatrix_pack(
+	immpc_mag3dof_calibmatrix_pack_s *pPack_s)
+{
+	pPack_s->crc =
+		IMMPC_GetCRC_Generic(
+			(uint8_t*) pPack_s,
+			(uint16_t) (sizeof(immpc_mag3dof_calibmatrix_pack_s)));
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief Функция проверяет валидность пакета данных (калиброванных)
+ *
+ * @param[in]	*pPack_s: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных.
+ *
+ * @return 	Если пакет данных валиден, то возвращает "1", иначе "0"
+ */
+static size_t
+IMMPC_IsPackValid_mag3dof_calibmatrix_pack(
+	immpc_mag3dof_calibmatrix_pack_s *pPack_s)
+{
+	uint16_t crc =
+		IMMPC_GetCRC_mag3dof_calibmatrixx_pack_s(pPack_s);
+
+	if (crc == pPack_s->crc)
+	{
+		return (1u);
+	}
+	else
+	{
+		return (0u);
+	}
+}
+/* Пакет immpc_mag3dof_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date      05-ноя-2019
+ *
+ * @brief    Функция выполняет поиск типа сообщения
+ *
+ * @param[in]	*pData: 	Указатель на область памяти, в которой содержатся
+ * 							данные
+ *
+ * @param[in]	buffSize: 	Количество данных
+ *
+ * @param[out]	*pMessagePackReturn: 	Указатель на область памяти, в которой содержится
+ * 										тип сообщения
+ */
+void
+IMMPC_GetDataMessage(
+	uint8_t *pData,
+	size_t 	buffSize,
+	uint8_t *pMessagePackReturn)
+{
+	uint8_t messageIDReturn;
+	uint32_t i;
+	uint8_t *pDataStruct;
+
+	/* получение типа сообщения */
+	IMMPC_GetTypeMessage(
+		pData,
+		buffSize,
+		&messageIDReturn,
+		pMessagePackReturn);
+
+	/* идентификатор и тип пакета определены? */
+	if(	(messageIDReturn != IMMPC_MESSAGE_ID_UNKNOWN) &&
+		(*pMessagePackReturn != IMMPC_MESSAGE_PACK_UNKNOWN))
+	{
+		return;
+	}
+
+	/* обработка по типу сообщения */
+	switch(*pMessagePackReturn)
+	{
+		case IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_9dof_main_raw_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_main_raw_pack((immpc_9dof_main_raw_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_9DOF_main_raw_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_9dof_main_raw_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_9dof_main_calib_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_main_calib_pack((immpc_9dof_main_calib_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_9DOF_main_calib_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_9dof_main_calib_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_9dof_reserve_raw_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_reserve_raw_pack((immpc_9dof_reserve_raw_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_9DOF_reserve_raw_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_9dof_reserve_raw_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_9dof_reserve_calib_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_9dof_reserve_calib_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_reserve_calib_pack((immpc_9dof_reserve_calib_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_9DOF_reserve_calib_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_9dof_reserve_calib_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_mag3dof_raw_pack_s))) &&
+				(IMMPC_IsPackValid_mag3dof_raw_pack((immpc_mag3dof_raw_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_MAG3DOF_raw_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_mag3dof_raw_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_mag3dof_calib_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_mag3dof_calib_pack_s))) &&
+				(IMMPC_IsPackValid_mag3dof_calib_pack((immpc_mag3dof_calib_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_MAG3DOF_calib_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_mag3dof_calib_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_read_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_acc3dof_main_calibmatrix_pack_s))) &&
+				(IMMPC_IsPackValid_acc3dof_main_calibmatrix_pack((immpc_acc3dof_main_calibmatrix_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_ACC3DOF_main_calibmatrix_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_acc3dof_main_calibmatrix_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_read_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s))) &&
+				(IMMPC_IsPackValid_acc3dof_reserve_calibmatrix_pack((immpc_acc3dof_reserve_calibmatrix_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_ACC3DOF_reserve_calibmatrix_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_read_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_gyr3dof_main_calibmatrix_pack_s))) &&
+				(IMMPC_IsPackValid_gyr3dof_main_calibmatrix_pack((immpc_gyr3dof_main_calibmatrix_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_GYR3DOF_main_calibmatrix_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_gyr3dof_main_calibmatrix_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_read_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s))) &&
+				(IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack((immpc_gyr3dof_reserve_calibmatrix_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_GYR3DOF_reserve_calibmatrix_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_read_pack_s:
+			/* проверка количества символов и правильности CRC */
+			if(	(buffSize == (size_t) (sizeof(immpc_mag3dof_calibmatrix_pack_s))) &&
+				(IMMPC_IsPackValid_mag3dof_calibmatrix_pack((immpc_mag3dof_calibmatrix_pack_s*) pData)))
+			{
+				/* сохранение адреса структуры */
+				pDataStruct = (uint8_t*) &IMMPC_MAG3DOF_calibmatrix_pack_s;
+
+				/* сохранение данных */
+				for(i=0; i<sizeof(immpc_mag3dof_calibmatrix_pack_s); i++)
+				{
+					*pDataStruct++ = *pData++;
+				}
+			}
+			else
+			{
+				*pMessagePackReturn == IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+			break;
+
+		case IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_9dof_main_raw_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_9dof_main_calib_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_9dof_reserve_calib_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_mag3dof_raw_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_mag3dof_calib_request_cmd_s:
+			/* формирование ответного сообщения ... */
+			break;
+
+		case IMMPC_MESSAGE_PACK_write_all_calibmatrix_in_eeprom_cmd_s:
+			/* формирование ответного сообщения ... */
+			/* установка события для записи в EEPROM ... */
+			break;
+	}
+}
+
 
 /*#### |End  | <-- Секция - "Описание глобальных функций" ####################*/
 
