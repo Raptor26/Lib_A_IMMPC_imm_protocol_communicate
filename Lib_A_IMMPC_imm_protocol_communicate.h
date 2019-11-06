@@ -13,7 +13,8 @@
 
 /*#### |Begin| --> Секция - "Include" ########################################*/
 /*==== |Begin| --> Секция - "C libraries" ====================================*/
-#include "stdint.h"
+#include <stdint.h>
+#include <stdio.h>
 /*==== |End  | <-- Секция - "C libraries" ====================================*/
 
 /*==== |Begin| --> Секция - "RTOS libraries ==================================*/
@@ -140,15 +141,24 @@
 
 #define IIMPC_PACK_REQUESTS_BITS_SET_CALIB_MEAS(var)    (var | IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
 #define IIMPC_PACK_REQUESTS_BITS_SET_RAW_MEAS(var)      (var & (~IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS))
+#define __IIMPC_PACK_REQUESTS_BITS_IsSetCalibMeas(var)	(IIMPC_PACK_REQUESTS_BITS_SET_CALIB_MEAS(var) == IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
 
 #define IIMPC_PACK_REQUESTS_BITS_SET_RESERV_MEAS(var)	(var | IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
 #define IIMPC_PACK_REQUESTS_BITS_SET_MAIN_MEAS(var)    	(var & (~IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS))
+#define __IIMPC_PACK_REQUESTS_BITS_IsSetReservMeas(var) (IIMPC_PACK_REQUESTS_BITS_SET_RESERV_MEAS(var) == IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
 
 #define IIMPC_PACK_REQUESTS_BITS_SET_READ_MEAS(var)		(var | IIMPC_PACK_REQUESTS_BITS_READ_MEAS)
 #define IIMPC_PACK_REQUESTS_BITS_SET_NOT_READ_MEAS(var)	(var & (~IIMPC_PACK_REQUESTS_BITS_READ_MEAS)
+#define __IIMPC_PACK_REQUESTS_BITS_IsSetReadFlag(var)	(IIMPC_PACK_REQUESTS_BITS_SET_READ_MEAS(var) == IIMPC_PACK_REQUESTS_BITS_READ_MEAS)
 
-#define IIMPC_PACK_REQUESTS_BITS_SET_REQUEST(var)		(var | IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
-#define IIMPC_PACK_REQUESTS_BITS_SET_DATA_PAYLOAD(var)	(var & (~IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+#define IIMPC_PACK_REQUESTS_BITS_SET_REQUEST(var)			(var | IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+#define IIMPC_PACK_REQUESTS_BITS_SET_DATA_PAYLOAD(var)		(var & (~IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+#define __IIMPC_PACK_REQUESTS_BITS_IsSetDataRequest(var)	(IIMPC_PACK_REQUESTS_BITS_SET_REQUEST(var) == IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+
+#define __IMMPC_GetOfssetID(pMem)			((uint8_t)pMem[2u])
+
+
+
 
 typedef enum
 {
@@ -164,12 +174,20 @@ typedef enum
 
 } immpc_message_id_e;
 
+#define IMMPC_MESSAGE_TYPE_BitsInID(bitsInID) 					(((((uint16_t) 	(0u | (bitsInID))) << 8u) & 0xFF00))
+#define IMMPC_MESSAGE_TYPE_BitsInPackRequests(bitsInPackReq)	(((uint16_t) 	(0u | bitsInPackReq)) & 0x00FF)
+
+#define IMMPC_MESSAGE_TYPE_ReturnMessageType(bitsInID, bitsInPackReq)	\
+	(IMMPC_MESSAGE_TYPE_BitsInID(bitsInID)) | (IMMPC_MESSAGE_TYPE_BitsInPackRequests(bitsInPackReq))
+
 typedef enum
 {
 	IMMPC_MESSAGE_PACK_UNKNOWN = 0u,
 	/* пакеты с данными */
 	IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s,
-	IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s,
+	IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s =
+		IMMPC_MESSAGE_TYPE_ReturnMessageType(IMMPC_MESSAGE_ID_9DOF_PACK_MAIN, IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
 	IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s,
 	IMMPC_MESSAGE_PACK_9dof_reserve_calib_pack_s,
 	IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s,
@@ -199,6 +217,14 @@ typedef enum
 	/* команды */
 	IMMPC_MESSAGE_PACK_write_all_calibmatrix_in_eeprom_cmd_s /* запись данных в в EEPROM ИИМ */
 } immpc_message_struct_e;
+
+typedef enum
+{
+	IMMPC_PACK_REQUESTS_9dof_main_calib_pack,
+} immpcs_pack_requests_e;
+
+
+
 
 /* заголовок пакета */
 typedef struct
@@ -418,9 +444,9 @@ immpc_mag3dof_calibmatrix_pack_s;
 
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
-extern void
+extern immpc_message_struct_e
 IMMPC_GetTypeMessage(
-	uint8_t *pData,
+	const uint8_t *pData,
 	size_t 	buffSize,
 	uint8_t *pMessageIDReturn,
 	uint8_t *pMessagePackReturn);
