@@ -13,7 +13,8 @@
 
 /*#### |Begin| --> Секция - "Include" ########################################*/
 /*==== |Begin| --> Секция - "C libraries" ====================================*/
-#include "stdint.h"
+#include <stdint.h>
+#include <stdio.h>
 /*==== |End  | <-- Секция - "C libraries" ====================================*/
 
 /*==== |Begin| --> Секция - "RTOS libraries ==================================*/
@@ -131,74 +132,266 @@
 #endif
 /*==== |End| --> Секция - Локальная оптимизация функций ======================*/
 
-#define IIMPC_START_FRAME								((uint16_t)0xAAAA)
+#define __IMMPC_SET_BIT(REG, BIT)   	((REG) |= (BIT))
 
-#define IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS             (0b10000000)
-#define IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS            (0b01000000)
-#define IIMPC_PACK_REQUESTS_BITS_READ_MEAS              (0b00100000)
-#define IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST        (0b00010000)
+#define __IMMPC_CLEAR_BIT(REG, BIT) 	((REG) &= ~(BIT))
 
-#define IIMPC_PACK_REQUESTS_BITS_SET_CALIB_MEAS(var)    (var | IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
-#define IIMPC_PACK_REQUESTS_BITS_SET_RAW_MEAS(var)      (var & (~IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS))
+#define __IMMPC_READ_BIT(REG, BIT)  	((REG) & (BIT))
 
-#define IIMPC_PACK_REQUESTS_BITS_SET_RESERV_MEAS(var)	(var | IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
-#define IIMPC_PACK_REQUESTS_BITS_SET_MAIN_MEAS(var)    	(var & (~IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS))
+#define __IMMPC_CLEAR_REG(REG)     		((REG) = (0x0))
 
-#define IIMPC_PACK_REQUESTS_BITS_SET_READ_MEAS(var)		(var | IIMPC_PACK_REQUESTS_BITS_READ_MEAS)
-#define IIMPC_PACK_REQUESTS_BITS_SET_NOT_READ_MEAS(var)	(var & (~IIMPC_PACK_REQUESTS_BITS_READ_MEAS)
+#define __IMMPC_WRITE_REG(REG, VAL) 	((REG) = (VAL))
 
-#define IIMPC_PACK_REQUESTS_BITS_SET_REQUEST(var)		(var | IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
-#define IIMPC_PACK_REQUESTS_BITS_SET_DATA_PAYLOAD(var)	(var & (~IIMPC_PACK_REQUESTS_BITS_IS_DATA_REQUEST)
+#define __IMMPC_READ_REG(REG)      		((REG))
+
+#define __IMMPC_IS_SET_BIT(REG, BIT)	((REG) & (BIT) == BIT)
+
+#define IMMPC_START_FRAME									((uint16_t)	0xAAAA)
+#define IMMPC_RESPONCE_END_FRAME							((uint8_t)	0x55)
+
+#define IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS             	(0b10000000) /* калиброванный */
+#define IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS            	(0b01000000) /* резервный */
+#define IMMPC_PACK_REQUESTS_BITS_READ_MEAS              	(0b00100000) /* чтение данных с пакета с последующей записью */
+#define IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST        		(0b00010000) /* запрос или команда */
+
+#define __IMMPC_PACK_REQUESTS_BITS_SET_CALIB_MEAS(var)    	__IMMPC_SET_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
+#define __IMMPC_PACK_REQUESTS_BITS_SET_RAW_MEAS(var)      	__IMMPC_CLEAR_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
+#define __IMMPC_PACK_REQUESTS_BITS_IsSetCalibMeas(var)		__IMMPC_IS_SET_BIT(var, IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
+
+#define __IMMPC_PACK_REQUESTS_BITS_SET_RESERV_MEAS(var)		__IMMPC_SET_BIT(var, 	IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
+#define __IMMPC_PACK_REQUESTS_BITS_SET_MAIN_MEAS(var)    	__IMMPC_CLEAR_BIT(var, 	IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
+#define __IIMPC_PACK_REQUESTS_BITS_IsSetReservMeas(var) 	__IMMPC_IS_SET_BIT(var, IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
+
+#define __IMMPC_PACK_REQUESTS_BITS_SET_READ_MEAS(var)		__IMMPC_SET_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_READ_MEAS)
+#define __IMMPC_PACK_REQUESTS_BITS_SET_NOT_READ_MEAS(var)	__IMMPC_CLEAR_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_READ_MEAS)
+#define __IIMPC_PACK_REQUESTS_BITS_IsSetReadFlag(var)		__IMMPC_IS_SET_BIT(var, IMMPC_PACK_REQUESTS_BITS_READ_MEAS)
+
+#define __IMPC_PACK_REQUESTS_BITS_SET_REQUEST(var)			__IMMPC_SET_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST)
+#define __IMMPC_PACK_REQUESTS_BITS_SET_DATA_PAYLOAD(var)	__IMMPC_CLEAR_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST)
+#define __IMMPC_PACK_REQUESTS_BITS_IsSetDataRequest(var)	__IMMPC_IS_SET_BIT(var, IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST)
+
+#define __IMMPC_GetOffssetID(pMem)							((uint8_t)pMem[2u])
 
 typedef enum
 {
+	/**/
 	IMMPC_MESSAGE_ID_UNKNOWN = 0u,
+	/**/
 	IMMPC_MESSAGE_ID_9DOF_PACK_MAIN,
 	IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE,
-
+	/**/
 	IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
 	IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
 	IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX,
-
-	IMMPC_MESSAGE_ID_3DOF_PACK_MAIN,
-
+	/**/
+	IMMPC_MESSAGE_ID_MAG3DOF_PACK,
+	/**/
+	IMMPC_MESSAGE_ID_WRITE_ALL_CALIBMATRIX,
+	/* коды ответных сообщений */
+	IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR = 200u,
+	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC,
+	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBRATION_MATRIX_FROM_EEPROM,
+	IMMPC_MESSAGE_ID_RESPONSE_CODE_OK,
 } immpc_message_id_e;
+
+
+#define __IMMPC_SetMessageTypeHelper_SetID(bitsInID) 				(((((uint16_t) 	(0u | (bitsInID))) << 8u) & 0xFF00))
+#define __IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq)	(((uint16_t) 	(0u | bitsInPackReq)) & 0x00fFF)
+
+#define __IMMPC_SetMessageType(bitsInID, bitsInPackReq)					\
+	((__IMMPC_SetMessageTypeHelper_SetID(bitsInID)) 					\
+	 | (__IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq)))
 
 typedef enum
 {
 	IMMPC_MESSAGE_PACK_UNKNOWN = 0u,
+
 	/* пакеты с данными */
-	IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s,
-	IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s,
-	IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s,
-	IMMPC_MESSAGE_PACK_9dof_reserve_calib_pack_s,
-	IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s,
-	IMMPC_MESSAGE_PACK_mag3dof_calib_pack_s,
-	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_read_pack_s,
-	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
-	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_read_pack_s,
-	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
-	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_read_pack_s,
-	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
-	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_read_pack_s,
-	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
-	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_read_pack_s,
-	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s, /* запись данных в ОЗУ ИИМ */
+	IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_9DOF_PACK_MAIN,
+			0u),
+
+	IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_9DOF_PACK_MAIN,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE,
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+
+	IMMPC_MESSAGE_PACK_9dof_reserve_calib_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE,
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_MAG3DOF_PACK,
+			0u),
+	IMMPC_MESSAGE_PACK_mag3dof_calib_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_MAG3DOF_PACK,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_read_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS),
+
+	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_read_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+
+	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_read_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS),
+
+	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_read_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+
+	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+
+	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_read_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS),
+
 	/* запросы */
-	IMMPC_MESSAGE_PACK_9dof_main_raw_request_cmd_s,
-	IMMPC_MESSAGE_PACK_9dof_main_calib_request_cmd_s,
-	IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s,
-	IMMPC_MESSAGE_PACK_9dof_reserve_calib_request_cmd_s,
-	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_request_cmd_s,
-	IMMPC_MESSAGE_PACK_mag3dof_raw_request_cmd_s,
-	IMMPC_MESSAGE_PACK_mag3dof_calib_request_cmd_s,
+	IMMPC_MESSAGE_PACK_9dof_main_raw_request_cmd_s =
+		__IMMPC_SetMessageType(	IMMPC_MESSAGE_ID_9DOF_PACK_MAIN,
+								IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+
+	IMMPC_MESSAGE_PACK_9dof_main_calib_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_9DOF_PACK_MAIN,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+
+	IMMPC_MESSAGE_PACK_9dof_reserve_calib_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+
+	IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+
+	IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+
+	IMMPC_MESSAGE_PACK_mag3dof_raw_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_MAG3DOF_PACK,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+
+	IMMPC_MESSAGE_PACK_mag3dof_calib_request_cmd_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_MAG3DOF_PACK,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
 	/* команды */
-	IMMPC_MESSAGE_PACK_write_all_calibmatrix_in_eeprom_cmd_s /* запись данных в в EEPROM ИИМ */
-} immpc_message_struct_e;
+	IMMPC_MESSAGE_PACK_write_all_calibmatrix_in_eeprom_cmd_s = /* запись данных в EEPROM ИИМ */
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_WRITE_ALL_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+
+	/* коды ответных сообщений */
+	IMMPC_MESSAGE_PACK_response_code_error_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR,
+			IMMPC_RESPONCE_END_FRAME),
+
+	IMMPC_MESSAGE_PACK_response_code_invalid_crc_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC,
+			IMMPC_RESPONCE_END_FRAME),
+
+	IMMPC_MESSAGE_PACK_response_code_invalid_calibration_matrix_from_eeprom_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBRATION_MATRIX_FROM_EEPROM,
+			IMMPC_RESPONCE_END_FRAME),
+
+	IMMPC_MESSAGE_PACK_response_code_ok_s =
+		__IMMPC_SetMessageType(
+			IMMPC_MESSAGE_ID_RESPONSE_CODE_OK,
+			IMMPC_RESPONCE_END_FRAME),
+} immpc_message_pack_type_e;
+
+typedef enum
+{
+	IMMPC_PACK_REQUESTS_9dof_main_calib_pack,
+} immpcs_pack_requests_e;
 
 /* заголовок пакета */
 typedef struct
@@ -209,9 +402,9 @@ typedef struct
 	uint16_t 	sensorsStatus;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_head_s;
 
@@ -230,9 +423,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_9dof_main_raw_pack_s;
 
@@ -251,9 +444,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_9dof_main_calib_pack_s;
 
@@ -272,9 +465,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_9dof_reserve_raw_pack_s;
 
@@ -293,9 +486,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_9dof_reserve_calib_pack_s;
 
@@ -309,9 +502,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_mag3dof_raw_pack_s;
 
@@ -325,9 +518,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_mag3dof_calib_pack_s;
 
@@ -340,9 +533,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_acc3dof_main_calibmatrix_pack_s;
 
@@ -355,9 +548,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_acc3dof_reserve_calibmatrix_pack_s;
 
@@ -370,9 +563,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_gyr3dof_main_calibmatrix_pack_s;
 
@@ -385,9 +578,9 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_gyr3dof_reserve_calibmatrix_pack_s;
 
@@ -400,11 +593,53 @@ typedef struct
 	uint16_t crc;
 }
 #if defined (__GNUC__)
-__attribute__((__packed__))
+	__attribute__((__packed__))
 #else
-#error "Please, define compiler"
+	#error "Please, define compiler"
 #endif
 immpc_mag3dof_calibmatrix_pack_s;
+
+
+/* пакет запросов или команд */
+typedef struct
+{
+	uint16_t 	startFrame;
+	uint8_t 	messageID;
+	uint8_t 	packRequests;;
+
+	uint16_t	crc;
+}
+#if defined (__GNUC__)
+	__attribute__((__packed__))
+#else
+	#error "Please, define compiler"
+#endif
+immpc_request_or_cmd_pack_s;
+
+/* указатели на функции */
+typedef struct
+{
+	/* ... */
+} immpc_api_s;
+
+/* структура указателей на переменные */
+typedef struct
+{
+	/* данные */
+	immpc_9dof_main_raw_pack_s *pIMMPC_9DOF_main_raw_pack_s;
+	immpc_9dof_main_calib_pack_s *pIMMPC_9DOF_main_calib_pack_s;
+	immpc_9dof_reserve_raw_pack_s *pIMMPC_9DOF_reserve_raw_pack_s;
+	immpc_9dof_reserve_calib_pack_s *pIMMPC_9DOF_reserve_calib_pack_s;
+	immpc_mag3dof_raw_pack_s *pIMMPC_MAG3DOF_raw_pack_s;
+	immpc_mag3dof_calib_pack_s *pIMMPC_MAG3DOF_calib_pack_s;
+
+	/* калибровочные матрицы */
+	immpc_acc3dof_main_calibmatrix_pack_s *pIMMPC_ACC3DOF_main_calibmatrix_pack_s;
+	immpc_acc3dof_reserve_calibmatrix_pack_s *pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s;
+	immpc_gyr3dof_main_calibmatrix_pack_s *pIMMPC_GYR3DOF_main_calibmatrix_pack_s;
+	immpc_gyr3dof_reserve_calibmatrix_pack_s *pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s;
+	immpc_mag3dof_calibmatrix_pack_s *pIMMPC_MAG3DOF_calibmatrix_pack_s;
+} immpc_pointer_data_s;
 
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
 
@@ -419,11 +654,21 @@ immpc_mag3dof_calibmatrix_pack_s;
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
 extern void
+IMMPC_PointerDataInit(
+	immpc_pointer_data_s pointerSetData_s);
+
+extern immpc_message_pack_type_e
 IMMPC_GetTypeMessage(
+	const uint8_t *pData,
+	size_t 	buffSize,
+	uint8_t *pMessageHead);
+
+extern immpc_message_pack_type_e
+IMMPC_GetDataMessage(
 	uint8_t *pData,
 	size_t 	buffSize,
-	uint8_t *pMessageIDReturn,
-	uint8_t *pMessagePackReturn);
+	uint8_t *pDataResponse,
+	size_t 	*pBuffSizeResponse);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
