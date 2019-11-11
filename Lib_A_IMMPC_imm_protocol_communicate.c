@@ -295,6 +295,10 @@ IMMPC_GenerateDataMessageFromStruct(
  *
  * @param[in]	pointerSetData_s: Структура указателей на переменные
  */
+
+/* Не правильно, в данном случае в функцию нужно передавать не структуру, а указатель 
+ * на структуру, т.к. в противном случае при выходе из функции IMMPC_PointerDataInit() 
+ * структура pointerSetData_s будет уничтожена */
 void
 IMMPC_PointerDataInit(
 	immpc_pointer_data_s pointerSetData_s)
