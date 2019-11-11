@@ -305,86 +305,86 @@ IMMPC_PointerDataInit(
 	/* заполнение "шапки" пакетов */
 	if(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_MAIN;
 		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).packRequests = (uint8_t) 0u;
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_MAIN;
-		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
-		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).packRequests = (uint8_t) IIMPC_PACK_REQUESTS_BITS_RESERVE_MEAS;
+		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS;
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
 		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-																									IIMPC_PACK_REQUESTS_BITS_RESERVE_MEAS |
-																									IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
+																									IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS |
+																									IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_PACK;
 		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).packRequests = (uint8_t) 0u;
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_PACK;
-		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX;
-		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests = (uint8_t) IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX;
 		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-																												IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
-																												IIMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
+																												IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+																												IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX;
-		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX;
 		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-																												IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
-																												IIMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
+																												IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+																												IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
 	}
 
 	if(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s != NULL)
 	{
-		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).startFrame = IIMPC_START_FRAME;
+		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
 		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX;
 		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-																										IIMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
+																										IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
 	}
 }
 
@@ -425,7 +425,7 @@ IMMPC_GetTypeMessage(
 		uint16_t *pIDAndPackReq = (uint16_t*) &pData[j + 2u];
 
 		/* Если нашли символы начала пакета данных */
-		if (*pStartFrame == IIMPC_START_FRAME)
+		if (*pStartFrame == IMMPC_START_FRAME)
 		{
 			messageType_e = (immpc_message_pack_type_e) *pIDAndPackReq;
 
@@ -1375,10 +1375,10 @@ IMMPC_GenerateResponseMessage(
 	uint8_t *pData,
 	immpc_message_id_e idResponse)
 {
-	*pData++ =	(uint8_t) ((IIMPC_START_FRAME & 0xFF00) >> 8u);
-	*pData++ =	(uint8_t) (IIMPC_START_FRAME & 0x00FF);
+	*pData++ =	(uint8_t) ((IMMPC_START_FRAME & 0xFF00) >> 8u);
+	*pData++ =	(uint8_t) (IMMPC_START_FRAME & 0x00FF);
 	*pData++ =	(uint8_t) idResponse;
-	*pData =	IIMPC_RESPONCE_END_FRAME;
+	*pData =	IMMPC_RESPONCE_END_FRAME;
 
 	return ((size_t) 4u);
 }
