@@ -1451,6 +1451,7 @@ IMMPC_GenerateDataMessageFromStruct(
  */
 immpc_message_pack_type_e
 IMMPC_GetDataMessage(
+	immpc_meas_data_tmp_s *pData_s,
 	uint8_t *pData,
 	size_t 	buffSize,
 	uint8_t *pDataResponse,

@@ -641,6 +641,27 @@ typedef struct
 	immpc_mag3dof_calibmatrix_pack_s *pIMMPC_MAG3DOF_calibmatrix_pack_s;
 } immpc_pointer_data_s;
 
+typedef struct
+{
+	int16_t rawMainAcc_a[3u];
+	int16_t rawMainGyr_a[3u];
+	int16_t rawMainMag_a[3u];
+
+	__IMMPC_FPT__ calibMainAcc_a[3u];
+	__IMMPC_FPT__ calibMainGyr_a[3u];
+	__IMMPC_FPT__ calibMainMag_a[3u];
+} immpc_meas_data_tmp_s;
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetRawMainAcc(
+	immpc_meas_data_tmp_s *pData_s,
+	int16_t *pRawMainAcc_a)
+{
+	pData_s->rawMainAcc_a[0u] = *pRawMainAcc_a++;
+	pData_s->rawMainAcc_a[1u] = *pRawMainAcc_a++;
+	pData_s->rawMainAcc_a[2u] = *pRawMainAcc_a;
+}
+
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
 
 
@@ -660,11 +681,12 @@ IMMPC_PointerDataInit(
 extern immpc_message_pack_type_e
 IMMPC_GetTypeMessage(
 	const uint8_t *pData,
-	size_t 	buffSize,
-	uint8_t *pMessageHead);
+		  size_t 	buffSize,
+		  uint8_t *pMessageHead);
 
 extern immpc_message_pack_type_e
 IMMPC_GetDataMessage(
+	immpc_meas_data_tmp_s *pData_s,
 	uint8_t *pData,
 	size_t 	buffSize,
 	uint8_t *pDataResponse,
