@@ -660,7 +660,8 @@ IMMPC_PointerDataInit(
 extern immpc_message_pack_type_e
 IMMPC_GetTypeMessage(
 	const uint8_t *pData,
-	size_t 	buffSize);
+	size_t 	buffSize,
+	uint8_t *pMessageHead);
 
 extern immpc_message_pack_type_e
 IMMPC_GetDataMessage(
