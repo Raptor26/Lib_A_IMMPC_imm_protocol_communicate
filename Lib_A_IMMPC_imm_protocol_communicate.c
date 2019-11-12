@@ -1434,40 +1434,48 @@ IMMPC_GenerateDataMessageFromStruct(
  * @author	Dmitry Tanikeev
  * @date	05-ноя-2019
  *
- * @brief	Функция получает данные и записывает в структуру
+ * @brief	Функция получает пакет данных,
+ * 			если пакет данных содержит полезную часть, то данные записываются в соответствующую структуру,
+ * 			если пакет содержит запрос или команду, то формируется ответ.
+ * 			Ответ может быть как с полезными данными так и без них (т.е. OK, ERROR, INVALID).
+ * 			Функция возвращет тип полученного пакета, который сформировани из двух полей пакета сообщения - Message ID и Pack requests.
  *
- * @param[in]	*pData: 	Указатель на область памяти, в которой содержатся
- * 							данные
+ * @param[in]	*pDataIn: 	Указатель на область памяти, в которой содержатся входной пакет данных.
  *
- * @param[in]	buffSize: 	Количество данных
+ * @param[in]	buffSize: 	Размер данных.
  *
- *  *
- * @param[out]	*pDataResponse:	Указатель на область памяти, в которой содержатся
- * 								данные для ответного сообщения
+ * @param[in]	*pIMMPC_Data_s:	Указатель на область памяти, в которой содержатся данные с датчиков.
+
+ * @param[out]	*pDataOut:	Указатель на область памяти, в которой будут содержаться данные
+ * 							для выходного пакета
  *
- * @param[out]	*pBuffSizeResponse:	Количество данных ответного сообщения
+ * @param[out]	*pLengthOut:	Количество данных для выходного пакета
  *
  * @return	Тип сообщения (см. immpc_message_pack_type_e)
  */
 immpc_message_pack_type_e
 IMMPC_GetDataMessage(
-	immpc_meas_data_tmp_s *pData_s,
-	uint8_t *pData,
+	uint8_t *pDataIn,
 	size_t 	buffSize,
-	uint8_t *pDataResponse,
-	size_t 	*pBuffSizeResponse)
+	immpc_meas_data_tmp_s *pIMMPC_Data_s,
+	uint8_t *pDataOut,
+	size_t 	*pLengthOut)
 {
+	/* тип выходного ссобщения */
 	immpc_message_pack_type_e messageTypeReturn_e;
+
+	/* указатель на структуру  */
 	uint8_t *pDataStruct;
 
-	*pBuffSizeResponse = (size_t) 0u;
+	/* сброс длины выходного массива */
+	*pLengthOut = (size_t) 0u;
 
 	uint8_t *pMessHeadAddr;
 
 	/* получение типа сообщения */
 	messageTypeReturn_e =
 		IMMPC_GetTypeMessage(
-			pData,
+			pDataIn,
 			buffSize,
 			pMessHeadAddr);
 
@@ -1482,11 +1490,12 @@ IMMPC_GetDataMessage(
 	{
 	case IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if ((buffSize == (size_t) (sizeof(immpc_9dof_main_raw_pack_s))) &&
-			(IMMPC_IsPackValid_9dof_main_raw_pack((immpc_9dof_main_raw_pack_s*) pData)))
+		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_main_raw_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_main_raw_pack((immpc_9dof_main_raw_pack_s*) pMessHeadAddr)))
 		{
+			/* запись новых данных в структуру */
 			IMMPC_SetDataMessageToStruct(
-				pData,
+				pMessHeadAddr,
 				&IMMPC_9DOF_main_raw_pack_s,
 				sizeof(immpc_9dof_main_raw_pack_s));
 		}
@@ -1498,11 +1507,12 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_9dof_main_calib_pack_s))) &&
-				(IMMPC_IsPackValid_9dof_main_calib_pack((immpc_9dof_main_calib_pack_s*) pData)))
+		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_main_calib_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_main_calib_pack((immpc_9dof_main_calib_pack_s*) pMessHeadAddr)))
 		{
+			/* запись новых данных в структуру */
 			IMMPC_SetDataMessageToStruct(
-				pData,
+				pMessHeadAddr,
 				&IMMPC_9DOF_main_calib_pack_s,
 				sizeof(immpc_9dof_main_calib_pack_s));
 		}
@@ -1514,11 +1524,12 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_9dof_reserve_raw_pack_s))) &&
-				(IMMPC_IsPackValid_9dof_reserve_raw_pack((immpc_9dof_reserve_raw_pack_s*) pData)))
+		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_reserve_raw_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_reserve_raw_pack((immpc_9dof_reserve_raw_pack_s*) pMessHeadAddr)))
 		{
+			/* запись новых данных в структуру */
 			IMMPC_SetDataMessageToStruct(
-				pData,
+				pMessHeadAddr,
 				&IMMPC_9DOF_reserve_raw_pack_s,
 				sizeof(immpc_9dof_reserve_raw_pack_s));
 		}
@@ -1530,11 +1541,12 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_9dof_reserve_calib_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_9dof_reserve_calib_pack_s))) &&
-				(IMMPC_IsPackValid_9dof_reserve_calib_pack((immpc_9dof_reserve_calib_pack_s*) pData)))
+		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_reserve_calib_pack_s))) &&
+				(IMMPC_IsPackValid_9dof_reserve_calib_pack((immpc_9dof_reserve_calib_pack_s*) pMessHeadAddr)))
 		{
+			/* запись новых данных в структуру */
 			IMMPC_SetDataMessageToStruct(
-				pData,
+				pMessHeadAddr,
 				&IMMPC_9DOF_reserve_calib_pack_s,
 				sizeof(immpc_9dof_reserve_calib_pack_s));
 		}
@@ -1546,11 +1558,12 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_mag3dof_raw_pack_s))) &&
-				(IMMPC_IsPackValid_mag3dof_raw_pack((immpc_mag3dof_raw_pack_s*) pData)))
+		if (	(buffSize >= (size_t) (sizeof(immpc_mag3dof_raw_pack_s))) &&
+				(IMMPC_IsPackValid_mag3dof_raw_pack((immpc_mag3dof_raw_pack_s*) pMessHeadAddr)))
 		{
+			/* запись новых данных в структуру */
 			IMMPC_SetDataMessageToStruct(
-				pData,
+				pMessHeadAddr,
 				&IMMPC_MAG3DOF_raw_pack_s,
 				sizeof(immpc_mag3dof_raw_pack_s));
 		}
@@ -1562,11 +1575,12 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_mag3dof_calib_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_mag3dof_calib_pack_s))) &&
-				(IMMPC_IsPackValid_mag3dof_calib_pack((immpc_mag3dof_calib_pack_s*) pData)))
+		if (	(buffSize >= (size_t) (sizeof(immpc_mag3dof_calib_pack_s))) &&
+				(IMMPC_IsPackValid_mag3dof_calib_pack((immpc_mag3dof_calib_pack_s*) pMessHeadAddr)))
 		{
+			/* запись новых данных в структуру */
 			IMMPC_SetDataMessageToStruct(
-				pData,
+				pMessHeadAddr,
 				&IMMPC_MAG3DOF_calib_pack_s,
 				sizeof(immpc_mag3dof_calib_pack_s));
 		}
@@ -1578,28 +1592,30 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s:
 		/* проверка количества символов */
-		if (buffSize == (size_t) (sizeof(immpc_acc3dof_main_calibmatrix_pack_s)))
+		if (buffSize >= (size_t) (sizeof(immpc_acc3dof_main_calibmatrix_pack_s)))
 		{
 			/* CRC правильный */
-			if (IMMPC_IsPackValid_acc3dof_main_calibmatrix_pack((immpc_acc3dof_main_calibmatrix_pack_s*) pData))
+			if (IMMPC_IsPackValid_acc3dof_main_calibmatrix_pack((immpc_acc3dof_main_calibmatrix_pack_s*) pMessHeadAddr))
 			{
 				IMMPC_SetDataMessageToStruct(
-					pData,
+					pMessHeadAddr,
 					&IMMPC_ACC3DOF_main_calibmatrix_pack_s,
 					sizeof(immpc_acc3dof_main_calibmatrix_pack_s));
 
 				/* формироваие ответа - OK */
-				*pBuffSizeResponse = IMMPC_GenerateResponseMessage(
-										 pDataResponse,
-										 IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
 
 			}
 			else
 			{
 				/* формирование ответа - INVALID_CRC */
-				*pBuffSizeResponse = IMMPC_GenerateResponseMessage(
-										 pDataResponse,
-										 IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
 
 				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 			}
@@ -1607,9 +1623,10 @@ IMMPC_GetDataMessage(
 		else
 		{
 			/* формироваие ответа - ERROR */
-			*pBuffSizeResponse = IMMPC_GenerateResponseMessage(
-									 pDataResponse,
-									 IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
 
 			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 		}
@@ -1620,18 +1637,43 @@ IMMPC_GetDataMessage(
 		break;
 
 	case IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s:
-		/* ПОДПРАВИТЬ!!! */
-		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s))) &&
-				(IMMPC_IsPackValid_acc3dof_reserve_calibmatrix_pack((immpc_acc3dof_reserve_calibmatrix_pack_s*) pData)))
+		/* проверка количества символов */
+		if (buffSize >= (size_t) (sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s)))
 		{
-			IMMPC_SetDataMessageToStruct(
-				pData,
-				&IMMPC_ACC3DOF_reserve_calibmatrix_pack_s,
-				sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s));
+			/* CRC правильный */
+			if (IMMPC_IsPackValid_acc3dof_reserve_calibmatrix_pack((immpc_acc3dof_reserve_calibmatrix_pack_s*) pMessHeadAddr))
+			{
+				IMMPC_SetDataMessageToStruct(
+					pMessHeadAddr,
+					&IMMPC_ACC3DOF_reserve_calibmatrix_pack_s,
+					sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s));
+
+				/* формироваие ответа - OK */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+
+			}
+			else
+			{
+				/* формирование ответа - INVALID_CRC */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+
+				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
 		}
 		else
 		{
+			/* формироваие ответа - ERROR */
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+
 			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 		}
 		break;
@@ -1641,18 +1683,43 @@ IMMPC_GetDataMessage(
 		break;
 
 	case IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s:
-		/* ПОДПРАВИТЬ!!! */
-		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_gyr3dof_main_calibmatrix_pack_s))) &&
-				(IMMPC_IsPackValid_gyr3dof_main_calibmatrix_pack((immpc_gyr3dof_main_calibmatrix_pack_s*) pData)))
+		/* проверка количества символов */
+		if (buffSize >= (size_t) (sizeof(immpc_gyr3dof_main_calibmatrix_pack_s)))
 		{
-			IMMPC_SetDataMessageToStruct(
-				pData,
-				&IMMPC_GYR3DOF_main_calibmatrix_pack_s,
-				sizeof(immpc_gyr3dof_main_calibmatrix_pack_s));
+			/* CRC правильный */
+			if (IMMPC_IsPackValid_gyr3dof_main_calibmatrix_pack((immpc_gyr3dof_main_calibmatrix_pack_s*) pMessHeadAddr))
+			{
+				IMMPC_SetDataMessageToStruct(
+					pMessHeadAddr,
+					&IMMPC_GYR3DOF_main_calibmatrix_pack_s,
+					sizeof(immpc_gyr3dof_main_calibmatrix_pack_s));
+
+				/* формироваие ответа - OK */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+
+			}
+			else
+			{
+				/* формирование ответа - INVALID_CRC */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+
+				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
 		}
 		else
 		{
+			/* формироваие ответа - ERROR */
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+
 			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 		}
 		break;
@@ -1662,18 +1729,43 @@ IMMPC_GetDataMessage(
 		break;
 
 	case IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s:
-		/* ПОДПРАВИТЬ!!! */
-		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s))) &&
-				(IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack((immpc_gyr3dof_reserve_calibmatrix_pack_s*) pData)))
+		/* проверка количества символов */
+		if (buffSize >= (size_t) (sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s)))
 		{
-			IMMPC_SetDataMessageToStruct(
-				pData,
-				&IMMPC_GYR3DOF_reserve_calibmatrix_pack_s,
-				sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s));
+			/* CRC правильный */
+			if (IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack((immpc_gyr3dof_reserve_calibmatrix_pack_s*) pMessHeadAddr))
+			{
+				IMMPC_SetDataMessageToStruct(
+					pMessHeadAddr,
+					&IMMPC_GYR3DOF_reserve_calibmatrix_pack_s,
+					sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s));
+
+				/* формироваие ответа - OK */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+
+			}
+			else
+			{
+				/* формирование ответа - INVALID_CRC */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+
+				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
 		}
 		else
 		{
+			/* формироваие ответа - ERROR */
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+
 			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 		}
 		break;
@@ -1683,18 +1775,43 @@ IMMPC_GetDataMessage(
 		break;
 
 	case IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s:
-		/* ПОДПРАВИТЬ!!! */
-		/* проверка количества символов и правильности CRC */
-		if (	(buffSize == (size_t) (sizeof(immpc_mag3dof_calibmatrix_pack_s))) &&
-				(IMMPC_IsPackValid_mag3dof_calibmatrix_pack((immpc_mag3dof_calibmatrix_pack_s*) pData)))
+		/* проверка количества символов */
+		if (buffSize >= (size_t) (sizeof(immpc_mag3dof_calibmatrix_pack_s)))
 		{
-			IMMPC_SetDataMessageToStruct(
-				pData,
-				&IMMPC_MAG3DOF_calibmatrix_pack_s,
-				sizeof(immpc_mag3dof_calibmatrix_pack_s));
+			/* CRC правильный */
+			if (IMMPC_IsPackValid_mag3dof_calibmatrix_pack((immpc_mag3dof_calibmatrix_pack_s*) pMessHeadAddr))
+			{
+				IMMPC_SetDataMessageToStruct(
+					pMessHeadAddr,
+					&IMMPC_MAG3DOF_calibmatrix_pack_s,
+					sizeof(immpc_mag3dof_calibmatrix_pack_s));
+
+				/* формироваие ответа - OK */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+
+			}
+			else
+			{
+				/* формирование ответа - INVALID_CRC */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+
+				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
 		}
 		else
 		{
+			/* формироваие ответа - ERROR */
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+
 			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 		}
 		break;
@@ -1707,23 +1824,25 @@ IMMPC_GetDataMessage(
 	case IMMPC_MESSAGE_PACK_9dof_main_raw_request_cmd_s:
 		/* формирование ответного сообщения ... */
 		/* проверка количества символов */
-		if (buffSize == (size_t) (sizeof(immpc_request_or_cmd_pack_s)))
+		if (buffSize >= (size_t) (sizeof(immpc_request_or_cmd_pack_s)))
 		{
 			/* CRC правильный */
-			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pData))
+			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
 			{
 				/* формироваие ответа */
-				*pBuffSizeResponse = IMMPC_GenerateDataMessageFromStruct(
-										 pDataResponse,
-										 IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s,
-										 sizeof (immpc_9dof_main_raw_pack_s));
+				*pLengthOut =
+					IMMPC_GenerateDataMessageFromStruct(
+						pDataOut,
+						IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s,
+						sizeof (immpc_9dof_main_raw_pack_s));
 			}
 			else
 			{
 				/* формирование ответа - INVALID_CRC */
-				*pBuffSizeResponse = IMMPC_GenerateResponseMessage(
-										 pDataResponse,
-										 IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
 
 				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 			}
@@ -1731,9 +1850,10 @@ IMMPC_GetDataMessage(
 		else
 		{
 			/* формироваие ответа - ERROR */
-			*pBuffSizeResponse = IMMPC_GenerateResponseMessage(
-									 pDataResponse,
-									 IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
 
 			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
 		}

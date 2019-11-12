@@ -131,6 +131,29 @@
 	#endif
 #endif
 /*==== |End| --> Секция - Локальная оптимизация функций ======================*/
+#if defined (__IMMPC_USE_9DOF)
+	#pragma message ("Use 9dof")
+#else
+	#pragma message ("Not use 9dof")
+#endif
+
+#if defined (__IMMPC_USE_3DOFACC)
+	#pragma message ("Use 3dof ACC")
+#else
+	#pragma message ("Not use 3dof ACC")
+#endif
+
+#if defined (__IMMPC_USE_3DOFGYR)
+	#pragma message ("Use 3dof GYR")
+#else
+	#pragma message ("Not use 3dof GYR")
+#endif
+
+#if defined (__IMMPC_USE_3DOFMAG)
+	#pragma message ("Use 3dof MAG")
+#else
+	#pragma message ("Not use 3dof MAG")
+#endif
 
 #define __IMMPC_SET_BIT(REG, BIT)   	((REG) |= (BIT))
 
@@ -433,12 +456,12 @@ immpc_9dof_main_raw_pack_s;
 typedef struct
 {
 	immpc_head_s headMessage_s;
-	float acc[3u];
-	float gyr[3u];
-	float mag[3u];
+	__IMMPC_FPT__ acc[3u];
+	__IMMPC_FPT__ gyr[3u];
+	__IMMPC_FPT__ mag[3u];
 
-	float accTemp[3u];
-	float gyrTemp[3u];
+	__IMMPC_FPT__ accTemp[3u];
+	__IMMPC_FPT__ gyrTemp[3u];
 	int16_t magSelfTest_a[3u];
 
 	uint16_t crc;
@@ -475,12 +498,12 @@ immpc_9dof_reserve_raw_pack_s;
 typedef struct
 {
 	immpc_head_s headMessage_s;
-	float acc[3u];
-	float gyr[3u];
-	float mag[3u];
+	__IMMPC_FPT__ acc[3u];
+	__IMMPC_FPT__ gyr[3u];
+	__IMMPC_FPT__ mag[3u];
 
-	float accTemp[3u];
-	float gyrTemp[3u];
+	__IMMPC_FPT__ accTemp[3u];
+	__IMMPC_FPT__ gyrTemp[3u];
 	int16_t magSelfTest_a[3u];
 
 	uint16_t crc;
@@ -641,16 +664,33 @@ typedef struct
 	immpc_mag3dof_calibmatrix_pack_s *pIMMPC_MAG3DOF_calibmatrix_pack_s;
 } immpc_pointer_data_s;
 
+/* структура данных */
 typedef struct
 {
+	/* "сырые" */
 	int16_t rawMainAcc_a[3u];
 	int16_t rawMainGyr_a[3u];
-	int16_t rawMainMag_a[3u];
+	int16_t rawReserveAcc_a[3u];
+	int16_t rawReserveGyr_a[3u];
+	int16_t rawMainTempAcc_a[3u];
+	int16_t rawMainTempGyr_a[3u];
+	int16_t rawMag_a[3u];
+//	int16_t rawMainMag_a[3u];
+//	int16_t rawReserveMag_a[3u];
+	int16_t rawMagSelfTest[3u];
 
+	/* калиброванные */
 	__IMMPC_FPT__ calibMainAcc_a[3u];
 	__IMMPC_FPT__ calibMainGyr_a[3u];
-	__IMMPC_FPT__ calibMainMag_a[3u];
+	__IMMPC_FPT__ calibReserveAcc_a[3u];
+	__IMMPC_FPT__ calibReserveGyr_a[3u];
+	__IMMPC_FPT__ calibMainTempAcc_a[3u];
+	__IMMPC_FPT__ calibMainTempGyr_a[3u];
+	__IMMPC_FPT__ calibMag_a[3u];
+//	__IMMPC_FPT__ calibMainMag_a[3u];
+//	__IMMPC_FPT__ calibReserveMag_a[3u];
 } immpc_meas_data_tmp_s;
+
 
 __IMMPC_ALWAYS_INLINE void
 IMMPC_SetRawMainAcc(
@@ -660,6 +700,46 @@ IMMPC_SetRawMainAcc(
 	pData_s->rawMainAcc_a[0u] = *pRawMainAcc_a++;
 	pData_s->rawMainAcc_a[1u] = *pRawMainAcc_a++;
 	pData_s->rawMainAcc_a[2u] = *pRawMainAcc_a;
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_GetRawMainAcc(
+	immpc_meas_data_tmp_s *pData_s,
+	int16_t *pRawMainAcc_a)
+{
+	*pRawMainAcc_a++ = pData_s->rawMainAcc_a[0u];
+	*pRawMainAcc_a++ = pData_s->rawMainAcc_a[1u];
+	*pRawMainAcc_a = pData_s->rawMainAcc_a[2u];
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetCalibMainAcc(
+	immpc_meas_data_tmp_s *pData_s,
+	__IMMPC_FPT__ *pCalibMainAcc_a)
+{
+	pData_s->calibMainAcc_a[0u] = *pCalibMainAcc_a++;
+	pData_s->calibMainAcc_a[1u] = *pCalibMainAcc_a++;
+	pData_s->calibMainAcc_a[2u] = *pCalibMainAcc_a;
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetRawMainGyr(
+	immpc_meas_data_tmp_s *pData_s,
+	int16_t *pRawMainGyr_a)
+{
+	pData_s->rawMainGyr_a[0u] = *pRawMainGyr_a++;
+	pData_s->rawMainGyr_a[1u] = *pRawMainGyr_a++;
+	pData_s->rawMainGyr_a[2u] = *pRawMainGyr_a;
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetCalibMainGyr(
+	immpc_meas_data_tmp_s *pData_s,
+	__IMMPC_FPT__ *pCalibMainGyr_a)
+{
+	pData_s->calibMainAcc_a[0u] = *pCalibMainGyr_a++;
+	pData_s->calibMainAcc_a[1u] = *pCalibMainGyr_a++;
+	pData_s->calibMainAcc_a[2u] = *pCalibMainGyr_a;
 }
 
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
@@ -686,11 +766,11 @@ IMMPC_GetTypeMessage(
 
 extern immpc_message_pack_type_e
 IMMPC_GetDataMessage(
-	immpc_meas_data_tmp_s *pData_s,
-	uint8_t *pData,
+	uint8_t *pDataIn,
 	size_t 	buffSize,
-	uint8_t *pDataResponse,
-	size_t 	*pBuffSizeResponse);
+	immpc_meas_data_tmp_s *pIMMPC_Data_s,
+	uint8_t *pDataOut,
+	size_t 	*pLengthOut);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
