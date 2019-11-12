@@ -61,9 +61,9 @@ static
 immpc_mag3dof_calibmatrix_pack_s
 IMMPC_MAG3DOF_calibmatrix_pack_s;
 
-static
-immpc_pointer_data_s
-IMMPC_pointerSetData_s;
+//static
+//immpc_pointer_data_s
+//IMMPC_pointerSetData_s;
 
 /*#### |End  | <-- Секция - "Локальные переменные" ###########################*/
 
