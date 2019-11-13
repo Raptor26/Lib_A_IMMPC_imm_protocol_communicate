@@ -687,866 +687,839 @@ typedef struct
 	int16_t rawMagSelfTest[3u];
 
 	/* калиброванные */
-	__IMMPC_FPT__ calibMainAcc_a[3u];
-	__IMMPC_FPT__ calibMainGyr_a[3u];
+	__IMMPC_FPT__ calibMainAcc[3u];
+	__IMMPC_FPT__ calibMainGyr[3u];
 
-	__IMMPC_FPT__ calibReserveAcc_a[3u];
-	__IMMPC_FPT__ calibReserveGyr_a[3u];
+	__IMMPC_FPT__ calibReserveAcc[3u];
+	__IMMPC_FPT__ calibReserveGyr[3u];
 
-	__IMMPC_FPT__ normMainTempAcc_a[3u];
-	__IMMPC_FPT__ normMainTempGyr_a[3u];
+	__IMMPC_FPT__ normMainTempAcc[3u];
+	__IMMPC_FPT__ normMainTempGyr[3u];
 
-	__IMMPC_FPT__ normReserveTempAcc_a[3u];
-	__IMMPC_FPT__ normReserveTempGyr_a[3u];
+	__IMMPC_FPT__ normReserveTempAcc[3u];
+	__IMMPC_FPT__ normReserveTempGyr[3u];
 
-	__IMMPC_FPT__ calibMag_a[3u];
+	__IMMPC_FPT__ calibMag[3u];
 //	__IMMPC_FPT__ calibMainMag_a[3u];
 //	__IMMPC_FPT__ calibReserveMag_a[3u];
-} immpc_meas_data_tmp_s;
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawMainAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawMainAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainAcc_a)
-{
-	pData_s->rawMainAcc_a[0u] = *pRawMainAcc_a++;
-	pData_s->rawMainAcc_a[1u] = *pRawMainAcc_a++;
-	pData_s->rawMainAcc_a[2u] = *pRawMainAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawMainAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawMainAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainAcc_a)
-{
-	*pRawMainAcc_a++ = pData_s->rawMainAcc_a[0u];
-	*pRawMainAcc_a++ = pData_s->rawMainAcc_a[1u];
-	*pRawMainAcc_a = pData_s->rawMainAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pCalibMainAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetCalibMainAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibMainAcc_a)
-{
-	pData_s->calibMainAcc_a[0u] = *pCalibMainAcc_a++;
-	pData_s->calibMainAcc_a[1u] = *pCalibMainAcc_a++;
-	pData_s->calibMainAcc_a[2u] = *pCalibMainAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pCalibMainAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetCalibMainAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibMainAcc_a)
-{
-	*pCalibMainAcc_a++ =	pData_s->calibMainAcc_a[0u];
-	*pCalibMainAcc_a++ =	pData_s->calibMainAcc_a[1u];
-	*pCalibMainAcc_a =		pData_s->calibMainAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawMainGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawMainGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainGyr_a)
-{
-	pData_s->rawMainGyr_a[0u] = *pRawMainGyr_a++;
-	pData_s->rawMainGyr_a[1u] = *pRawMainGyr_a++;
-	pData_s->rawMainGyr_a[2u] = *pRawMainGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawMainGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawMainGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainGyr_a)
-{
-	*pRawMainGyr_a++ =	pData_s->rawMainGyr_a[0u];
-	*pRawMainGyr_a++ =	pData_s->rawMainGyr_a[1u];
-	*pRawMainGyr_a =	pData_s->rawMainGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pCalibMainGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetCalibMainGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibMainGyr_a)
-{
-	pData_s->calibMainGyr_a[0u] = *pCalibMainGyr_a++;
-	pData_s->calibMainGyr_a[1u] = *pCalibMainGyr_a++;
-	pData_s->calibMainGyr_a[2u] = *pCalibMainGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pCalibMainGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetCalibMainGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibMainGyr_a)
-{
-	*pCalibMainGyr_a++ =	pData_s->calibMainGyr_a[0u];
-	*pCalibMainGyr_a++ =	pData_s->calibMainGyr_a[1u];
-	*pCalibMainGyr_a =		pData_s->calibMainGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawMainTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawMainTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainTempAcc_a)
-{
-	pData_s->rawMainTempAcc_a[0u] = *pRawMainTempAcc_a++;
-	pData_s->rawMainTempAcc_a[1u] = *pRawMainTempAcc_a++;
-	pData_s->rawMainTempAcc_a[2u] = *pRawMainTempAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawMainTempAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawMainTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainTempAcc_a)
-{
-	*pRawMainTempAcc_a++ =	pData_s->rawMainTempAcc_a[0u];
-	*pRawMainTempAcc_a++ =	pData_s->rawMainTempAcc_a[1u];
-	*pRawMainTempAcc_a = 	pData_s->rawMainTempAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pNormMainTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetNormMainTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormMainTempAcc_a)
-{
-	pData_s->normMainTempAcc_a[0u] = *pNormMainTempAcc_a++;
-	pData_s->normMainTempAcc_a[1u] = *pNormMainTempAcc_a++;
-	pData_s->normMainTempAcc_a[2u] = *pNormMainTempAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pNormMainTempAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetNormMainTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormMainTempAcc_a)
-{
-	*pNormMainTempAcc_a++ = pData_s->normMainTempAcc_a[0u];
-	*pNormMainTempAcc_a++ =	pData_s->normMainTempAcc_a[1u];
-	*pNormMainTempAcc_a =	pData_s->normMainTempAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawMainTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawMainTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainTempGyr_a)
-{
-	pData_s->rawMainTempGyr_a[0u] = *pRawMainTempGyr_a++;
-	pData_s->rawMainTempGyr_a[1u] = *pRawMainTempGyr_a++;
-	pData_s->rawMainTempGyr_a[2u] = *pRawMainTempGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawMainTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawMainTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMainTempGyr_a)
-{
-	*pRawMainTempGyr_a++ =	pData_s->rawMainTempGyr_a[0u];
-	*pRawMainTempGyr_a++ =	pData_s->rawMainTempGyr_a[1u];
-	*pRawMainTempGyr_a =	pData_s->rawMainTempGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pNormMainTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetNormMainTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormMainTempGyr_a)
-{
-	pData_s->normMainTempGyr_a[0u] = *pNormMainTempGyr_a++;
-	pData_s->normMainTempGyr_a[1u] = *pNormMainTempGyr_a++;
-	pData_s->normMainTempGyr_a[2u] = *pNormMainTempGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pNormMainTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetNormMainTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormMainTempGyr_a)
-{
-	*pNormMainTempGyr_a++ =	pData_s->normMainTempGyr_a[0u];
-	*pNormMainTempGyr_a++ =	pData_s->normMainTempGyr_a[1u];
-	*pNormMainTempGyr_a =	pData_s->normMainTempGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawMag_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawMag(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMag_a)
-{
-	pData_s->rawMag_a[0u] = *pRawMag_a++;
-	pData_s->rawMag_a[1u] = *pRawMag_a++;
-	pData_s->rawMag_a[2u] = *pRawMag_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawMag_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawMag(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMag_a)
-{
-	*pRawMag_a++ =	pData_s->rawMag_a[0u];
-	*pRawMag_a++ =	pData_s->rawMag_a[1u];
-	*pRawMag_a =	pData_s->rawMag_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pCalibMag_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetCalibMag(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibMag_a)
-{
-	pData_s->calibMag_a[0u] = *pCalibMag_a++;
-	pData_s->calibMag_a[1u] = *pCalibMag_a++;
-	pData_s->calibMag_a[2u] = *pCalibMag_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pCalibMag_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetCalibMag(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibMag_a)
-{
-	*pCalibMag_a++ =	pData_s->calibMag_a[0u];
-	*pCalibMag_a++ =	pData_s->calibMag_a[1u];
-	*pCalibMag_a =		pData_s->calibMag_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawReserveAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawReserveAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveAcc_a)
-{
-	pData_s->rawMainAcc_a[0u] = *pRawReserveAcc_a++;
-	pData_s->rawMainAcc_a[1u] = *pRawReserveAcc_a++;
-	pData_s->rawMainAcc_a[2u] = *pRawReserveAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawReserveAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawReserveAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveAcc_a)
-{
-	*pRawReserveAcc_a++ =	pData_s->rawReserveAcc_a[0u];
-	*pRawReserveAcc_a++ =	pData_s->rawReserveAcc_a[1u];
-	*pRawReserveAcc_a = 	pData_s->rawReserveAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pCalibReserveAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetCalibReserveAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibReserveAcc_a)
-{
-	pData_s->calibReserveAcc_a[0u] = *pCalibReserveAcc_a++;
-	pData_s->calibReserveAcc_a[1u] = *pCalibReserveAcc_a++;
-	pData_s->calibReserveAcc_a[2u] = *pCalibReserveAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pCalibReserveAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetCalibReserveAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibReserveAcc_a)
-{
-	*pCalibReserveAcc_a++ =	pData_s->calibReserveAcc_a[0u];
-	*pCalibReserveAcc_a++ =	pData_s->calibReserveAcc_a[1u];
-	*pCalibReserveAcc_a =	pData_s->calibReserveAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawReserveGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawReserveGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveGyr_a)
-{
-	pData_s->rawReserveGyr_a[0u] = *pRawReserveGyr_a++;
-	pData_s->rawReserveGyr_a[1u] = *pRawReserveGyr_a++;
-	pData_s->rawReserveGyr_a[2u] = *pRawReserveGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawReserveGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawReserveGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveGyr_a)
-{
-	*pRawReserveGyr_a++ =	pData_s->rawReserveGyr_a[0u];
-	*pRawReserveGyr_a++ =	pData_s->rawReserveGyr_a[1u];
-	*pRawReserveGyr_a =		pData_s->rawReserveGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pCalibReserveGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetCalibReserveGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibReserveGyr_a)
-{
-	pData_s->calibReserveGyr_a[0u] = *pCalibReserveGyr_a++;
-	pData_s->calibReserveGyr_a[1u] = *pCalibReserveGyr_a++;
-	pData_s->calibReserveGyr_a[2u] = *pCalibReserveGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pCalibReserveGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetCalibReserveGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pCalibReserveGyr_a)
-{
-	*pCalibReserveGyr_a++ =	pData_s->calibReserveGyr_a[0u];
-	*pCalibReserveGyr_a++ =	pData_s->calibReserveGyr_a[1u];
-	*pCalibReserveGyr_a =	pData_s->calibReserveGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawReserveTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawReserveTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveTempAcc_a)
-{
-	pData_s->rawMainTempAcc_a[0u] = *pRawReserveTempAcc_a++;
-	pData_s->rawMainTempAcc_a[1u] = *pRawReserveTempAcc_a++;
-	pData_s->rawMainTempAcc_a[2u] = *pRawReserveTempAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawReserveAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawReserveTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveTempAcc_a)
-{
-	*pRawReserveTempAcc_a++ =	pData_s->rawReserveTempAcc_a[0u];
-	*pRawReserveTempAcc_a++ =	pData_s->rawReserveTempAcc_a[1u];
-	*pRawReserveTempAcc_a = 	pData_s->rawReserveTempAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pNormReserveTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetNormReserveTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormReserveTempAcc_a)
-{
-	pData_s->normReserveTempAcc_a[0u] = *pNormReserveTempAcc_a++;
-	pData_s->normReserveTempAcc_a[1u] = *pNormReserveTempAcc_a++;
-	pData_s->normReserveTempAcc_a[2u] = *pNormReserveTempAcc_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pNormReserveTempAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetNormReserveTempAcc(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormReserveTempAcc_a)
-{
-	*pNormReserveTempAcc_a++ =	pData_s->normReserveTempAcc_a[0u];
-	*pNormReserveTempAcc_a++ =	pData_s->normReserveTempAcc_a[1u];
-	*pNormReserveTempAcc_a =	pData_s->normReserveTempAcc_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawReserveTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawReserveTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveTempGyr_a)
-{
-	pData_s->rawReserveTempGyr_a[0u] = *pRawReserveTempGyr_a++;
-	pData_s->rawReserveTempGyr_a[1u] = *pRawReserveTempGyr_a++;
-	pData_s->rawReserveTempGyr_a[2u] = *pRawReserveTempGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawReserveTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawReserveTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawReserveTempGyr_a)
-{
-	*pRawReserveTempGyr_a++ =	pData_s->rawReserveTempGyr_a[0u];
-	*pRawReserveTempGyr_a++ =	pData_s->rawReserveTempGyr_a[1u];
-	*pRawReserveTempGyr_a =		pData_s->rawReserveTempGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pNormReserveTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetNormReserveTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormReserveTempGyr_a)
-{
-	pData_s->normReserveTempGyr_a[0u] = *pNormReserveTempGyr_a++;
-	pData_s->normReserveTempGyr_a[1u] = *pNormReserveTempGyr_a++;
-	pData_s->normReserveTempGyr_a[2u] = *pNormReserveTempGyr_a;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pNormReserveTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetNormReserveTempGyr(
-	immpc_meas_data_tmp_s *pData_s,
-	__IMMPC_FPT__ *pNormReserveTempGyr_a)
-{
-	*pNormReserveTempGyr_a++ =	pData_s->normReserveTempGyr_a[0u];
-	*pNormReserveTempGyr_a++ =	pData_s->normReserveTempGyr_a[1u];
-	*pNormReserveTempGyr_a =	pData_s->normReserveTempGyr_a[2u];
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Запись данных в структуру.
- * 			Служит для записи данных полученные из датчика.
- *
- * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pRawMagSelfTest_a:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_SetRawMagSelfTest(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMagSelfTest)
-{
-	pData_s->rawMagSelfTest[0u] = *pRawMagSelfTest++;
-	pData_s->rawMagSelfTest[1u] = *pRawMagSelfTest++;
-	pData_s->rawMagSelfTest[2u] = *pRawMagSelfTest;
-}
-
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Получение данных из структуры.
- * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
- *
- * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
- *
- * @param[out]	*pRawMagSelfTest_a:	Указатель на область памяти, в которую будут запысываться данные.
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_GetRawMagSelfTest(
-	immpc_meas_data_tmp_s *pData_s,
-	int16_t *pRawMagSelfTest)
-{
-	*pRawMagSelfTest++ =	pData_s->rawMagSelfTest[0u];
-	*pRawMagSelfTest++ =	pData_s->rawMagSelfTest[1u];
-	*pRawMagSelfTest =		pData_s->rawMagSelfTest[2u];
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+} immpc_meas_data_s;
+
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawMainAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawMainAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainAcc_a)
+//{
+//	pData_s->rawMainAcc_a[0u] = *pRawMainAcc_a++;
+//	pData_s->rawMainAcc_a[1u] = *pRawMainAcc_a++;
+//	pData_s->rawMainAcc_a[2u] = *pRawMainAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawMainAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawMainAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainAcc_a)
+//{
+//	*pRawMainAcc_a++ = pData_s->rawMainAcc_a[0u];
+//	*pRawMainAcc_a++ = pData_s->rawMainAcc_a[1u];
+//	*pRawMainAcc_a = pData_s->rawMainAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pCalibMainAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetCalibMainAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibMainAcc_a)
+//{
+//	pData_s->calibMainAcc_a[0u] = *pCalibMainAcc_a++;
+//	pData_s->calibMainAcc_a[1u] = *pCalibMainAcc_a++;
+//	pData_s->calibMainAcc_a[2u] = *pCalibMainAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pCalibMainAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetCalibMainAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibMainAcc_a)
+//{
+//	*pCalibMainAcc_a++ =	pData_s->calibMainAcc_a[0u];
+//	*pCalibMainAcc_a++ =	pData_s->calibMainAcc_a[1u];
+//	*pCalibMainAcc_a =		pData_s->calibMainAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawMainGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawMainGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainGyr_a)
+//{
+//	pData_s->rawMainGyr_a[0u] = *pRawMainGyr_a++;
+//	pData_s->rawMainGyr_a[1u] = *pRawMainGyr_a++;
+//	pData_s->rawMainGyr_a[2u] = *pRawMainGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawMainGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawMainGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainGyr_a)
+//{
+//	*pRawMainGyr_a++ =	pData_s->rawMainGyr_a[0u];
+//	*pRawMainGyr_a++ =	pData_s->rawMainGyr_a[1u];
+//	*pRawMainGyr_a =	pData_s->rawMainGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pCalibMainGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetCalibMainGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibMainGyr_a)
+//{
+//	pData_s->calibMainGyr_a[0u] = *pCalibMainGyr_a++;
+//	pData_s->calibMainGyr_a[1u] = *pCalibMainGyr_a++;
+//	pData_s->calibMainGyr_a[2u] = *pCalibMainGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pCalibMainGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetCalibMainGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibMainGyr_a)
+//{
+//	*pCalibMainGyr_a++ =	pData_s->calibMainGyr_a[0u];
+//	*pCalibMainGyr_a++ =	pData_s->calibMainGyr_a[1u];
+//	*pCalibMainGyr_a =		pData_s->calibMainGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawMainTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawMainTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainTempAcc_a)
+//{
+//	pData_s->rawMainTempAcc_a[0u] = *pRawMainTempAcc_a++;
+//	pData_s->rawMainTempAcc_a[1u] = *pRawMainTempAcc_a++;
+//	pData_s->rawMainTempAcc_a[2u] = *pRawMainTempAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawMainTempAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawMainTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainTempAcc_a)
+//{
+//	*pRawMainTempAcc_a++ =	pData_s->rawMainTempAcc_a[0u];
+//	*pRawMainTempAcc_a++ =	pData_s->rawMainTempAcc_a[1u];
+//	*pRawMainTempAcc_a = 	pData_s->rawMainTempAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pNormMainTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetNormMainTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormMainTempAcc_a)
+//{
+//	pData_s->normMainTempAcc_a[0u] = *pNormMainTempAcc_a++;
+//	pData_s->normMainTempAcc_a[1u] = *pNormMainTempAcc_a++;
+//	pData_s->normMainTempAcc_a[2u] = *pNormMainTempAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pNormMainTempAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetNormMainTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormMainTempAcc_a)
+//{
+//	*pNormMainTempAcc_a++ = pData_s->normMainTempAcc_a[0u];
+//	*pNormMainTempAcc_a++ =	pData_s->normMainTempAcc_a[1u];
+//	*pNormMainTempAcc_a =	pData_s->normMainTempAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawMainTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawMainTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainTempGyr_a)
+//{
+//	pData_s->rawMainTempGyr_a[0u] = *pRawMainTempGyr_a++;
+//	pData_s->rawMainTempGyr_a[1u] = *pRawMainTempGyr_a++;
+//	pData_s->rawMainTempGyr_a[2u] = *pRawMainTempGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawMainTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawMainTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMainTempGyr_a)
+//{
+//	*pRawMainTempGyr_a++ =	pData_s->rawMainTempGyr_a[0u];
+//	*pRawMainTempGyr_a++ =	pData_s->rawMainTempGyr_a[1u];
+//	*pRawMainTempGyr_a =	pData_s->rawMainTempGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pNormMainTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetNormMainTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormMainTempGyr_a)
+//{
+//	pData_s->normMainTempGyr_a[0u] = *pNormMainTempGyr_a++;
+//	pData_s->normMainTempGyr_a[1u] = *pNormMainTempGyr_a++;
+//	pData_s->normMainTempGyr_a[2u] = *pNormMainTempGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pNormMainTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetNormMainTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormMainTempGyr_a)
+//{
+//	*pNormMainTempGyr_a++ =	pData_s->normMainTempGyr_a[0u];
+//	*pNormMainTempGyr_a++ =	pData_s->normMainTempGyr_a[1u];
+//	*pNormMainTempGyr_a =	pData_s->normMainTempGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawMag_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawMag(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMag_a)
+//{
+//	pData_s->rawMag_a[0u] = *pRawMag_a++;
+//	pData_s->rawMag_a[1u] = *pRawMag_a++;
+//	pData_s->rawMag_a[2u] = *pRawMag_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawMag_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawMag(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMag_a)
+//{
+//	*pRawMag_a++ =	pData_s->rawMag_a[0u];
+//	*pRawMag_a++ =	pData_s->rawMag_a[1u];
+//	*pRawMag_a =	pData_s->rawMag_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pCalibMag_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetCalibMag(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibMag_a)
+//{
+//	pData_s->calibMag_a[0u] = *pCalibMag_a++;
+//	pData_s->calibMag_a[1u] = *pCalibMag_a++;
+//	pData_s->calibMag_a[2u] = *pCalibMag_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pCalibMag_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetCalibMag(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibMag_a)
+//{
+//	*pCalibMag_a++ =	pData_s->calibMag_a[0u];
+//	*pCalibMag_a++ =	pData_s->calibMag_a[1u];
+//	*pCalibMag_a =		pData_s->calibMag_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawReserveAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawReserveAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveAcc_a)
+//{
+//	pData_s->rawMainAcc_a[0u] = *pRawReserveAcc_a++;
+//	pData_s->rawMainAcc_a[1u] = *pRawReserveAcc_a++;
+//	pData_s->rawMainAcc_a[2u] = *pRawReserveAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawReserveAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawReserveAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveAcc_a)
+//{
+//	*pRawReserveAcc_a++ =	pData_s->rawReserveAcc_a[0u];
+//	*pRawReserveAcc_a++ =	pData_s->rawReserveAcc_a[1u];
+//	*pRawReserveAcc_a = 	pData_s->rawReserveAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pCalibReserveAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetCalibReserveAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibReserveAcc_a)
+//{
+//	pData_s->calibReserveAcc_a[0u] = *pCalibReserveAcc_a++;
+//	pData_s->calibReserveAcc_a[1u] = *pCalibReserveAcc_a++;
+//	pData_s->calibReserveAcc_a[2u] = *pCalibReserveAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pCalibReserveAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetCalibReserveAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibReserveAcc_a)
+//{
+//	*pCalibReserveAcc_a++ =	pData_s->calibReserveAcc_a[0u];
+//	*pCalibReserveAcc_a++ =	pData_s->calibReserveAcc_a[1u];
+//	*pCalibReserveAcc_a =	pData_s->calibReserveAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawReserveGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawReserveGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveGyr_a)
+//{
+//	pData_s->rawReserveGyr_a[0u] = *pRawReserveGyr_a++;
+//	pData_s->rawReserveGyr_a[1u] = *pRawReserveGyr_a++;
+//	pData_s->rawReserveGyr_a[2u] = *pRawReserveGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawReserveGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawReserveGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveGyr_a)
+//{
+//	*pRawReserveGyr_a++ =	pData_s->rawReserveGyr_a[0u];
+//	*pRawReserveGyr_a++ =	pData_s->rawReserveGyr_a[1u];
+//	*pRawReserveGyr_a =		pData_s->rawReserveGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pCalibReserveGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetCalibReserveGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibReserveGyr_a)
+//{
+//	pData_s->calibReserveGyr_a[0u] = *pCalibReserveGyr_a++;
+//	pData_s->calibReserveGyr_a[1u] = *pCalibReserveGyr_a++;
+//	pData_s->calibReserveGyr_a[2u] = *pCalibReserveGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pCalibReserveGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetCalibReserveGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pCalibReserveGyr_a)
+//{
+//	*pCalibReserveGyr_a++ =	pData_s->calibReserveGyr_a[0u];
+//	*pCalibReserveGyr_a++ =	pData_s->calibReserveGyr_a[1u];
+//	*pCalibReserveGyr_a =	pData_s->calibReserveGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawReserveTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawReserveTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveTempAcc_a)
+//{
+//	pData_s->rawMainTempAcc_a[0u] = *pRawReserveTempAcc_a++;
+//	pData_s->rawMainTempAcc_a[1u] = *pRawReserveTempAcc_a++;
+//	pData_s->rawMainTempAcc_a[2u] = *pRawReserveTempAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawReserveAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawReserveTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveTempAcc_a)
+//{
+//	*pRawReserveTempAcc_a++ =	pData_s->rawReserveTempAcc_a[0u];
+//	*pRawReserveTempAcc_a++ =	pData_s->rawReserveTempAcc_a[1u];
+//	*pRawReserveTempAcc_a = 	pData_s->rawReserveTempAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pNormReserveTempAcc_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetNormReserveTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormReserveTempAcc_a)
+//{
+//	pData_s->normReserveTempAcc_a[0u] = *pNormReserveTempAcc_a++;
+//	pData_s->normReserveTempAcc_a[1u] = *pNormReserveTempAcc_a++;
+//	pData_s->normReserveTempAcc_a[2u] = *pNormReserveTempAcc_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pNormReserveTempAcc_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetNormReserveTempAcc(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormReserveTempAcc_a)
+//{
+//	*pNormReserveTempAcc_a++ =	pData_s->normReserveTempAcc_a[0u];
+//	*pNormReserveTempAcc_a++ =	pData_s->normReserveTempAcc_a[1u];
+//	*pNormReserveTempAcc_a =	pData_s->normReserveTempAcc_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawReserveTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawReserveTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveTempGyr_a)
+//{
+//	pData_s->rawReserveTempGyr_a[0u] = *pRawReserveTempGyr_a++;
+//	pData_s->rawReserveTempGyr_a[1u] = *pRawReserveTempGyr_a++;
+//	pData_s->rawReserveTempGyr_a[2u] = *pRawReserveTempGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawReserveTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawReserveTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawReserveTempGyr_a)
+//{
+//	*pRawReserveTempGyr_a++ =	pData_s->rawReserveTempGyr_a[0u];
+//	*pRawReserveTempGyr_a++ =	pData_s->rawReserveTempGyr_a[1u];
+//	*pRawReserveTempGyr_a =		pData_s->rawReserveTempGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pNormReserveTempGyr_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetNormReserveTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormReserveTempGyr_a)
+//{
+//	pData_s->normReserveTempGyr_a[0u] = *pNormReserveTempGyr_a++;
+//	pData_s->normReserveTempGyr_a[1u] = *pNormReserveTempGyr_a++;
+//	pData_s->normReserveTempGyr_a[2u] = *pNormReserveTempGyr_a;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pNormReserveTempGyr_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetNormReserveTempGyr(
+//	immpc_meas_data_s *pData_s,
+//	__IMMPC_FPT__ *pNormReserveTempGyr_a)
+//{
+//	*pNormReserveTempGyr_a++ =	pData_s->normReserveTempGyr_a[0u];
+//	*pNormReserveTempGyr_a++ =	pData_s->normReserveTempGyr_a[1u];
+//	*pNormReserveTempGyr_a =	pData_s->normReserveTempGyr_a[2u];
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Запись данных в структуру.
+// * 			Служит для записи данных полученные из датчика.
+// *
+// * @param[out]	*pData_s: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pRawMagSelfTest_a:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_SetRawMagSelfTest(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMagSelfTest)
+//{
+//	pData_s->rawMagSelfTest[0u] = *pRawMagSelfTest++;
+//	pData_s->rawMagSelfTest[1u] = *pRawMagSelfTest++;
+//	pData_s->rawMagSelfTest[2u] = *pRawMagSelfTest;
+//}
+//
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Получение данных из структуры.
+// * 			Служит для чтения данных, которые будут записаны в отправляемый пакет.
+// *
+// * @param[in]	*pData_s: 	Указатель на область памяти структуры, из которой будут считываться данные.
+// *
+// * @param[out]	*pRawMagSelfTest_a:	Указатель на область памяти, в которую будут запысываться данные.
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_GetRawMagSelfTest(
+//	immpc_meas_data_s *pData_s,
+//	int16_t *pRawMagSelfTest)
+//{
+//	*pRawMagSelfTest++ =	pData_s->rawMagSelfTest[0u];
+//	*pRawMagSelfTest++ =	pData_s->rawMagSelfTest[1u];
+//	*pRawMagSelfTest =		pData_s->rawMagSelfTest[2u];
+//}
 
 
 
@@ -1563,9 +1536,9 @@ IMMPC_GetRawMagSelfTest(
 
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
-//extern void
-//IMMPC_PointerDataInit(
-//	immpc_pointer_data_s pointerSetData_s);
+extern void
+IMMPC_PointerDataInit(
+	immpc_meas_data_s *pDataMeas_ss);
 
 extern immpc_message_pack_type_e
 IMMPC_GetTypeMessage(
@@ -1577,7 +1550,7 @@ extern immpc_message_pack_type_e
 IMMPC_GetDataMessage(
 	uint8_t *pDataIn,
 	size_t 	buffSize,
-	immpc_meas_data_tmp_s *pIMMPC_Data_s,
+	immpc_meas_data_s *pIMMPC_Data_s,
 	uint8_t *pDataOut,
 	size_t 	*pLengthOut);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
