@@ -61,11 +61,11 @@ static
 immpc_mag3dof_calibmatrix_pack_s
 IMMPC_MAG3DOF_calibmatrix_pack_s;
 
-/* указатель на структуру
- * !!! необходимо проинициализировать
- *
- */
-immpc_meas_data_s *pIMMPC_MeasData_s;
+///* указатель на структуру
+// * !!! необходимо проинициализировать
+// *
+// */
+//immpc_meas_data_s *pIMMPC_MeasData_s;
 
 //static
 //immpc_pointer_data_s
@@ -272,11 +272,17 @@ IMMPC_IsPackValid_request_or_cmd(
 
 /* Пакет запросов и команд --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
-static void
-IMMPC_SetDataMessageToStruct(
-	uint8_t *pData,
-	void *pStruct,
-	size_t structSize);
+//static void
+//IMMPC_SetDataMessageToStruct(
+//	uint8_t *pData,
+//	void *pStruct,
+//	size_t structSize);
+
+immpc_message_pack_type_e
+IMMPC_GetTypeMessage(
+	const uint8_t *pData,
+	size_t 	buffSize,
+	uint8_t *pMessageHead);
 
 static size_t
 IMMPC_GenerateResponseMessage(
@@ -284,69 +290,73 @@ IMMPC_GenerateResponseMessage(
 	immpc_message_id_e idResponse);
 
 static size_t
-IMMPC_GenerateDataMessageFromStruct(
+IMMPC_GenerateRawDataMessage(
 	uint8_t *pData,
-	void *pStruct,
-	size_t structSize);
+	immpc_message_pack_type_e setTypeMessage,
+	uint16_t sensorStatus,
+	int16_t *pDataMeas3dof,
+	...);
 
-__IMMPC_ALWAYS_INLINE void
-IMMPC_CopyMeasData_FPT(
-	__IMMPC_FPT__ *pDataSet,
-	__IMMPC_FPT__ *pDataGet);
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_CopyMeasData_FPT(
+//	__IMMPC_FPT__ *pDataSet,
+//	__IMMPC_FPT__ *pDataGet);
 
-__IMMPC_ALWAYS_INLINE void
-IMMPC_CopyMeasData_int16(
-	int16_t *pDataSet,
-	int16_t *pDataGet);
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_CopyMeasData_int16(
+//	int16_t *pDataSet,
+//	int16_t *pDataGet);
 
-#define IMMPC_SetRawMainAcc(pVar)			IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainAcc_a[0u]), pVar)
-#define IMMPC_GetRawMainAcc(pVar)			IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMainAcc_a[0u]))
-#define IMMPC_SetRawMainGyr(pVar)			IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainGyr_a[0u]), pVar)
-#define IMMPC_GetRawMainGyr(pVar)			IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMainGyr_a[0u]))
+////#define IMMPC_SetRawMainAcc(pVar)			IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainAcc_a[0u]), pVar)
+////#define IMMPC_GetRawMainAcc(pVarArray, dataMeasStruct)		IMMPC_CopyMeasData_int16(pVarArray, &(dataMeasStruct.
+////
+////&(pIMMPC_MeasData_s->rawMainAcc_a[0u]), pVar)
+//#define IMMPC_SetRawMainGyr(pVar)			IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainGyr_a[0u]), pVar)
+//#define IMMPC_GetRawMainGyr(pVar)			IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMainGyr_a[0u]))
+//
+//#define IMMPC_SetRawReserveAcc(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveAcc_a[0u]), pVar)
+//#define IMMPC_GetRawReserveAcc(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveAcc_a[0u]))
+//#define IMMPC_SetRawReserveGyr(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveGyr_a[0u]), pVar)
+//#define IMMPC_GetRawReserveGyr(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveGyr_a[0u]))
+//
+//#define IMMPC_SetRawMainTempAcc(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainTempAcc_a[0u]), pVar)
+//#define IMMPC_GetRawMainTempAcc(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMainTempAcc_a[0u]))
+//#define IMMPC_SetRawMainTempGyr(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainTempGyr_a[0u]), pVar)
+//#define IMMPC_GetRawMainTempGyr(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMainTempGyr_a[0u]))
+//
+//#define IMMPC_SetRawReserveTempAcc(pVar)	IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveTempAcc_a[0u]), pVar)
+//#define IMMPC_GetRawReserveTempAcc(pVar)	IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveTempAcc_a[0u]))
+//#define IMMPC_SetRawReserveTempGyr(pVar)	IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveTempGyr_a[0u]), pVar)
+//#define IMMPC_GetRawReserveTempGyr(pVar)	IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveTempGyr_a[0u]))
+//
+//#define IMMPC_SetRawMag(pVar)				IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMag_a[0u]), pVar)
+//#define IMMPC_GetRawMag(pVar)				IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMag_a[0u]))
+//
+//#define IMMPC_SetRawMagSelfTest(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMagSelfTest_a[0u]), pVar)
+//#define IMMPC_GetRawMagSelfTest(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMagSelfTest_a[0u]))
 
-#define IMMPC_SetRawReserveAcc(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveAcc_a[0u]), pVar)
-#define IMMPC_GetRawReserveAcc(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveAcc_a[0u]))
-#define IMMPC_SetRawReserveGyr(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveGyr_a[0u]), pVar)
-#define IMMPC_GetRawReserveGyr(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveGyr_a[0u]))
-
-#define IMMPC_SetRawMainTempAcc(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainTempAcc_a[0u]), pVar)
-#define IMMPC_GetRawMainTempAcc(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMainTempAcc_a[0u]))
-#define IMMPC_SetRawMainTempGyr(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMainTempGyr_a[0u]), pVar)
-#define IMMPC_GetRawMainTempGyr(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMainTempGyr_a[0u]))
-
-#define IMMPC_SetRawReserveTempAcc(pVar)	IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveTempAcc_a[0u]), pVar)
-#define IMMPC_GetRawReserveTempAcc(pVar)	IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveTempAcc_a[0u]))
-#define IMMPC_SetRawReserveTempGyr(pVar)	IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawReserveTempGyr_a[0u]), pVar)
-#define IMMPC_GetRawReserveTempGyr(pVar)	IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawReserveTempGyr_a[0u]))
-
-#define IMMPC_SetRawMag(pVar)				IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMag_a[0u]), pVar)
-#define IMMPC_GetRawMag(pVar)				IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMag_a[0u]))
-
-#define IMMPC_SetRawMagSelfTest(pVar)		IMMPC_CopyMeasData_int16(&(pIMMPC_MeasData_s->rawMagSelfTest_a[0u]), pVar)
-#define IMMPC_GetRawMagSelfTest(pVar)		IMMPC_CopyMeasData_int16(pVar, &(pIMMPC_MeasData_s->rawMagSelfTest_a[0u]))
-
-#define IMMPC_SetCalibMainAcc(pVar)			IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMainAcc[0u]),	pVar)
-#define IMMPC_GetCalibMainAcc(pVar)			IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainAcc[0u]))
-#define IMMPC_SetCalibMainGyr(pVar)			IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMainGyr[0u]),	pVar)
-#define IMMPC_GetCalibMainGyr(pVar)			IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainGyr[0u]))
-
-#define IMMPC_SetCalibReserveAcc(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibReserveAcc[0u]),	pVar)
-#define IMMPC_GetCalibReserveAcc(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainAcc[0u]))
-#define IMMPC_SetCalibReserveGyr(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMainGyr[0u]),	pVar)
-#define IMMPC_GetCalibReserveGyr(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainGyr[0u]))
-
-#define IMMPC_SetNormMainTempAcc(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normMainTempAcc[0u]),	pVar)
-#define IMMPC_GetNormMainTempAcc(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normMainTempAcc[0u]))
-#define IMMPC_SetNormMainTempGyr(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normMainTempGyr[0u]),	pVar)
-#define IMMPC_GetNormMainTempGyr(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normMainTempGyr[0u]))
-
-#define IMMPC_SetNormReserveTempAcc(pVar)	IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normReserveTempAcc_a[0u]),	pVar)
-#define IMMPC_GetNormReserveTempAcc(pVar)	IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normReserveTempAcc[0u]))
-#define IMMPC_SetNormReserveTempGyr(pVar)	IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normReserveTempGyr_a[0u]),	pVar)
-#define IMMPC_GetNormReserveTempGyr(pVar)	IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normReserveTempGyr[0u]))
-
-#define IMMPC_SetCalibMag(pVar)				IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMag_a[0u]), pVar)
-#define IMMPC_GetCalibMag(pVar)				IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMag_a[0u]))
+//#define IMMPC_SetCalibMainAcc(pVar)			IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMainAcc[0u]),	pVar)
+//#define IMMPC_GetCalibMainAcc(pVar)			IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainAcc[0u]))
+//#define IMMPC_SetCalibMainGyr(pVar)			IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMainGyr[0u]),	pVar)
+//#define IMMPC_GetCalibMainGyr(pVar)			IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainGyr[0u]))
+//
+//#define IMMPC_SetCalibReserveAcc(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibReserveAcc[0u]),	pVar)
+//#define IMMPC_GetCalibReserveAcc(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainAcc[0u]))
+//#define IMMPC_SetCalibReserveGyr(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMainGyr[0u]),	pVar)
+//#define IMMPC_GetCalibReserveGyr(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMainGyr[0u]))
+//
+//#define IMMPC_SetNormMainTempAcc(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normMainTempAcc[0u]),	pVar)
+//#define IMMPC_GetNormMainTempAcc(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normMainTempAcc[0u]))
+//#define IMMPC_SetNormMainTempGyr(pVar)		IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normMainTempGyr[0u]),	pVar)
+//#define IMMPC_GetNormMainTempGyr(pVar)		IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normMainTempGyr[0u]))
+//
+//#define IMMPC_SetNormReserveTempAcc(pVar)	IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normReserveTempAcc_a[0u]),	pVar)
+//#define IMMPC_GetNormReserveTempAcc(pVar)	IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normReserveTempAcc[0u]))
+//#define IMMPC_SetNormReserveTempGyr(pVar)	IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->normReserveTempGyr_a[0u]),	pVar)
+//#define IMMPC_GetNormReserveTempGyr(pVar)	IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->normReserveTempGyr[0u]))
+//
+//#define IMMPC_SetCalibMag(pVar)				IMMPC_CopyMeasData_FPT(&(pIMMPC_MeasData_s->calibMag_a[0u]), pVar)
+//#define IMMPC_GetCalibMag(pVar)				IMMPC_CopyMeasData_FPT(pVar, &(pIMMPC_MeasData_s->calibMag_a[0u]))
 
 
 /*#### |End  | <-- Секция - "Прототипы локальных функций" ####################*/
@@ -362,103 +372,103 @@ IMMPC_CopyMeasData_int16(
  * @param[in]	pDataMeas_s: Указатель на область данных, в которой будут храниться данные полученные из датчика.
  */
 
-/* Не правильно, в данном случае в функцию нужно передавать не структуру, а указатель
- * на структуру, т.к. в противном случае при выходе из функции IMMPC_PointerDataInit()
- * структура pointerSetData_s будет уничтожена */
-void
-IMMPC_PointerDataInit(
-	immpc_meas_data_s *pDataMeas_s)
-{
-	pIMMPC_MeasData_s = pDataMeas_s;
-
-//	/* сохранение структуры указателей */
-//	IMMPC_pointerSetData_s = pointerSetData_s;
+///* Не правильно, в данном случае в функцию нужно передавать не структуру, а указатель
+// * на структуру, т.к. в противном случае при выходе из функции IMMPC_PointerDataInit()
+// * структура pointerSetData_s будет уничтожена */
+//void
+//IMMPC_PointerDataInit(
+//	immpc_meas_data_s *pDataMeas_s)
+//{
+//	pIMMPC_MeasData_s = pDataMeas_s;
 //
-//	/* заполнение "шапки" пакетов */
-//	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_MAIN;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).packRequests = (uint8_t) 0u;
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_MAIN;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS;
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-//					IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS |
-//					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_PACK;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).packRequests = (uint8_t) 0u;
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_PACK;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-//					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
-//					IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-//					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
-//					IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
-//	}
-//
-//	if (IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s != NULL)
-//	{
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX;
-//		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
-//					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
-//	}
-}
+////	/* сохранение структуры указателей */
+////	IMMPC_pointerSetData_s = pointerSetData_s;
+////
+////	/* заполнение "шапки" пакетов */
+////	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_MAIN;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s)).headMessage_s).packRequests = (uint8_t) 0u;
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_MAIN;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_main_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_raw_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS;
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_9DOF_reserve_calib_pack_s)).headMessage_s).packRequests =	(uint8_t) (
+////					IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS |
+////					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_PACK;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_raw_pack_s)).headMessage_s).packRequests = (uint8_t) 0u;
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_PACK;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calib_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests = (uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_ACC3DOF_reserve_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
+////					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+////					IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_main_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS;
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_GYR3DOF_reserve_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
+////					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+////					IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
+////	}
+////
+////	if (IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s != NULL)
+////	{
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).startFrame = IMMPC_START_FRAME;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).messageID = IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX;
+////		((*(IMMPC_pointerSetData_s.pIMMPC_MAG3DOF_calibmatrix_pack_s)).headMessage_s).packRequests =	(uint8_t) (
+////					IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
+////	}
+//}
 
 /*-------------------------------------------------------------------------*//**
  * @author	Dmitry Tanikeev
@@ -1464,38 +1474,150 @@ IMMPC_GenerateResponseMessage(
 	return ((size_t) 4u);
 }
 
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	08-ноя-2019
+// *
+// * @brief	Функция формирует ответ на запрос
+// *
+// * @param[out]	*pData: 	Указатель на область памяти, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pStruct: 	Указатель на область памяти, в которой содержится
+// * 							структура данных
+// *
+// * @param[in]	structSize: Размерность структуры
+// *
+// * @return Количество байт данных
+// */
+//static size_t
+//IMMPC_GenerateDataMessageFromStruct(
+//	uint8_t *pData,
+//	void *pStruct,
+//	size_t structSize)
+//{
+//	uint8_t *pDataStruct = (uint8_t*) pStruct;
+//
+//	/* сохранение данных */
+//	size_t i;
+//	for (i = 0; i < structSize; i++)
+//	{
+//		*pData++ = *pDataStruct++;
+//	}
+//
+//	return (structSize);
+//}
+
 /*-------------------------------------------------------------------------*//**
  * @author	Dmitry Tanikeev
- * @date	08-ноя-2019
+ * @date	14-ноя-2019
  *
  * @brief	Функция формирует ответ на запрос
  *
  * @param[out]	*pData: 	Указатель на область памяти, в которой будут содержаться
  * 							данные
  *
- * @param[in]	*pStruct: 	Указатель на область памяти, в которой содержится
- * 							структура данных
+ * @param[in]	setTypeMessage:	Тип пакета данных
  *
- * @param[in]	structSize: Размерность структуры
+ * @param[in]	sensorStatus: Статус сенсора
+ *
+ * @param[in]	*pDataMeas3dof:	Указатель на область памяти, в которой храняться данные
+ *
+ * @param[in]   ...     Остальные указатели для копирования в структуру
+ * 						типа "int16_t*"
+ * @param[in]   NULL:	нулевой указатель, по которому функция определяет
+ *                          		конец передаваемых в функцию параметров
  *
  * @return Количество байт данных
  */
 static size_t
-IMMPC_GenerateDataMessageFromStruct(
+IMMPC_GenerateRawDataMessage(
 	uint8_t *pData,
-	void *pStruct,
-	size_t structSize)
+	immpc_message_pack_type_e setTypeMessage,
+	uint16_t sensorStatus,
+	int16_t *pDataMeas3dof,
+	...)
 {
-	uint8_t *pDataStruct = (uint8_t*) pStruct;
+	/* Объявление указателя на переменное число параметров функции */
+	va_list pInParam;
 
-	/* сохранение данных */
-	size_t i;
-	for (i = 0; i < structSize; i++)
+	/* Инициализация указателя */
+	va_start(
+		pInParam,
+		*pDataMeas3dof);
+
+	/* сохранение указателя */
+	int16_t *pData3dofTmp;
+	pData3dofTmp = pDataMeas3dof;
+
+	int16_t *pRawMeas = pData;
+
+	/* запись стартовых байт (Start frame) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) IMMPC_START_FRAME;
+//	*pData[0u] =	(uint8_t) ((IMMPC_START_FRAME & 0xFF00) >> 8u);
+//	*pData[1u] =	(uint8_t) (IMMPC_START_FRAME & 0x00FF);
+
+	/* запись типа сообщения (Message ID + Pack requests) */
+//	*pData[2u] =	(uint8_t) (((uint16_t) setTypeMessage >> 8u) & 0x00FF);
+//	*pData[3u] =	(uint8_t) ((uint16_t) setTypeMessage & 0x00FF);
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) setTypeMessage;
+
+	/* запись статус сенсора (Sensors status) */
+//	*pData[4u] =	(uint8_t) ((sensorStatus >> 8u) & 0x00FF);
+//	*pData[5u] =	(uint8_t) (sensorStatus & 0x00FF);
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) sensorStatus;
+
+
+
+	/* Предварительный размер сообщения с учетом CRC */
+	size_t messageSize = 8u;
+
+	/* запись полезных данных (Payload) */
+	while (pData3dofTmp != NULL)
 	{
-		*pData++ = *pDataStruct++;
+		for(size_t i = 0u; i < 3u; i++)
+		{
+//			*pData++ =	(uint8_t) (((*pData3dofTmp) >> 8u) & 0x00FF);
+//			*pData++ =	(uint8_t) (*pData3dofTmp++ & 0x00FF);
+
+			*pRawMeas++ = *pData3dofTmp++;
+		}
+
+
+		/* передача указателя */
+		/* @todo проверить передачу указателя */
+		pData3dofTmp =
+			va_arg(
+				pInParam,
+				int16_t);
+
+		messageSize += 6u;
 	}
 
-	return (structSize);
+	/* "закрыть" указатель */
+	va_end(pInParam);
+
+	/* вычисление crc */
+//	uint16_t *pCrc = (uint16_t*) pRawMeas;
+//	*pCrc =
+//		CRC_XOR_CCITT_Poly0x1021_Crc16(
+//			(uint8_t*)&pData[2u],
+//			messageSize - 2u);
+
+	/* @todo проверить приведение типов */
+	pRawMeas = (uint16_t*) pRawMeas;
+	pRawMeas = IMMPC_GetCRC_Generic(
+		(uint8_t*)&pData[2u],
+		messageSize);
+
+//	*pData++ =	(uint8_t) ((crc >> 8u) & 0x00FF);
+//	*pData++ =	(uint8_t) (crc & 0x00FF);
+
+
+	return (messageSize);
 }
 
 /*-------------------------------------------------------------------------*//**
@@ -1508,12 +1630,12 @@ IMMPC_GenerateDataMessageFromStruct(
  * 			Ответ может быть как с полезными данными так и без них (т.е. OK, ERROR, INVALID).
  * 			Функция возвращет тип полученного пакета, который сформировани из двух полей пакета сообщения - Message ID и Pack requests.
  *
+ * @param[in]	*pIMMPC_RawData_s:	Указатель на область памяти, в которой содержатся данные с датчиков.
+ *
+ *
  * @param[in]	*pDataIn: 	Указатель на область памяти, в которой содержатся входной пакет данных.
  *
- * @param[in]	buffSize: 	Размер данных.
- *
- * @param[in]	*pIMMPC_Data_s:	Указатель на область памяти, в которой содержатся данные с датчиков.
-
+ * @param[in]	buffSizeIn:	Размер данных.
  * @param[out]	*pDataOut:	Указатель на область памяти, в которой будут содержаться данные
  * 							для выходного пакета
  *
@@ -1523,9 +1645,9 @@ IMMPC_GenerateDataMessageFromStruct(
  */
 immpc_message_pack_type_e
 IMMPC_GetDataMessage(
+	immpc_meas_raw_data_s *pIMMPC_RawData_s,
 	uint8_t *pDataIn,
-	size_t 	buffSize,
-	immpc_meas_data_s *pIMMPC_Data_s,
+	size_t 	buffSizeIn,
 	uint8_t *pDataOut,
 	size_t 	*pLengthOut)
 {
@@ -1538,13 +1660,14 @@ IMMPC_GetDataMessage(
 	/* сброс длины выходного массива */
 	*pLengthOut = (size_t) 0u;
 
+	/* указатель на начало */
 	uint8_t *pMessHeadAddr;
 
 	/* получение типа сообщения */
 	messageTypeReturn_e =
 		IMMPC_GetTypeMessage(
 			pDataIn,
-			buffSize,
+			buffSizeIn,
 			pMessHeadAddr);
 
 	/* тип сообщения определен? */
@@ -1558,7 +1681,7 @@ IMMPC_GetDataMessage(
 	{
 	case IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_main_raw_pack_s))) &&
+		if (	(buffSizeIn >= (size_t) (sizeof(immpc_9dof_main_raw_pack_s))) &&
 				(IMMPC_IsPackValid_9dof_main_raw_pack((immpc_9dof_main_raw_pack_s*) pMessHeadAddr)))
 		{
 			/* запись новых данных в структуру */
@@ -1575,7 +1698,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_9dof_main_calib_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_main_calib_pack_s))) &&
+		if (	(buffSizeIn >= (size_t) (sizeof(immpc_9dof_main_calib_pack_s))) &&
 				(IMMPC_IsPackValid_9dof_main_calib_pack((immpc_9dof_main_calib_pack_s*) pMessHeadAddr)))
 		{
 			/* запись новых данных в структуру */
@@ -1592,7 +1715,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_reserve_raw_pack_s))) &&
+		if (	(buffSizeIn >= (size_t) (sizeof(immpc_9dof_reserve_raw_pack_s))) &&
 				(IMMPC_IsPackValid_9dof_reserve_raw_pack((immpc_9dof_reserve_raw_pack_s*) pMessHeadAddr)))
 		{
 			/* запись новых данных в структуру */
@@ -1609,7 +1732,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_9dof_reserve_calib_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize >= (size_t) (sizeof(immpc_9dof_reserve_calib_pack_s))) &&
+		if (	(buffSizeIn >= (size_t) (sizeof(immpc_9dof_reserve_calib_pack_s))) &&
 				(IMMPC_IsPackValid_9dof_reserve_calib_pack((immpc_9dof_reserve_calib_pack_s*) pMessHeadAddr)))
 		{
 			/* запись новых данных в структуру */
@@ -1626,7 +1749,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize >= (size_t) (sizeof(immpc_mag3dof_raw_pack_s))) &&
+		if (	(buffSizeIn >= (size_t) (sizeof(immpc_mag3dof_raw_pack_s))) &&
 				(IMMPC_IsPackValid_mag3dof_raw_pack((immpc_mag3dof_raw_pack_s*) pMessHeadAddr)))
 		{
 			/* запись новых данных в структуру */
@@ -1643,7 +1766,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_mag3dof_calib_pack_s:
 		/* проверка количества символов и правильности CRC */
-		if (	(buffSize >= (size_t) (sizeof(immpc_mag3dof_calib_pack_s))) &&
+		if (	(buffSizeIn >= (size_t) (sizeof(immpc_mag3dof_calib_pack_s))) &&
 				(IMMPC_IsPackValid_mag3dof_calib_pack((immpc_mag3dof_calib_pack_s*) pMessHeadAddr)))
 		{
 			/* запись новых данных в структуру */
@@ -1660,7 +1783,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s:
 		/* проверка количества символов */
-		if (buffSize >= (size_t) (sizeof(immpc_acc3dof_main_calibmatrix_pack_s)))
+		if (buffSizeIn >= (size_t) (sizeof(immpc_acc3dof_main_calibmatrix_pack_s)))
 		{
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_acc3dof_main_calibmatrix_pack((immpc_acc3dof_main_calibmatrix_pack_s*) pMessHeadAddr))
@@ -1706,7 +1829,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s:
 		/* проверка количества символов */
-		if (buffSize >= (size_t) (sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s)))
+		if (buffSizeIn >= (size_t) (sizeof(immpc_acc3dof_reserve_calibmatrix_pack_s)))
 		{
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_acc3dof_reserve_calibmatrix_pack((immpc_acc3dof_reserve_calibmatrix_pack_s*) pMessHeadAddr))
@@ -1752,7 +1875,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s:
 		/* проверка количества символов */
-		if (buffSize >= (size_t) (sizeof(immpc_gyr3dof_main_calibmatrix_pack_s)))
+		if (buffSizeIn >= (size_t) (sizeof(immpc_gyr3dof_main_calibmatrix_pack_s)))
 		{
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_gyr3dof_main_calibmatrix_pack((immpc_gyr3dof_main_calibmatrix_pack_s*) pMessHeadAddr))
@@ -1798,7 +1921,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s:
 		/* проверка количества символов */
-		if (buffSize >= (size_t) (sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s)))
+		if (buffSizeIn >= (size_t) (sizeof(immpc_gyr3dof_reserve_calibmatrix_pack_s)))
 		{
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack((immpc_gyr3dof_reserve_calibmatrix_pack_s*) pMessHeadAddr))
@@ -1844,7 +1967,7 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s:
 		/* проверка количества символов */
-		if (buffSize >= (size_t) (sizeof(immpc_mag3dof_calibmatrix_pack_s)))
+		if (buffSizeIn >= (size_t) (sizeof(immpc_mag3dof_calibmatrix_pack_s)))
 		{
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_mag3dof_calibmatrix_pack((immpc_mag3dof_calibmatrix_pack_s*) pMessHeadAddr))
@@ -1892,17 +2015,33 @@ IMMPC_GetDataMessage(
 	case IMMPC_MESSAGE_PACK_9dof_main_raw_request_cmd_s:
 		/* формирование ответного сообщения ... */
 		/* проверка количества символов */
-		if (buffSize >= (size_t) (sizeof(immpc_request_or_cmd_pack_s)))
+		if (buffSizeIn >= (size_t) (sizeof(immpc_request_or_cmd_pack_s)))
 		{
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
 			{
-				/* формироваие ответа */
-//				*pLengthOut =
-//					IMMPC_GenerateDataMessageFromStruct(
-//						pDataOut,
-//						IMMPC_pointerSetData_s.pIMMPC_9DOF_main_raw_pack_s,
-//						sizeof (immpc_9dof_main_raw_pack_s));
+				/* установка флага */
+				__IMMPC_SET_BIT(
+					(*pIMMPC_RawData_s).flagsUseData,
+					IMMPC_FLAG_NEED_RAW_MAIN_ACC |
+					IMMPC_FLAG_NEED_RAW_MAIN_GYR |
+					IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC |
+					IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR |
+					IMMPC_FLAG_NEED_RAW_MAG |
+					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
+
+				/* формирование пакета для ответа */
+				*pLengthOut = IMMPC_GenerateRawDataMessage(
+					pDataOut,
+					IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s,
+					pIMMPC_RawData_s->statusMainSensorValidSelfTest,
+					(pIMMPC_RawData_s->dataMainAccGyr).rawMainAcc_a,
+					(pIMMPC_RawData_s->dataMainAccGyr).rawMainGyr_a,
+					(pIMMPC_RawData_s->dataMag).rawMag_a,
+					(pIMMPC_RawData_s->dataMainAccGyr).rawMainTempAcc_a,
+					(pIMMPC_RawData_s->dataMainAccGyr).rawMainTempGyr_a,
+					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
+					NULL);
 			}
 			else
 			{
@@ -1933,6 +2072,56 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s:
 		/* формирование ответного сообщения ... */
+		/* проверка количества символов */
+		if (buffSizeIn >= (size_t) (sizeof(immpc_request_or_cmd_pack_s)))
+		{
+			/* CRC правильный */
+			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
+			{
+				/* установка флага */
+				__IMMPC_SET_BIT(
+					(*pIMMPC_RawData_s).flagsUseData,
+					IMMPC_FLAG_NEED_RAW_RESERVE_ACC |
+					IMMPC_FLAG_NEED_RAW_RESERVE_GYR |
+					IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC |
+					IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR |
+					IMMPC_FLAG_NEED_RAW_MAG |
+					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
+
+				/* формирование пакета для ответа */
+				*pLengthOut = IMMPC_GenerateRawDataMessage(
+					pDataOut,
+					IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s,
+					pIMMPC_RawData_s->statusReserveSensorValidSelfTest,
+					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveAcc_a,
+					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveGyr_a,
+					(pIMMPC_RawData_s->dataMag).rawMag_a,
+					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveTempAcc_a,
+					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveTempGyr_a,
+					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
+					NULL);
+			}
+			else
+			{
+				/* формирование ответа - INVALID_CRC */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+
+				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+		}
+		else
+		{
+			/* формироваие ответа - ERROR */
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+
+			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+		}
 		break;
 
 	case IMMPC_MESSAGE_PACK_9dof_reserve_calib_request_cmd_s:
@@ -1961,6 +2150,44 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_mag3dof_raw_request_cmd_s:
 		/* формирование ответного сообщения ... */
+		/* проверка количества символов */
+		if (buffSizeIn >= (size_t) (sizeof(immpc_request_or_cmd_pack_s)))
+		{
+			/* CRC правильный */
+			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
+			{
+				/* установка флага */
+				__IMMPC_SET_BIT(
+					(*pIMMPC_RawData_s).flagsUseData,
+					IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM);
+
+				/* формироваие ответа - OK */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+			}
+			else
+			{
+				/* формирование ответа - INVALID_CRC */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+
+				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+		}
+		else
+		{
+			/* формироваие ответа - ERROR */
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+
+			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+		}
 		break;
 
 	case IMMPC_MESSAGE_PACK_mag3dof_calib_request_cmd_s:
@@ -1969,7 +2196,47 @@ IMMPC_GetDataMessage(
 
 	case IMMPC_MESSAGE_PACK_write_all_calibmatrix_in_eeprom_cmd_s:
 		/* формирование ответного сообщения ... */
-		/* установка события для записи в EEPROM ... */
+		/* проверка количества символов */
+		if (buffSizeIn >= (size_t) (sizeof(immpc_request_or_cmd_pack_s)))
+		{
+			/* CRC правильный */
+			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
+			{
+				/* установка флага */
+				__IMMPC_SET_BIT(
+					(*pIMMPC_RawData_s).flagsUseData,
+					IMMPC_FLAG_NEED_RAW_MAG |
+					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
+
+				/* формирование пакета для ответа */
+				*pLengthOut = IMMPC_GenerateRawDataMessage(
+					pDataOut,
+					IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s,
+					(pIMMPC_RawData_s->dataMag).rawMag_a,
+					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
+					NULL);
+			}
+			else
+			{
+				/* формирование ответа - INVALID_CRC */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+
+				messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+			}
+		}
+		else
+		{
+			/* формироваие ответа - ERROR */
+			*pLengthOut =
+				IMMPC_GenerateResponseMessage(
+					pDataOut,
+					IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR);
+
+			messageTypeReturn_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+		}
 		break;
 
 	/* ответ - IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR */
@@ -2005,47 +2272,47 @@ IMMPC_GetDataMessage(
 
 
 /*#### |Begin| --> Секция - "Описание локальных функций" #####################*/
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Перезапись данных типа __IMMPC_FPT__.
- *
- * @param[out]	*pDataSet: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pDataSet:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_CopyMeasData_FPT(
-	__IMMPC_FPT__ *pDataSet,
-	__IMMPC_FPT__ *pDataGet)
-{
-	*pDataSet++ = *pDataGet++;
-	*pDataSet++ = *pDataGet++;
-	*pDataSet = *pDataGet;
-}
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Перезапись данных типа __IMMPC_FPT__.
+// *
+// * @param[out]	*pDataSet: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pDataSet:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_CopyMeasData_FPT(
+//	__IMMPC_FPT__ *pDataSet,
+//	__IMMPC_FPT__ *pDataGet)
+//{
+//	*pDataSet++ = *pDataGet++;
+//	*pDataSet++ = *pDataGet++;
+//	*pDataSet = *pDataGet;
+//}
 
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	12-ноя-2019
- *
- * @brief	Перезапись данных типа int16_t.
- *
- * @param[out]	*pDataSet: 	Указатель на область памяти структуры, в которой будут содержаться
- * 							данные
- *
- * @param[in]	*pDataSet:	Указатель на область памяти, из которой будут считываться данные
- */
-__IMMPC_ALWAYS_INLINE void
-IMMPC_CopyMeasData_int16(
-	int16_t *pDataSet,
-	int16_t *pDataGet)
-{
-	*pDataSet++ = *pDataGet++;
-	*pDataSet++ = *pDataGet++;
-	*pDataSet = *pDataGet;
-}
+///*-------------------------------------------------------------------------*//**
+// * @author	Dmitry Tanikeev
+// * @date	12-ноя-2019
+// *
+// * @brief	Перезапись данных типа int16_t.
+// *
+// * @param[out]	*pDataSet: 	Указатель на область памяти структуры, в которой будут содержаться
+// * 							данные
+// *
+// * @param[in]	*pDataSet:	Указатель на область памяти, из которой будут считываться данные
+// */
+//__IMMPC_ALWAYS_INLINE void
+//IMMPC_CopyMeasData_int16(
+//	int16_t *pDataSet,
+//	int16_t *pDataGet)
+//{
+//	*pDataSet++ = *pDataGet++;
+//	*pDataSet++ = *pDataGet++;
+//	*pDataSet = *pDataGet;
+//}
 /*#### |End  | <-- Секция - "Описание локальных функций" #####################*/
 
 
