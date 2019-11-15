@@ -2034,7 +2034,7 @@ IMMPC_GetDataMessage(
 				*pLengthOut = IMMPC_GenerateRawDataMessage(
 					pDataOut,
 					IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s,
-					pIMMPC_RawData_s->statusMainSensorValidSelfTest,
+					(pIMMPC_RawData_s->dataMainAccGyr).sensorStatus,
 					(pIMMPC_RawData_s->dataMainAccGyr).rawMainAcc_a,
 					(pIMMPC_RawData_s->dataMainAccGyr).rawMainGyr_a,
 					(pIMMPC_RawData_s->dataMag).rawMag_a,
@@ -2092,7 +2092,7 @@ IMMPC_GetDataMessage(
 				*pLengthOut = IMMPC_GenerateRawDataMessage(
 					pDataOut,
 					IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s,
-					pIMMPC_RawData_s->statusReserveSensorValidSelfTest,
+					(pIMMPC_RawData_s->dataReserveAccGyr).sensorStatus,
 					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveAcc_a,
 					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveGyr_a,
 					(pIMMPC_RawData_s->dataMag).rawMag_a,
