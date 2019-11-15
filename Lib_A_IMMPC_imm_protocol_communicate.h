@@ -210,6 +210,20 @@
 #define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR				(((uint32_t)(0b01000000) << 16) & 0x00FF0000)
 #define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM			(((uint32_t)(0b00100000) << 16) & 0x00FF0000)
 
+/* биты Sensor status */
+#define IMMPC_ACC_X_SELF_TEST								(((uint16_t)(0b10000000) << 8) & 0xFF00)
+#define IMMPC_ACC_Y_SELF_TEST								(((uint16_t)(0b01000000) << 8) & 0xFF00)
+#define IMMPC_ACC_Z_SELF_TEST								(((uint16_t)(0b00100000) << 8) & 0xFF00)
+#define IMMPC_GYR_X_SELF_TEST								(((uint16_t)(0b00010000) << 8) & 0xFF00)
+#define IMMPC_GYR_Y_SELF_TEST								(((uint16_t)(0b00001000) << 8) & 0xFF00)
+#define IMMPC_GYR_Z_SELF_TEST								(((uint16_t)(0b00000100) << 8) & 0xFF00)
+#define IMMPC_MAG_X_SELF_TEST								(((uint16_t)(0b00000010) << 8) & 0xFF00)
+#define IMMPC_MAG_Y_SELF_TEST								(((uint16_t)(0b00000001) << 8) & 0xFF00)
+#define IMMPC_MAG_Z_SELF_TEST								((uint16_t)(0b10000000) & 0x00FF)
+#define IMMPC_ACC_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b01000000) & 0x00FF)
+#define IMMPC_GYR_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b00100000) & 0x00FF)
+#define IMMPC_MAG_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b00010000) & 0x00FF)
+
 /* идентификаторы */
 typedef enum
 {
@@ -717,6 +731,85 @@ typedef struct
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
 __IMMPC_ALWAYS_INLINE void
+IMMPC_SetMainRawAcc(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pRawAcc)
+{
+	pRawData_s->dataMainAccGyr.rawMainAcc_a[0u] = *pRawAcc++;
+	pRawData_s->dataMainAccGyr.rawMainAcc_a[1u] = *pRawAcc++;
+	pRawData_s->dataMainAccGyr.rawMainAcc_a[2u] = *pRawAcc;
+
+	/* @todo Установить бит обновления данных гироскопа */
+	__IMMPC_SET_BIT(
+		pRawData_s->dataMainAccGyr.sensorStatus,
+		IMMPC_ACC_XYZ_DATA_WAS_UPDATE);
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetMainRawGyr(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pRawGyr)
+{
+	pRawData_s->dataMainAccGyr.rawMainGyr_a[0u] = *pRawGyr++;
+	pRawData_s->dataMainAccGyr.rawMainGyr_a[1u] = *pRawGyr++;
+	pRawData_s->dataMainAccGyr.rawMainGyr_a[2u] = *pRawGyr;
+
+	/* @todo Установить бит обновления данных акселерометра */
+	__IMMPC_SET_BIT(
+		pRawData_s->dataMainAccGyr.sensorStatus,
+		IMMPC_GYR_XYZ_DATA_WAS_UPDATE);
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetMainRawGyrTemperature(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pGyrTemperature)
+{
+	pRawData_s->dataMainAccGyr.rawMainTempGyr_a[0u] = *pGyrTemperature++;
+	pRawData_s->dataMainAccGyr.rawMainTempGyr_a[1u] = *pGyrTemperature++;
+	pRawData_s->dataMainAccGyr.rawMainTempGyr_a[2u] = *pGyrTemperature;
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetMainRawAccTemperature(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pAccTemperature)
+{
+	pRawData_s->dataMainAccGyr.rawMainTempAcc_a[0u] = *pAccTemperature++;
+	pRawData_s->dataMainAccGyr.rawMainTempAcc_a[1u] = *pAccTemperature++;
+	pRawData_s->dataMainAccGyr.rawMainTempAcc_a[2u] = *pAccTemperature;
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetMag(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pRawAcc)
+{
+	pRawData_s->dataMag.rawMag_a[0u] = *pRawAcc++;
+	pRawData_s->dataMag.rawMag_a[1u] = *pRawAcc++;
+	pRawData_s->dataMag.rawMag_a[2u] = *pRawAcc;
+
+	/* @todo Установить бит обновления данных гироскопа */
+	__IMMPC_SET_BIT(
+		pRawData_s->dataMainAccGyr.sensorStatus,
+		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
+
+	__IMMPC_SET_BIT(
+		pRawData_s->dataReserveAccGyr.sensorStatus,
+		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetMagSelfTest(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pRawGyr)
+{
+	pRawData_s->dataMag.rawMagSelfTest[0u] = *pRawGyr++;
+	pRawData_s->dataMag.rawMagSelfTest[1u] = *pRawGyr++;
+	pRawData_s->dataMag.rawMagSelfTest[2u] = *pRawGyr;
+}
+
+__IMMPC_ALWAYS_INLINE void
 IMMPC_SetReserveRawAcc(
 	immpc_meas_raw_data_s *pRawData_s,
 	int16_t *pRawAcc)
@@ -726,6 +819,9 @@ IMMPC_SetReserveRawAcc(
 	pRawData_s->dataReserveAccGyr.rawReserveAcc_a[2u] = *pRawAcc;
 
 	/* @todo Установить бит обновления данных гироскопа */
+	__IMMPC_SET_BIT(
+		pRawData_s->dataReserveAccGyr.sensorStatus,
+		IMMPC_ACC_XYZ_DATA_WAS_UPDATE);
 }
 
 __IMMPC_ALWAYS_INLINE void
@@ -738,6 +834,9 @@ IMMPC_SetReserveRawGyr(
 	pRawData_s->dataReserveAccGyr.rawReserveGyr_a[2u] = *pRawGyr;
 
 	/* @todo Установить бит обновления данных акселерометра */
+	__IMMPC_SET_BIT(
+		pRawData_s->dataReserveAccGyr.sensorStatus,
+		IMMPC_GYR_XYZ_DATA_WAS_UPDATE);
 }
 
 __IMMPC_ALWAYS_INLINE void
