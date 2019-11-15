@@ -665,6 +665,8 @@ typedef struct
 
 	int16_t rawMainTempAcc_a[3u];
 	int16_t rawMainTempGyr_a[3u];
+
+	uint16_t sensorStatus;
 } immpc_raw_main_acc_gyr_data_s;
 
 /* структура "сырых" данных магнитометра */
@@ -672,6 +674,8 @@ typedef struct
 {
 	int16_t rawMag_a[3u];
 	int16_t rawMagSelfTest[3u];
+
+	uint16_t sensorStatus;
 } immpc_raw_mag_data_s;
 
 /* структура "сырых" данных акселерометра и гироскопа
@@ -684,6 +688,8 @@ typedef struct
 
 	int16_t rawReserveTempAcc_a[3u];
 	int16_t rawReserveTempGyr_a[3u];
+
+	uint16_t sensorStatus;
 } immpc_raw_reserve_acc_gyr_data_s;
 
 /* структура данных */
@@ -693,10 +699,6 @@ typedef struct
 	immpc_raw_main_acc_gyr_data_s dataMainAccGyr;
 	immpc_raw_reserve_acc_gyr_data_s dataReserveAccGyr;
 	immpc_raw_mag_data_s dataMag;
-
-	/* биты сенсор статус (см. Sensors status) */
-	uint16_t statusMainSensorValidSelfTest;
-	uint16_t statusReserveSensorValidSelfTest;
 
 	/* флаги (см. выше #define IMMPC_FLAG_NEED...) */
 	uint32_t flagsUseData;
