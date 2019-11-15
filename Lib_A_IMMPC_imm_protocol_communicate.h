@@ -716,6 +716,50 @@ typedef struct
 
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetReserveRawAcc(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pRawAcc)
+{
+	pRawData_s->dataReserveAccGyr.rawReserveAcc_a[0u] = *pRawAcc++;
+	pRawData_s->dataReserveAccGyr.rawReserveAcc_a[1u] = *pRawAcc++;
+	pRawData_s->dataReserveAccGyr.rawReserveAcc_a[2u] = *pRawAcc;
+
+	/* @todo Установить бит обновления данных гироскопа */
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetReserveRawGyr(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pRawGyr)
+{
+	pRawData_s->dataReserveAccGyr.rawReserveGyr_a[0u] = *pRawGyr++;
+	pRawData_s->dataReserveAccGyr.rawReserveGyr_a[1u] = *pRawGyr++;
+	pRawData_s->dataReserveAccGyr.rawReserveGyr_a[2u] = *pRawGyr;
+
+	/* @todo Установить бит обновления данных акселерометра */
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetReserveRawGyrTemperature(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pGyrTemperature)
+{
+	pRawData_s->dataReserveAccGyr.rawReserveTempGyr_a[0u] = *pGyrTemperature++;
+	pRawData_s->dataReserveAccGyr.rawReserveTempGyr_a[1u] = *pGyrTemperature++;
+	pRawData_s->dataReserveAccGyr.rawReserveTempGyr_a[2u] = *pGyrTemperature;
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetReserveRawAccTemperature(
+	immpc_meas_raw_data_s *pRawData_s,
+	int16_t *pAccTemperature)
+{
+	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[0u] = *pAccTemperature++;
+	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[1u] = *pAccTemperature++;
+	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[2u] = *pAccTemperature;
+}
+
 extern immpc_message_pack_type_e
 IMMPC_GetDataMessage(
 	immpc_meas_raw_data_s *pIMMPC_RawData_s,
