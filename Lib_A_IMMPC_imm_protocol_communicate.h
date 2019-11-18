@@ -916,7 +916,7 @@ IMMPC_IsMain6DofNeed(
 	immpc_meas_raw_data_s *pMeasRawData_s)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
-	return (IMMPC_IsMainDofNeedByVar(pMeasRawData_s->flagsUseData));
+	return (IMMPC_IsMain6DofNeedByVar(pMeasRawData_s->flagsUseData));
 }
 
 __IMMPC_ALWAYS_INLINE void
