@@ -202,17 +202,47 @@
 #define IMMPC_FLAG_NEED_RAW_MAIN_ACC_Pos					(31u)
 #define IMMPC_FLAG_NEED_RAW_MAIN_ACC_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_ACC_Pos)
 #define IMMPC_FLAG_NEED_RAW_MAIN_ACC 						((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_ACC_Msk))
-
-#define IMMPC_FLAG_NEED_RAW_MAIN_GYR						(((uint32_t)(0b01000000) << 24) & 0xFF000000)
-#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC					(((uint32_t)(0b00100000) << 24) & 0xFF000000)
-#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR					(((uint32_t)(0b00010000) << 24) & 0xFF000000)
-#define IMMPC_FLAG_NEED_RAW_MAG								(((uint32_t)(0b00001000) << 24) & 0xFF000000)
-#define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST					(((uint32_t)(0b00000100) << 24) & 0xFF000000)
-#define IMMPC_FLAG_NEED_RAW_RESERVE_ACC						(((uint32_t)(0b00000010) << 24) & 0xFF000000)
-#define IMMPC_FLAG_NEED_RAW_RESERVE_GYR						(((uint32_t)(0b00000001) << 24) & 0xFF000000)
-#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC				(((uint32_t)(0b10000000) << 16) & 0x00FF0000)
-#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR				(((uint32_t)(0b01000000) << 16) & 0x00FF0000)
-#define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM			(((uint32_t)(0b00100000) << 16) & 0x00FF0000)
+//#define IMMPC_FLAG_NEED_RAW_MAIN_GYR						(((uint32_t)(0b01000000) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_MAIN_GYR_Pos					(30u)
+#define IMMPC_FLAG_NEED_RAW_MAIN_GYR_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_GYR_Pos)
+#define IMMPC_FLAG_NEED_RAW_MAIN_GYR 						((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_GYR_Msk))
+//#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC					(((uint32_t)(0b00100000) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Pos				(29u)
+#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Msk				(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Pos)
+#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC 					((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Msk))
+//#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR					(((uint32_t)(0b00010000) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Pos				(28u)
+#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Msk				(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Pos)
+#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR 					((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Msk))
+//#define IMMPC_FLAG_NEED_RAW_MAG							(((uint32_t)(0b00001000) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_MAG_Pos							(27u)
+#define IMMPC_FLAG_NEED_RAW_MAG_Msk							(0x1u << IMMPC_FLAG_NEED_RAW_MAG_Pos)
+#define IMMPC_FLAG_NEED_RAW_MAG 							((uint32_t)(IMMPC_FLAG_NEED_RAW_MAG_Msk))
+//#define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST					(((uint32_t)(0b00000100) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Pos				(26u)
+#define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Msk				(0x1u << IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Pos)
+#define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST					((uint32_t)(IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Msk))
+//#define IMMPC_FLAG_NEED_RAW_RESERVE_ACC					(((uint32_t)(0b00000010) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Pos					(25u)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Pos)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_ACC 					((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Msk))
+//#define IMMPC_FLAG_NEED_RAW_RESERVE_GYR					(((uint32_t)(0b00000001) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Pos					(24u)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Pos)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_GYR 					((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Msk))
+//#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC				(((uint32_t)(0b10000000) << 16) & 0x00FF0000)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Pos			(23u)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Msk			(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Pos)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC 				((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Msk))
+//#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR				(((uint32_t)(0b01000000) << 16) & 0x00FF0000)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Pos			(22u)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Msk			(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Pos)
+#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR 				((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Msk))
+//#define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM		(((uint32_t)(0b00100000) << 16) & 0x00FF0000)
+#define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Pos		(21u)
+#define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Msk		(0x1u << IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Pos)
+#define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM 			((uint32_t)(IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Msk))
+// next 													(20u)
 
 /* биты Sensor status */
 #define IMMPC_ACC_X_SELF_TEST								(((uint16_t)(0b10000000) << 8) & 0xFF00)
@@ -734,6 +764,9 @@ typedef struct
 
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
+
+/* Запись данных в структуру -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
 __IMMPC_ALWAYS_INLINE void
 IMMPC_SetMainRawAcc(
 	immpc_meas_raw_data_s *pRawData_s,
@@ -863,6 +896,37 @@ IMMPC_SetReserveRawAccTemperature(
 	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[2u] = *pAccTemperature;
 }
 
+/* Запись данных в структуру --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+/* Работа с флагами -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+
+__IMMPC_ALWAYS_INLINE size_t
+IMMPC_IsMain6DofNeedByVar(
+	size_t flags)
+{
+	/* Возвращает 1 если нужны данные от резервного измерителя */
+	return (__IMMPC_IS_SET_BIT(
+				flags,
+				(IMMPC_FLAG_NEED_RAW_MAIN_ACC |
+				 IMMPC_FLAG_NEED_RAW_MAIN_GYR)));
+}
+
+__IMMPC_ALWAYS_INLINE size_t
+IMMPC_IsMain6DofNeed(
+	immpc_meas_raw_data_s *pMeasRawData_s)
+{
+	/* Возвращает 1 если нужны данные от резервного измерителя */
+	return (IMMPC_IsMainDofNeedByVar(pMeasRawData_s->flagsUseData));
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetMain6DofNeedFlag(
+	immpc_meas_raw_data_s *pMeasRawData_s)
+{
+	__IMMPC_SET_BIT(
+		pMeasRawData_s->flagsUseData,
+		(IMMPC_FLAG_NEED_RAW_MAIN_ACC | IMMPC_FLAG_NEED_RAW_MAIN_GYR));
+}
 
 __IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsReserve6DofNeedByVar(
@@ -891,6 +955,35 @@ IMMPC_SetReserve6DofNeedFlag(
 		pMeasRawData_s->flagsUseData,
 		(IMMPC_FLAG_NEED_RAW_RESERVE_ACC | IMMPC_FLAG_NEED_RAW_RESERVE_GYR));
 }
+
+__IMMPC_ALWAYS_INLINE size_t
+IMMPC_IsMag3DofNeedByVar(
+	size_t flags)
+{
+	/* Возвращает 1 если нужны данные от резервного измерителя */
+	return (__IMMPC_IS_SET_BIT(
+				flags,
+				(IMMPC_FLAG_NEED_RAW_MAG)));
+}
+
+__IMMPC_ALWAYS_INLINE size_t
+IMMPC_IsMag3DofNeed(
+	immpc_meas_raw_data_s *pMeasRawData_s)
+{
+	/* Возвращает 1 если нужны данные от резервного измерителя */
+	return (IMMPC_IsMag3DofNeedByVar(pMeasRawData_s->flagsUseData));
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetMag3DofNeedFlag(
+	immpc_meas_raw_data_s *pMeasRawData_s)
+{
+	__IMMPC_SET_BIT(
+		pMeasRawData_s->flagsUseData,
+		(IMMPC_FLAG_NEED_RAW_MAG));
+}
+
+/* Работа с флагами --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
 extern immpc_message_pack_type_e
 IMMPC_GetDataMessage(
