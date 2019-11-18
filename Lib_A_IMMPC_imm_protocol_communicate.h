@@ -169,7 +169,7 @@
 
 #define __IMMPC_READ_REG(REG)      		((REG))
 
-#define __IMMPC_IS_SET_BIT(REG, BIT)	((REG) & (BIT) == BIT)
+#define __IMMPC_IS_SET_BIT(REG, BIT)	(((REG) & (BIT)) == (BIT))
 
 #define IMMPC_START_FRAME									((uint16_t)	0xAAAA)
 #define IMMPC_RESPONCE_END_FRAME							((uint8_t)	0x55)
@@ -198,7 +198,11 @@
 #define __IMMPC_GetOffssetID(pMem)							((uint8_t)pMem[2u])
 
 /* флаги необходимости "сырых" данных */
-#define IMMPC_FLAG_NEED_RAW_MAIN_ACC						(((uint32_t)(0b10000000) << 24) & 0xFF000000)
+// #define IMMPC_FLAG_NEED_RAW_MAIN_ACC						(((uint32_t)(0b10000000) << 24) & 0xFF000000)
+#define IMMPC_FLAG_NEED_RAW_MAIN_ACC_Pos					(31u)
+#define IMMPC_FLAG_NEED_RAW_MAIN_ACC_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_ACC_Pos)
+#define IMMPC_FLAG_NEED_RAW_MAIN_ACC 						((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_ACC_Msk))
+
 #define IMMPC_FLAG_NEED_RAW_MAIN_GYR						(((uint32_t)(0b01000000) << 24) & 0xFF000000)
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC					(((uint32_t)(0b00100000) << 24) & 0xFF000000)
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR					(((uint32_t)(0b00010000) << 24) & 0xFF000000)
@@ -857,6 +861,35 @@ IMMPC_SetReserveRawAccTemperature(
 	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[0u] = *pAccTemperature++;
 	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[1u] = *pAccTemperature++;
 	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[2u] = *pAccTemperature;
+}
+
+
+__IMMPC_ALWAYS_INLINE size_t
+IMMPC_IsReserve6DofNeedByVar(
+	size_t flags)
+{
+	/* Возвращает 1 если нужны данные от резервного измерителя */
+	return (__IMMPC_IS_SET_BIT(
+				flags,
+				(IMMPC_FLAG_NEED_RAW_RESERVE_ACC |
+				 IMMPC_FLAG_NEED_RAW_RESERVE_GYR)));
+}
+
+__IMMPC_ALWAYS_INLINE size_t
+IMMPC_IsReserve6DofNeed(
+	immpc_meas_raw_data_s *pMeasRawData_s)
+{
+	/* Возвращает 1 если нужны данные от резервного измерителя */
+	return (IMMPC_IsReserve6DofNeedByVar(pMeasRawData_s->flagsUseData));
+}
+
+__IMMPC_ALWAYS_INLINE void
+IMMPC_SetReserve6DofNeedFlag(
+	immpc_meas_raw_data_s *pMeasRawData_s)
+{
+	__IMMPC_SET_BIT(
+		pMeasRawData_s->flagsUseData,
+		(IMMPC_FLAG_NEED_RAW_RESERVE_ACC | IMMPC_FLAG_NEED_RAW_RESERVE_GYR));
 }
 
 extern immpc_message_pack_type_e
