@@ -258,6 +258,13 @@
 #define IMMPC_GYR_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b00100000) & 0x00FF)
 #define IMMPC_MAG_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b00010000) & 0x00FF)
 
+/* скорости передачи данных при использовании USART */
+#define IMMPC_USART_BAUDRATE_LOW							(57600U)
+#define IMMPC_USART_BAUDRATE_MEDIUM							(115200U)
+#define IMMPC_USART_BAUDRATE_FAST							(460800U)
+#define IMMPC_USART_BAUDRATE_VERY_FAST						(921600U)
+#define IMMPC_USART_BAUDRATE_DEFAULT						(IMMPC_USART_BAUDRATE_LOW)
+
 /* идентификаторы */
 typedef enum
 {
