@@ -2244,23 +2244,19 @@ IMMPC_GetDataMessage(
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
 			{
-				/* установка флага */
+
+				/* Сброс флагов */
+				pIMMPC_RawData_s->flagsUseData = 0u;
+
+				/* установка флагов */
 				__IMMPC_SET_BIT(
-					(*pIMMPC_RawData_s).flagsUseData,
+					pIMMPC_RawData_s->flagsUseData,
 					IMMPC_FLAG_NEED_RAW_MAIN_ACC |
 					IMMPC_FLAG_NEED_RAW_MAIN_GYR |
 					IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC |
 					IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR |
 					IMMPC_FLAG_NEED_RAW_MAG |
 					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
-
-				/* сброс флагов */
-				__IMMPC_CLEAR_BIT(
-					(*pIMMPC_RawData_s).flagsUseData,
-					IMMPC_FLAG_NEED_RAW_RESERVE_ACC |
-					IMMPC_FLAG_NEED_RAW_RESERVE_GYR |
-					IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC |
-					IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR);
 
 				/* формирование пакета для ответа */
 				*pLengthOut = IMMPC_GenerateRawDataMessage(

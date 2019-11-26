@@ -909,7 +909,7 @@ IMMPC_SetReserveRawAccTemperature(
 
 __IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsMain6DofNeedByVar(
-	size_t flags)
+	uint32_t flags)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
 	return (__IMMPC_IS_SET_BIT(
@@ -937,7 +937,7 @@ IMMPC_SetMain6DofNeedFlag(
 
 __IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsReserve6DofNeedByVar(
-	size_t flags)
+	uint32_t flags)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
 	return (__IMMPC_IS_SET_BIT(
