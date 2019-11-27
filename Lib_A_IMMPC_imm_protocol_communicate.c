@@ -290,6 +290,12 @@ IMMPC_GenerateResponseMessage(
 	immpc_message_id_e idResponse);
 
 static size_t
+IMMPC_GenerateCalibMatrixMessage(
+    uint8_t *pData,
+    immpc_message_pack_type_e setTypeMessage,
+    double *pCalibMatrix3x4);
+
+static size_t
 IMMPC_GenerateRawDataMessage(
 	uint8_t *pData,
 	immpc_message_pack_type_e setTypeMessage,
@@ -1474,6 +1480,65 @@ IMMPC_GenerateResponseMessage(
 	return ((size_t) 4u);
 }
 
+/*-------------------------------------------------------------------------*//**
+ * @author    Dmitry Tanikeev
+ * @date    18-ноя-2019
+ *
+ * @brief    Функция формирует ответ на запрос
+ *
+ * @param[out]    *pData:     Указатель на область памяти, в которой будут содержаться
+ *                             данные
+ *
+ * @param[in]    setTypeMessage:    Тип пакета данных
+
+*
+ * @param[in]    *pCalibMatrix3x4:    Указатель на область памяти, в которой храняться калибровочные матрицы
+ *
+ * @return Количество байт данных
+ */
+static size_t
+IMMPC_GenerateCalibMatrixMessage(
+    uint8_t *pData,
+    immpc_message_pack_type_e setTypeMessage,
+    double *pCalibMatrix3x4)
+{
+    /* сохранение указателя */
+    int16_t *pCalibMatrixTmp;
+    pCalibMatrixTmp = pCalibMatrix3x4;
+
+    int16_t *pPacket = pData;
+
+    /* запись стартовых байт (Start frame) */
+    /* @todo проверить приведение типов */
+    *pPacket++ = (int16_t) IMMPC_START_FRAME;
+
+    /* запись типа сообщения (Message ID + Pack requests) */
+    /* @todo проверить приведение типов */
+    *pPacket++ = (int16_t) setTypeMessage;
+
+    /* Предварительный размер сообщения с учетом CRC */
+    size_t messageSize = 6u;
+
+    /* прогнать 4x3x4 = 48 раз:
+     * 4 - двуйбайтных числа в типе double
+     * 3x4 - размерность матрицы
+     */
+    for(size_t i = 0u; i < 48u; i++)
+    {
+        *pPacket++ = *pCalibMatrixTmp++;
+
+        messageSize += 2u;
+    }
+
+    /* @todo проверить приведение типов */
+    pPacket = (uint16_t*) pPacket;
+    pPacket = IMMPC_GetCRC_Generic(
+        (uint8_t*)pData,
+        messageSize);
+
+    return (messageSize);
+}
+
 ///*-------------------------------------------------------------------------*//**
 // * @author	Dmitry Tanikeev
 // * @date	08-ноя-2019
@@ -1570,8 +1635,6 @@ IMMPC_GenerateRawDataMessage(
 	/* @todo проверить приведение типов */
 	*pRawMeas++ = (int16_t) sensorStatus;
 
-
-
 	/* Предварительный размер сообщения с учетом CRC */
 	size_t messageSize = 8u;
 
@@ -1610,7 +1673,7 @@ IMMPC_GenerateRawDataMessage(
 	/* @todo проверить приведение типов */
 	pRawMeas = (uint16_t*) pRawMeas;
 	pRawMeas = IMMPC_GetCRC_Generic(
-		(uint8_t*)&pData[2u],
+		(uint8_t*)pData,
 		messageSize);
 
 //	*pData++ =	(uint8_t) ((crc >> 8u) & 0x00FF);
@@ -1620,64 +1683,7 @@ IMMPC_GenerateRawDataMessage(
 	return (messageSize);
 }
 
-/*-------------------------------------------------------------------------*//**
- * @author	Dmitry Tanikeev
- * @date	18-ноя-2019
- *
- * @brief	Функция формирует ответ на запрос
- *
- * @param[out]	*pData: 	Указатель на область памяти, в которой будут содержаться
- * 							данные
- *
- * @param[in]	setTypeMessage:	Тип пакета данных
 
-*
- * @param[in]	*pCalibMatrix3x4:	Указатель на область памяти, в которой храняться калибровочные матрицы
- *
- * @return Количество байт данных
- */
-static size_t
-IMMPC_GenerateCalibMatrixMessage(
-	uint8_t *pData,
-	immpc_message_pack_type_e setTypeMessage,
-	double *pCalibMatrix3x4)
-{
-	/* сохранение указателя */
-	int16_t *pCalibMatrixTmp;
-	pCalibMatrixTmp = pCalibMatrix3x4;
-
-	int16_t *pPacket = pData;
-
-	/* запись стартовых байт (Start frame) */
-	/* @todo проверить приведение типов */
-	*pPacket++ = (int16_t) IMMPC_START_FRAME;
-
-	/* запись типа сообщения (Message ID + Pack requests) */
-	/* @todo проверить приведение типов */
-	*pPacket++ = (int16_t) setTypeMessage;
-
-	/* Предварительный размер сообщения с учетом CRC */
-	size_t messageSize = 6u;
-
-	/* прогнать 4x3x4 = 48 раз:
-	 * 4 - двуйбайтных числа в типе double
-	 * 3x4 - размерность матрицы
-	 */
-	for(size_t i = 0u; i < 48u; i++)
-	{
-		*pPacket++ = *pCalibMatrixTmp++;
-
-		messageSize += 2u;
-	}
-
-	/* @todo проверить приведение типов */
-	pPacket = (uint16_t*) pPacket;
-	pPacket = IMMPC_GetCRC_Generic(
-		(uint8_t*)&pData[2u],
-		messageSize);
-
-	return (messageSize);
-}
 
 /*-------------------------------------------------------------------------*//**
  * @author	Dmitry Tanikeev
@@ -2502,6 +2508,268 @@ IMMPC_GetDataMessage(
 	}
 
 	return (messageTypeReturn_e);
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author		Dmitry Tanikeev
+ * @date		27-ноя-2019
+ *
+ * @brief		Функция формирует пакет для отправки "сырых" данных основных
+ * 				измерителей
+ *
+ * @param[in]	*pIMMPC_RawData_s:	Указатель на область памяти, в которой храняться
+ * 									"сырые" данные
+ *
+ * @param[out]	*pDataTx: 	Указатель на область памяти, в которой будут
+ * 							содержаться данные
+ * 							@note 	Контрольная сумма записывается в конец
+ * 									пакета данных
+ *
+ * @param[out]	*pLengthDataTx: Указатель на область памяти, в которой будет
+ * 								содержаться количество отправляемых данных
+ */
+static void
+IMMPC_Generate_9dof_main_raw_pack(
+	immpc_meas_raw_data_s *pIMMPC_RawData_s,
+	uint8_t *pDataTx,
+	size_t *pLengthDataTx)
+{
+	int16_t *pRawMeas;
+	pRawMeas = (int16_t*) pDataTx;
+
+	/* запись стартовых байт (Start frame) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) IMMPC_START_FRAME;
+
+	/* запись типа сообщения (Message ID + Pack requests) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) IMMPC_MESSAGE_PACK_9dof_main_raw_request_cmd_s;
+
+	/* запись статус сенсора (Sensors status) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) (
+		pIMMPC_RawData_s->dataMainAccGyr.sensorStatus |
+		pIMMPC_RawData_s->dataMag.sensorStatus);
+	/* сброс статусов сенсора */
+	pIMMPC_RawData_s->dataMainAccGyr.sensorStatus = 0;
+	pIMMPC_RawData_s->dataMag.sensorStatus = 0;
+
+	int16_t *pData3dofTmp;
+	size_t i;
+
+	/* запись измерений 3-х осей акселерометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainAcc_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись измерений 3-х осей гироскопа  (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainGyr_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись измерений 3-х осей магнитометра  (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMag_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись температуры каждой оси акселерометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainTempAcc_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись температуры каждой оси акселерометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainTempGyr_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись Self test каждой оси магнитометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMagSelfTest);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* перерасчет количества данных с учетом CRC */
+	*pLengthDataTx = (size_t) 8u + ((size_t) 6u * 6u);
+
+	/* расчет CRC */
+	*pRawMeas = (int16_t) IMMPC_GetCRC_Generic(
+		(uint8_t*) pDataTx,
+		*pLengthDataTx);
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author		Dmitry Tanikeev
+ * @date		27-ноя-2019
+ *
+ * @brief		Функция формирует пакет для отправки "сырых" данных резервных
+ * 				измерителей
+ *
+ * @param[in]	*pIMMPC_RawData_s:	Указатель на область памяти, в которой храняться
+ * 									"сырые" данные
+ *
+ * @param[out]	*pDataTx: 	Указатель на область памяти, в которой будут
+ * 							содержаться данные
+ * 							@note 	Контрольная сумма записывается в конец
+ * 									пакета данных
+ *
+ * @param[out]	*pLengthDataTx: Указатель на область памяти, в которой будет
+ * 								содержаться количество отправляемых данных
+ */
+static void
+IMMPC_Generate_9dof_reserve_raw_pack(
+	immpc_meas_raw_data_s *pIMMPC_RawData_s,
+	uint8_t *pDataTx,
+	size_t *pLengthDataTx)
+{
+	int16_t *pRawMeas;
+	pRawMeas = (int16_t*) pDataTx;
+
+	/* запись стартовых байт (Start frame) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) IMMPC_START_FRAME;
+
+	/* запись типа сообщения (Message ID + Pack requests) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s;
+
+	/* запись статус сенсора (Sensors status) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) (
+		pIMMPC_RawData_s->dataReserveAccGyr.sensorStatus |
+		pIMMPC_RawData_s->dataMag.sensorStatus);
+	/* сброс статусов сенсора */
+	pIMMPC_RawData_s->dataReserveAccGyr.sensorStatus = 0;
+	pIMMPC_RawData_s->dataMag.sensorStatus = 0;
+
+	int16_t *pData3dofTmp;
+	size_t i;
+
+	/* запись измерений 3-х осей акселерометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveAcc_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись измерений 3-х осей гироскопа (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveGyr_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись измерений 3-х осей магнитометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMag_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись температуры каждой оси акселерометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveTempAcc_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись температуры каждой оси акселерометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveTempGyr_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись Self test каждой оси магнитометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMagSelfTest);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* перерасчет количества данных с учетом CRC */
+	*pLengthDataTx = (size_t) 8u + ((size_t) 6u * 6u);
+
+	/* расчет CRC */
+	*pRawMeas = (int16_t) IMMPC_GetCRC_Generic(
+		(uint8_t*) pDataTx,
+		*pLengthDataTx);
+}
+
+/*-------------------------------------------------------------------------*//**
+ * @author		Dmitry Tanikeev
+ * @date		27-ноя-2019
+ *
+ * @brief		Функция формирует пакет для отправки "сырых" данных магнитометра
+ *
+ * @param[in]	*pIMMPC_RawData_s:	Указатель на область памяти, в которой храняться
+ * 									"сырые" данные
+ *
+ * @param[out]	*pDataTx: 	Указатель на область памяти, в которой будут
+ * 							содержаться данные
+ * 							@note 	Контрольная сумма записывается в конец
+ * 									пакета данных
+ *
+ * @param[out]	*pLengthDataTx: Указатель на область памяти, в которой будет
+ * 								содержаться количество отправляемых данных
+ */
+static void
+IMMPC_Generate_3dof_mag_raw_pack(
+	immpc_meas_raw_data_s *pIMMPC_RawData_s,
+	uint8_t *pDataTx,
+	size_t *pLengthDataTx)
+{
+	int16_t *pRawMeas;
+	pRawMeas = (int16_t*) pDataTx;
+
+	/* запись стартовых байт (Start frame) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) IMMPC_START_FRAME;
+
+	/* запись типа сообщения (Message ID + Pack requests) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) IMMPC_MESSAGE_PACK_mag3dof_raw_request_cmd_s;
+
+	/* запись статус сенсора (Sensors status) */
+	/* @todo проверить приведение типов */
+	*pRawMeas++ = (int16_t) (pIMMPC_RawData_s->dataMag.sensorStatus);
+	/* сброс статусов сенсора */
+	pIMMPC_RawData_s->dataMag.sensorStatus = 0;
+
+	int16_t *pData3dofTmp;
+	size_t i;
+
+	/* запись измерений 3-х осей магнитометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMag_a);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* запись Self test каждой оси магнитометра (сырые данные) */
+	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMagSelfTest);
+	for(i = 0u; i < 3u; i++)
+	{
+		*pRawMeas++ = *pData3dofTmp++;
+	}
+
+	/* перерасчет количества данных с учетом CRC */
+	*pLengthDataTx = (size_t) 8u + ((size_t) 6u * 2u);
+
+	/* расчет CRC */
+	*pRawMeas = (int16_t) IMMPC_GetCRC_Generic(
+		(uint8_t*) pDataTx,
+		*pLengthDataTx);
 }
 
 /*#### |End  | <-- Секция - "Описание глобальных функций" ####################*/

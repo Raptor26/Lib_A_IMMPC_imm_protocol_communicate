@@ -999,6 +999,25 @@ IMMPC_GetDataMessage(
 	size_t 	buffSizeIn,
 	uint8_t *pDataOut,
 	size_t 	*pLengthOut);
+
+static void
+IMMPC_Generate_9dof_main_raw_pack(
+	immpc_meas_raw_data_s *pIMMPC_RawData_s,
+	uint8_t *pDataTx,
+	size_t *pLengthDataTx);
+
+static void
+IMMPC_Generate_9dof_reserve_raw_pack(
+	immpc_meas_raw_data_s *pIMMPC_RawData_s,
+	uint8_t *pDataTx,
+	size_t *pLengthDataTx);
+
+static void
+IMMPC_Generate_3dof_mag_raw_pack(
+	immpc_meas_raw_data_s *pIMMPC_RawData_s,
+	uint8_t *pDataTx,
+	size_t *pLengthDataTx);
+
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
