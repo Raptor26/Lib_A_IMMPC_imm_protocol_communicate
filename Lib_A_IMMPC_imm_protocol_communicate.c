@@ -683,7 +683,7 @@ IMMPC_IsPackValid_9dof_main_calib_pack(
 	immpc_9dof_main_calib_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_9dof_main_calib_pack_s(pPack_s);
+		IMMPC_GetCRC_9dof_main_calib_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -755,7 +755,7 @@ IMMPC_IsPackValid_9dof_reserve_raw_pack(
 	immpc_9dof_reserve_raw_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_9dof_reserve_raw_pack_s(pPack_s);
+		IMMPC_GetCRC_9dof_reserve_raw_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -827,7 +827,7 @@ IMMPC_IsPackValid_9dof_reserve_calib_pack(
 	immpc_9dof_reserve_calib_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_9dof_reserve_calib_pack_s(pPack_s);
+		IMMPC_GetCRC_9dof_reserve_calib_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -899,7 +899,7 @@ IMMPC_IsPackValid_mag3dof_raw_pack(
 	immpc_mag3dof_raw_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_mag3dof_raw_pack_s(pPack_s);
+		IMMPC_GetCRC_mag3dof_raw_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -971,7 +971,7 @@ IMMPC_IsPackValid_mag3dof_calib_pack(
 	immpc_mag3dof_calib_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_mag3dof_calib_pack_s(pPack_s);
+		IMMPC_GetCRC_mag3dof_calib_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -1043,7 +1043,7 @@ IMMPC_IsPackValid_acc3dof_main_calibmatrix_pack(
 	immpc_acc3dof_main_calibmatrix_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_acc3dof_main_calibmatrix_pack_s(pPack_s);
+		IMMPC_GetCRC_acc3dof_main_calibmatrix_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -1115,7 +1115,7 @@ IMMPC_IsPackValid_acc3dof_reserve_calibmatrix_pack(
 	immpc_acc3dof_reserve_calibmatrix_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_acc3dof_reserve_calibmatrix_pack_s(pPack_s);
+		IMMPC_GetCRC_acc3dof_reserve_calibmatrix_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -1187,7 +1187,7 @@ IMMPC_IsPackValid_gyr3dof_main_calibmatrix_pack(
 	immpc_gyr3dof_main_calibmatrix_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_gyr3dof_main_calibmatrix_pack_s(pPack_s);
+		IMMPC_GetCRC_gyr3dof_main_calibmatrix_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -1259,7 +1259,7 @@ IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack(
 	immpc_gyr3dof_reserve_calibmatrix_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_gyr3dof_reserve_calibmatrix_pack_s(pPack_s);
+		IMMPC_GetCRC_gyr3dof_reserve_calibmatrix_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -1331,7 +1331,7 @@ IMMPC_IsPackValid_mag3dof_calibmatrix_pack(
 	immpc_mag3dof_calibmatrix_pack_s *pPack_s)
 {
 	uint16_t crc =
-		IMMPC_GetCRC_mag3dof_calibmatrixx_pack_s(pPack_s);
+		IMMPC_GetCRC_mag3dof_calibmatrix_pack(pPack_s);
 
 	if (crc == pPack_s->crc)
 	{
@@ -1691,8 +1691,7 @@ IMMPC_GenerateCalibMatrixMessage(
  *
  * @param[in]	*pIMMPC_RawData_s:	Указатель на область памяти, в которой содержатся данные с датчиков.
  *
- *
- * @param[in]	*pDataIn: 	Указатель на область памяти, в которой содержатся входной пакет данных.
+  * @param[in]	*pDataIn: 	Указатель на область памяти, в которой содержатся входной пакет данных.
  *
  * @param[in]	buffSizeIn:	Размер данных.
  * @param[out]	*pDataOut:	Указатель на область памяти, в которой будут содержаться данные
@@ -2258,18 +2257,19 @@ IMMPC_GetDataMessage(
 					IMMPC_FLAG_NEED_RAW_MAG |
 					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
 
-				/* формирование пакета для ответа */
-				*pLengthOut = IMMPC_GenerateRawDataMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s,
-					(pIMMPC_RawData_s->dataMainAccGyr).sensorStatus,
-					(pIMMPC_RawData_s->dataMainAccGyr).rawMainAcc_a,
-					(pIMMPC_RawData_s->dataMainAccGyr).rawMainGyr_a,
-					(pIMMPC_RawData_s->dataMag).rawMag_a,
-					(pIMMPC_RawData_s->dataMainAccGyr).rawMainTempAcc_a,
-					(pIMMPC_RawData_s->dataMainAccGyr).rawMainTempGyr_a,
-					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
-					NULL);
+				/* @todo закомментировал т.к. будет отдельная функция */
+//				/* формирование пакета для ответа */
+//				*pLengthOut = IMMPC_GenerateRawDataMessage(
+//					pDataOut,
+//					IMMPC_MESSAGE_PACK_9dof_main_raw_pack_s,
+//					(pIMMPC_RawData_s->dataMainAccGyr).sensorStatus,
+//					(pIMMPC_RawData_s->dataMainAccGyr).rawMainAcc_a,
+//					(pIMMPC_RawData_s->dataMainAccGyr).rawMainGyr_a,
+//					(pIMMPC_RawData_s->dataMag).rawMag_a,
+//					(pIMMPC_RawData_s->dataMainAccGyr).rawMainTempAcc_a,
+//					(pIMMPC_RawData_s->dataMainAccGyr).rawMainTempGyr_a,
+//					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
+//					NULL);
 			}
 			else
 			{
@@ -2306,6 +2306,9 @@ IMMPC_GetDataMessage(
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
 			{
+				/* Сброс флагов */
+				pIMMPC_RawData_s->flagsUseData = 0u;
+
 				/* установка флага */
 				__IMMPC_SET_BIT(
 					(*pIMMPC_RawData_s).flagsUseData,
@@ -2316,26 +2319,19 @@ IMMPC_GetDataMessage(
 					IMMPC_FLAG_NEED_RAW_MAG |
 					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
 
-				/* сброс флагов */
-				__IMMPC_CLEAR_BIT(
-					(*pIMMPC_RawData_s).flagsUseData,
-					IMMPC_FLAG_NEED_RAW_MAIN_ACC |
-					IMMPC_FLAG_NEED_RAW_MAIN_GYR |
-					IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC |
-					IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR);
-
+				/* @todo закомментировал т.к. будет отдельная функция */
 				/* формирование пакета для ответа */
-				*pLengthOut = IMMPC_GenerateRawDataMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s,
-					(pIMMPC_RawData_s->dataReserveAccGyr).sensorStatus,
-					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveAcc_a,
-					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveGyr_a,
-					(pIMMPC_RawData_s->dataMag).rawMag_a,
-					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveTempAcc_a,
-					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveTempGyr_a,
-					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
-					NULL);
+//				*pLengthOut = IMMPC_GenerateRawDataMessage(
+//					pDataOut,
+//					IMMPC_MESSAGE_PACK_9dof_reserve_raw_pack_s,
+//					(pIMMPC_RawData_s->dataReserveAccGyr).sensorStatus,
+//					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveAcc_a,
+//					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveGyr_a,
+//					(pIMMPC_RawData_s->dataMag).rawMag_a,
+//					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveTempAcc_a,
+//					(pIMMPC_RawData_s->dataReserveAccGyr).rawReserveTempGyr_a,
+//					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
+//					NULL);
 			}
 			else
 			{
@@ -2392,16 +2388,23 @@ IMMPC_GetDataMessage(
 			/* CRC правильный */
 			if (IMMPC_IsPackValid_request_or_cmd((immpc_request_or_cmd_pack_s*) pMessHeadAddr))
 			{
+				/* Сброс флагов */
+				pIMMPC_RawData_s->flagsUseData = 0u;
+
 				/* установка флага */
 				__IMMPC_SET_BIT(
 					(*pIMMPC_RawData_s).flagsUseData,
-					IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM);
+					IMMPC_FLAG_NEED_RAW_MAG |
+					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
 
-				/* формирование ответа - OK */
-				*pLengthOut =
-					IMMPC_GenerateResponseMessage(
-						pDataOut,
-						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+				/* @todo закомментировал т.к. будет отдельная функция */
+//				/* формирование пакета для ответа */
+//				*pLengthOut = IMMPC_GenerateRawDataMessage(
+//					pDataOut,
+//					IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s,
+//					(pIMMPC_RawData_s->dataMag).rawMag_a,
+//					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
+//					NULL);
 			}
 			else
 			{
@@ -2441,16 +2444,13 @@ IMMPC_GetDataMessage(
 				/* установка флага */
 				__IMMPC_SET_BIT(
 					(*pIMMPC_RawData_s).flagsUseData,
-					IMMPC_FLAG_NEED_RAW_MAG |
-					IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST);
+					IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM);
 
-				/* формирование пакета для ответа */
-				*pLengthOut = IMMPC_GenerateRawDataMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_mag3dof_raw_pack_s,
-					(pIMMPC_RawData_s->dataMag).rawMag_a,
-					(pIMMPC_RawData_s->dataMag).rawMagSelfTest,
-					NULL);
+				/* формирование ответа - OK */
+				*pLengthOut =
+					IMMPC_GenerateResponseMessage(
+						pDataOut,
+						IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
 			}
 			else
 			{
