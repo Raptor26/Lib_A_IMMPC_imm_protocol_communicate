@@ -291,9 +291,9 @@ IMMPC_GenerateResponseMessage(
 
 static size_t
 IMMPC_GenerateCalibMatrixMessage(
-    uint8_t *pData,
-    immpc_message_pack_type_e setTypeMessage,
-    double *pCalibMatrix3x4);
+	uint8_t *pData,
+	immpc_message_pack_type_e setTypeMessage,
+	double *pCalibMatrix3x4);
 
 static size_t
 IMMPC_GenerateRawDataMessage(
@@ -1276,9 +1276,9 @@ IMMPC_IsPackValid_gyr3dof_reserve_calibmatrix_pack(
 		return (0u);
 	}
 }
-/* Пакет immpc_gyr3dof_reserve_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<</
+/* Пакет immpc_gyr3dof_reserve_calibmatrix_read_pack_s --<<<<<<<<<<<<<<<<<<<<<<*/
 
-/* Пакет immpc_mag3dof_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>/
+/* Пакет immpc_mag3dof_calibmatrix_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
 
 /*-------------------------------------------------------------------------*//**
  * @author	Dmitry Tanikeev
@@ -1498,45 +1498,45 @@ IMMPC_GenerateResponseMessage(
  */
 static size_t
 IMMPC_GenerateCalibMatrixMessage(
-    uint8_t *pData,
-    immpc_message_pack_type_e setTypeMessage,
-    double *pCalibMatrix3x4)
+	uint8_t *pData,
+	immpc_message_pack_type_e setTypeMessage,
+	double *pCalibMatrix3x4)
 {
-    /* сохранение указателя */
-    int16_t *pCalibMatrixTmp;
-    pCalibMatrixTmp = pCalibMatrix3x4;
+	/* сохранение указателя */
+	int16_t *pCalibMatrixTmp;
+	pCalibMatrixTmp = pCalibMatrix3x4;
 
-    int16_t *pPacket = pData;
+	int16_t *pPacket = pData;
 
-    /* запись стартовых байт (Start frame) */
-    /* @todo проверить приведение типов */
-    *pPacket++ = (int16_t) IMMPC_START_FRAME;
+	/* запись стартовых байт (Start frame) */
+	/* @todo проверить приведение типов */
+	*pPacket++ = (int16_t) IMMPC_START_FRAME;
 
-    /* запись типа сообщения (Message ID + Pack requests) */
-    /* @todo проверить приведение типов */
-    *pPacket++ = (int16_t) setTypeMessage;
+	/* запись типа сообщения (Message ID + Pack requests) */
+	/* @todo проверить приведение типов */
+	*pPacket++ = (int16_t) setTypeMessage;
 
-    /* Предварительный размер сообщения с учетом CRC */
-    size_t messageSize = 6u;
+	/* Предварительный размер сообщения с учетом CRC */
+	size_t messageSize = 6u;
 
-    /* прогнать 4x3x4 = 48 раз:
-     * 4 - двуйбайтных числа в типе double
-     * 3x4 - размерность матрицы
-     */
-    for(size_t i = 0u; i < 48u; i++)
-    {
-        *pPacket++ = *pCalibMatrixTmp++;
+	/* прогнать 4x3x4 = 48 раз:
+	 * 4 - двуйбайтных числа в типе double
+	 * 3x4 - размерность матрицы
+	 */
+	for (size_t i = 0u; i < 48u; i++)
+	{
+		*pPacket++ = *pCalibMatrixTmp++;
 
-        messageSize += 2u;
-    }
+		messageSize += 2u;
+	}
 
-    /* @todo проверить приведение типов */
-    pPacket = (uint16_t*) pPacket;
-    pPacket = IMMPC_GetCRC_Generic(
-        (uint8_t*)pData,
-        messageSize);
+	/* @todo проверить приведение типов */
+	pPacket = (uint16_t*) pPacket; // бесполезная строка
+	*pPacket = IMMPC_GetCRC_Generic(
+				   (uint8_t*)pData,
+				   messageSize);
 
-    return (messageSize);
+	return (messageSize);
 }
 
 ///*-------------------------------------------------------------------------*//**
@@ -1641,7 +1641,7 @@ IMMPC_GenerateRawDataMessage(
 	/* запись полезных данных (Payload) */
 	while (pData3dofTmp != NULL)
 	{
-		for(size_t i = 0u; i < 3u; i++)
+		for (size_t i = 0u; i < 3u; i++)
 		{
 //			*pData++ =	(uint8_t) (((*pData3dofTmp) >> 8u) & 0x00FF);
 //			*pData++ =	(uint8_t) (*pData3dofTmp++ & 0x00FF);
@@ -1673,8 +1673,8 @@ IMMPC_GenerateRawDataMessage(
 	/* @todo проверить приведение типов */
 	pRawMeas = (uint16_t*) pRawMeas;
 	pRawMeas = IMMPC_GetCRC_Generic(
-		(uint8_t*)pData,
-		messageSize);
+				   (uint8_t*)pData,
+				   messageSize);
 
 //	*pData++ =	(uint8_t) ((crc >> 8u) & 0x00FF);
 //	*pData++ =	(uint8_t) (crc & 0x00FF);
@@ -1897,9 +1897,9 @@ IMMPC_GetDataMessage(
 			{
 				/* формирование пакета для ответа */
 				*pLengthOut = IMMPC_GenerateCalibMatrixMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s,
-					IMMPC_ACC3DOF_main_calibmatrix_pack_s.matrix);
+								  pDataOut,
+								  IMMPC_MESSAGE_PACK_acc3dof_main_calibmatrix_write_pack_s,
+								  IMMPC_ACC3DOF_main_calibmatrix_pack_s.matrix);
 			}
 			else
 			{
@@ -1976,9 +1976,9 @@ IMMPC_GetDataMessage(
 			{
 				/* формирование пакета для ответа */
 				*pLengthOut = IMMPC_GenerateCalibMatrixMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s,
-					IMMPC_ACC3DOF_reserve_calibmatrix_pack_s.matrix);
+								  pDataOut,
+								  IMMPC_MESSAGE_PACK_acc3dof_reserve_calibmatrix_write_pack_s,
+								  IMMPC_ACC3DOF_reserve_calibmatrix_pack_s.matrix);
 			}
 			else
 			{
@@ -2055,9 +2055,9 @@ IMMPC_GetDataMessage(
 			{
 				/* формирование пакета для ответа */
 				*pLengthOut = IMMPC_GenerateCalibMatrixMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s,
-					IMMPC_GYR3DOF_main_calibmatrix_pack_s.matrix);
+								  pDataOut,
+								  IMMPC_MESSAGE_PACK_gyr3dof_main_calibmatrix_write_pack_s,
+								  IMMPC_GYR3DOF_main_calibmatrix_pack_s.matrix);
 			}
 			else
 			{
@@ -2134,9 +2134,9 @@ IMMPC_GetDataMessage(
 			{
 				/* формирование пакета для ответа */
 				*pLengthOut = IMMPC_GenerateCalibMatrixMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s,
-					IMMPC_GYR3DOF_reserve_calibmatrix_pack_s.matrix);
+								  pDataOut,
+								  IMMPC_MESSAGE_PACK_gyr3dof_reserve_calibmatrix_write_pack_s,
+								  IMMPC_GYR3DOF_reserve_calibmatrix_pack_s.matrix);
 			}
 			else
 			{
@@ -2213,9 +2213,9 @@ IMMPC_GetDataMessage(
 			{
 				/* формирование пакета для ответа */
 				*pLengthOut = IMMPC_GenerateCalibMatrixMessage(
-					pDataOut,
-					IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s,
-					IMMPC_MAG3DOF_calibmatrix_pack_s.matrix);
+								  pDataOut,
+								  IMMPC_MESSAGE_PACK_mag3dof_calibmatrix_write_pack_s,
+								  IMMPC_MAG3DOF_calibmatrix_pack_s.matrix);
 			}
 			else
 			{
@@ -2528,7 +2528,7 @@ IMMPC_GetDataMessage(
  * @param[out]	*pLengthDataTx: Указатель на область памяти, в которой будет
  * 								содержаться количество отправляемых данных
  */
-static void
+void
 IMMPC_Generate_9dof_main_raw_pack(
 	immpc_meas_raw_data_s *pIMMPC_RawData_s,
 	uint8_t *pDataTx,
@@ -2548,8 +2548,8 @@ IMMPC_Generate_9dof_main_raw_pack(
 	/* запись статус сенсора (Sensors status) */
 	/* @todo проверить приведение типов */
 	*pRawMeas++ = (int16_t) (
-		pIMMPC_RawData_s->dataMainAccGyr.sensorStatus |
-		pIMMPC_RawData_s->dataMag.sensorStatus);
+					  pIMMPC_RawData_s->dataMainAccGyr.sensorStatus |
+					  pIMMPC_RawData_s->dataMag.sensorStatus);
 	/* сброс статусов сенсора */
 	pIMMPC_RawData_s->dataMainAccGyr.sensorStatus = 0;
 	pIMMPC_RawData_s->dataMag.sensorStatus = 0;
@@ -2559,42 +2559,42 @@ IMMPC_Generate_9dof_main_raw_pack(
 
 	/* запись измерений 3-х осей акселерометра (сырые данные) */
 	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainAcc_a);
-	for(i = 0u; i < 3u; i++)
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
 
 	/* запись измерений 3-х осей гироскопа  (сырые данные) */
 	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainGyr_a);
-	for(i = 0u; i < 3u; i++)
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
 
 	/* запись измерений 3-х осей магнитометра  (сырые данные) */
 	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMag_a);
-	for(i = 0u; i < 3u; i++)
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
 
 	/* запись температуры каждой оси акселерометра (сырые данные) */
 	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainTempAcc_a);
-	for(i = 0u; i < 3u; i++)
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
 
 	/* запись температуры каждой оси акселерометра (сырые данные) */
 	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMainAccGyr.rawMainTempGyr_a);
-	for(i = 0u; i < 3u; i++)
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
 
 	/* запись Self test каждой оси магнитометра (сырые данные) */
 	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMagSelfTest);
-	for(i = 0u; i < 3u; i++)
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
@@ -2604,8 +2604,8 @@ IMMPC_Generate_9dof_main_raw_pack(
 
 	/* расчет CRC */
 	*pRawMeas = (int16_t) IMMPC_GetCRC_Generic(
-		(uint8_t*) pDataTx,
-		*pLengthDataTx);
+					(uint8_t*) pDataTx,
+					*pLengthDataTx);
 }
 
 /*-------------------------------------------------------------------------*//**
@@ -2626,84 +2626,74 @@ IMMPC_Generate_9dof_main_raw_pack(
  * @param[out]	*pLengthDataTx: Указатель на область памяти, в которой будет
  * 								содержаться количество отправляемых данных
  */
-static void
+size_t
 IMMPC_Generate_9dof_reserve_raw_pack(
-	immpc_meas_raw_data_s *pIMMPC_RawData_s,
-	uint8_t *pDataTx,
-	size_t *pLengthDataTx)
+	immpc_meas_raw_data_s 				*pSourceData_s,
+	immpc_9dof_reserve_raw_pack_s		*pPackForTx)
 {
-	int16_t *pRawMeas;
-	pRawMeas = (int16_t*) pDataTx;
-
 	/* запись стартовых байт (Start frame) */
-	/* @todo проверить приведение типов */
-	*pRawMeas++ = (int16_t) IMMPC_START_FRAME;
+	pPackForTx->headMessage_s.startFrame = IMMPC_START_FRAME;
 
 	/* запись типа сообщения (Message ID + Pack requests) */
-	/* @todo проверить приведение типов */
-	*pRawMeas++ = (int16_t) IMMPC_MESSAGE_PACK_9dof_reserve_raw_request_cmd_s;
+	pPackForTx->headMessage_s.messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
 
-	/* запись статус сенсора (Sensors status) */
-	/* @todo проверить приведение типов */
-	*pRawMeas++ = (int16_t) (
-		pIMMPC_RawData_s->dataReserveAccGyr.sensorStatus |
-		pIMMPC_RawData_s->dataMag.sensorStatus);
+	__IMMPC_WRITE_REG(
+		/* Переменная для записи битовых масок */
+		pPackForTx->headMessage_s.packRequests,
+
+		/* Битовые маски для записи в переменную */
+		IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS);
+
+	/* запись статусов сенсора (Sensors status) */
+	__IMMPC_WRITE_REG(
+		/* Переменная для записи битовых масок */
+		pPackForTx->headMessage_s.sensorsStatus,
+
+		/* Битовые маски для записи в переменную */
+		pSourceData_s->dataReserveAccGyr.sensorStatus |
+		pSourceData_s->dataMag.sensorStatus);
+
 	/* сброс статусов сенсора */
-	pIMMPC_RawData_s->dataReserveAccGyr.sensorStatus = 0;
-	pIMMPC_RawData_s->dataMag.sensorStatus = 0;
+	pSourceData_s->dataReserveAccGyr.sensorStatus 	= 0;
+	pSourceData_s->dataMag.sensorStatus 			= 0;
 
-	int16_t *pData3dofTmp;
-	size_t i;
+	/* Запись измерений акселерометра */
+	pPackForTx->acc_a[0u] = pSourceData_s->dataReserveAccGyr.rawReserveAcc_a[0u];
+	pPackForTx->acc_a[1u] = pSourceData_s->dataReserveAccGyr.rawReserveAcc_a[1u];
+	pPackForTx->acc_a[2u] = pSourceData_s->dataReserveAccGyr.rawReserveAcc_a[2u];
 
-	/* запись измерений 3-х осей акселерометра (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveAcc_a);
-	for(i = 0u; i < 3u; i++)
-	{
-		*pRawMeas++ = *pData3dofTmp++;
-	}
+	/* Запись измерений температуры акселерометра */
+	pPackForTx->accTemp_a[0u] = pSourceData_s->dataReserveAccGyr.rawReserveTempAcc_a[0u];
+	pPackForTx->accTemp_a[1u] = pSourceData_s->dataReserveAccGyr.rawReserveTempAcc_a[1u];
+	pPackForTx->accTemp_a[2u] = pSourceData_s->dataReserveAccGyr.rawReserveTempAcc_a[2u];
 
-	/* запись измерений 3-х осей гироскопа (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveGyr_a);
-	for(i = 0u; i < 3u; i++)
-	{
-		*pRawMeas++ = *pData3dofTmp++;
-	}
+	/* Запись измерений 3-х осей гироскопа (сырые данные) */
+	pPackForTx->gyr_a[0u] = pSourceData_s->dataReserveAccGyr.rawReserveGyr_a[0u];
+	pPackForTx->gyr_a[1u] = pSourceData_s->dataReserveAccGyr.rawReserveGyr_a[1u];
+	pPackForTx->gyr_a[2u] = pSourceData_s->dataReserveAccGyr.rawReserveGyr_a[2u];
 
-	/* запись измерений 3-х осей магнитометра (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMag_a);
-	for(i = 0u; i < 3u; i++)
-	{
-		*pRawMeas++ = *pData3dofTmp++;
-	}
+	/* Запись измерений температуры гироскопа */
+	pPackForTx->gyrTemp_a[0u] = pSourceData_s->dataReserveAccGyr.rawReserveTempGyr_a[0u];
+	pPackForTx->gyrTemp_a[1u] = pSourceData_s->dataReserveAccGyr.rawReserveTempGyr_a[1u];
+	pPackForTx->gyrTemp_a[2u] = pSourceData_s->dataReserveAccGyr.rawReserveTempGyr_a[2u];
 
-	/* запись температуры каждой оси акселерометра (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveTempAcc_a);
-	for(i = 0u; i < 3u; i++)
-	{
-		*pRawMeas++ = *pData3dofTmp++;
-	}
+	/* Запись измерений 3-х осей магнитометра (сырые данные) */
+	pPackForTx->mag_a[0u] = pSourceData_s->dataMag.rawMag_a[0u];
+	pPackForTx->mag_a[1u] = pSourceData_s->dataMag.rawMag_a[1u];
+	pPackForTx->mag_a[2u] = pSourceData_s->dataMag.rawMag_a[2u];
 
-	/* запись температуры каждой оси акселерометра (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataReserveAccGyr.rawReserveTempGyr_a);
-	for(i = 0u; i < 3u; i++)
-	{
-		*pRawMeas++ = *pData3dofTmp++;
-	}
-
-	/* запись Self test каждой оси магнитометра (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMagSelfTest);
-	for(i = 0u; i < 3u; i++)
-	{
-		*pRawMeas++ = *pData3dofTmp++;
-	}
-
-	/* перерасчет количества данных с учетом CRC */
-	*pLengthDataTx = (size_t) 8u + ((size_t) 6u * 6u);
+	/* Запись измерений температуры гироскопа */
+	pPackForTx->magSelfTest_a[0u] = pSourceData_s->dataMag.rawMagSelfTest[0u];
+	pPackForTx->magSelfTest_a[1u] = pSourceData_s->dataMag.rawMagSelfTest[1u];
+	pPackForTx->magSelfTest_a[2u] = pSourceData_s->dataMag.rawMagSelfTest[2u];
 
 	/* расчет CRC */
-	*pRawMeas = (int16_t) IMMPC_GetCRC_Generic(
-		(uint8_t*) pDataTx,
-		*pLengthDataTx);
+	pPackForTx->crc =
+		(uint16_t) IMMPC_GetCRC_Generic(
+			(uint8_t*) pPackForTx,
+			(uint16_t) sizeof(immpc_9dof_reserve_raw_pack_s));
+
+	return (sizeof(immpc_9dof_reserve_raw_pack_s));
 }
 
 /*-------------------------------------------------------------------------*//**
@@ -2723,9 +2713,9 @@ IMMPC_Generate_9dof_reserve_raw_pack(
  * @param[out]	*pLengthDataTx: Указатель на область памяти, в которой будет
  * 								содержаться количество отправляемых данных
  */
-static void
+void
 IMMPC_Generate_3dof_mag_raw_pack(
-	immpc_meas_raw_data_s *pIMMPC_RawData_s,
+	immpc_meas_raw_data_s *pSourceData_s,
 	uint8_t *pDataTx,
 	size_t *pLengthDataTx)
 {
@@ -2742,23 +2732,23 @@ IMMPC_Generate_3dof_mag_raw_pack(
 
 	/* запись статус сенсора (Sensors status) */
 	/* @todo проверить приведение типов */
-	*pRawMeas++ = (int16_t) (pIMMPC_RawData_s->dataMag.sensorStatus);
+	*pRawMeas++ = (int16_t) (pSourceData_s->dataMag.sensorStatus);
 	/* сброс статусов сенсора */
-	pIMMPC_RawData_s->dataMag.sensorStatus = 0;
+	pSourceData_s->dataMag.sensorStatus = 0;
 
 	int16_t *pData3dofTmp;
 	size_t i;
 
 	/* запись измерений 3-х осей магнитометра (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMag_a);
-	for(i = 0u; i < 3u; i++)
+	pData3dofTmp = (int16_t*) (pSourceData_s->dataMag.rawMag_a);
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
 
 	/* запись Self test каждой оси магнитометра (сырые данные) */
-	pData3dofTmp = (int16_t*) (pIMMPC_RawData_s->dataMag.rawMagSelfTest);
-	for(i = 0u; i < 3u; i++)
+	pData3dofTmp = (int16_t*) (pSourceData_s->dataMag.rawMagSelfTest);
+	for (i = 0u; i < 3u; i++)
 	{
 		*pRawMeas++ = *pData3dofTmp++;
 	}
@@ -2768,8 +2758,8 @@ IMMPC_Generate_3dof_mag_raw_pack(
 
 	/* расчет CRC */
 	*pRawMeas = (int16_t) IMMPC_GetCRC_Generic(
-		(uint8_t*) pDataTx,
-		*pLengthDataTx);
+					(uint8_t*) pDataTx,
+					*pLengthDataTx);
 }
 
 /*#### |End  | <-- Секция - "Описание глобальных функций" ####################*/

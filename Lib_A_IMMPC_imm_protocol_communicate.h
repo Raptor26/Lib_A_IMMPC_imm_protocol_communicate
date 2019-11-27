@@ -183,9 +183,9 @@
 #define __IMMPC_PACK_REQUESTS_BITS_SET_RAW_MEAS(var)      	__IMMPC_CLEAR_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS)
 #define __IMMPC_PACK_REQUESTS_BITS_IsSetCalibMeas(var)		__IMMPC_IS_SET_BIT(var, IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS);
 
-#define __IMMPC_PACK_REQUESTS_BITS_SET_RESERV_MEAS(var)		__IMMPC_SET_BIT(var, 	IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
-#define __IMMPC_PACK_REQUESTS_BITS_SET_MAIN_MEAS(var)    	__IMMPC_CLEAR_BIT(var, 	IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
-#define __IIMPC_PACK_REQUESTS_BITS_IsSetReservMeas(var) 	__IMMPC_IS_SET_BIT(var, IIMPC_PACK_REQUESTS_BITS_RESERV_MEAS)
+#define __IMMPC_PACK_REQUESTS_BITS_SET_RESERV_MEAS(var)		__IMMPC_SET_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS)
+#define __IMMPC_PACK_REQUESTS_BITS_SET_MAIN_MEAS(var)    	__IMMPC_CLEAR_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS)
+#define __IIMPC_PACK_REQUESTS_BITS_IsSetReservMeas(var) 	__IMMPC_IS_SET_BIT(var, IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS)
 
 #define __IMMPC_PACK_REQUESTS_BITS_SET_READ_MEAS(var)		__IMMPC_SET_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_READ_MEAS)
 #define __IMMPC_PACK_REQUESTS_BITS_SET_NOT_READ_MEAS(var)	__IMMPC_CLEAR_BIT(var, 	IMMPC_PACK_REQUESTS_BITS_READ_MEAS)
@@ -751,9 +751,9 @@ typedef struct
 typedef struct
 {
 	/* "сырые" данные */
-	immpc_raw_main_acc_gyr_data_s dataMainAccGyr;
-	immpc_raw_reserve_acc_gyr_data_s dataReserveAccGyr;
-	immpc_raw_mag_data_s dataMag;
+	immpc_raw_main_acc_gyr_data_s 		dataMainAccGyr;
+	immpc_raw_reserve_acc_gyr_data_s 	dataReserveAccGyr;
+	immpc_raw_mag_data_s 				dataMag;
 
 	/* флаги (см. выше #define IMMPC_FLAG_NEED...) */
 	uint32_t flagsUseData;
@@ -1000,19 +1000,18 @@ IMMPC_GetDataMessage(
 	uint8_t *pDataOut,
 	size_t 	*pLengthOut);
 
-static void
+extern void
 IMMPC_Generate_9dof_main_raw_pack(
 	immpc_meas_raw_data_s *pIMMPC_RawData_s,
 	uint8_t *pDataTx,
 	size_t *pLengthDataTx);
 
-static void
+extern size_t
 IMMPC_Generate_9dof_reserve_raw_pack(
 	immpc_meas_raw_data_s *pIMMPC_RawData_s,
-	uint8_t *pDataTx,
-	size_t *pLengthDataTx);
+	immpc_9dof_reserve_raw_pack_s *pPackForTx);
 
-static void
+extern void
 IMMPC_Generate_3dof_mag_raw_pack(
 	immpc_meas_raw_data_s *pIMMPC_RawData_s,
 	uint8_t *pDataTx,
