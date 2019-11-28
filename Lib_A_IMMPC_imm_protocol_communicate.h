@@ -33,6 +33,9 @@
 
 
 /*#### |Begin| --> Секция - "Определение констант" ###########################*/
+#if defined (__IMMPC_EXTERN_MODE_ENABLE__)
+	#include "macros_definitions.h"
+#endif
 
 /*==== |Begin| --> Секция определения типа числа с плавающей точкой ==========*/
 #if !defined (__IMMPC_FPT__)
@@ -772,6 +775,28 @@ typedef struct
 
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
+/*-------------------------------------------------------------------------*//**
+ * @author	Mickle Isaev
+ * @date	01-ноя-2019
+ *
+ * @brief	Функция вычисляет контрольную сумму
+ *
+ * @param[in] 	*pData: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных
+ * @param[in]   len:	Количество байт пакета данных
+ *
+ * @return    { description_of_the_return_value }
+ */
+__IMMPC_ALWAYS_INLINE uint16_t
+IMMPC_GetCRC_Generic(
+	uint8_t *pData,
+	uint16_t len)
+{
+	return (CRC_XOR_CCITT_Poly0x1021_Crc16(
+				(uint8_t*)&pData[2u],
+				len - 4u));
+}
+
 
 /* Запись данных в структуру -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
@@ -965,6 +990,14 @@ IMMPC_SetReserve6DofNeedFlag(
 }
 
 __IMMPC_ALWAYS_INLINE size_t
+IMMPC_IsNeedReserve6dofRawPack(
+	immpc_meas_raw_data_s *pMeasRawData_s)
+{
+	/* @todo добавить проверку */
+	return (1u);
+}
+
+__IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsMag3DofNeedByVar(
 	size_t flags)
 {
@@ -1009,13 +1042,12 @@ IMMPC_Generate_9dof_main_raw_pack(
 extern size_t
 IMMPC_Generate_9dof_reserve_raw_pack(
 	immpc_meas_raw_data_s 			*pSourceData_s,
-	immpc_9dof_reserve_raw_pack_s	*pPackForTx_s);
+	immpc_9dof_reserve_raw_pack_s	*pPackForTx_s) __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
 IMMPC_Generate_3dof_mag_raw_pack(
 	immpc_meas_raw_data_s 		*pSourceData_s,
 	immpc_mag3dof_raw_pack_s	*pPackForTx_s);
-
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 

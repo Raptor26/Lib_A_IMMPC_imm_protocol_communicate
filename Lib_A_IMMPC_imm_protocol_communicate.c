@@ -75,10 +75,10 @@ IMMPC_MAG3DOF_calibmatrix_pack_s;
 
 
 /*#### |Begin| --> Секция - "Прототипы локальных функций" ####################*/
-static uint16_t
-IMMPC_GetCRC_Generic(
-	uint8_t *pData,
-	uint16_t len);
+//static uint16_t
+//IMMPC_GetCRC_Generic(
+//	uint8_t *pData,
+//	uint16_t len);
 
 /* Пакет 9dof_main_raw_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
@@ -528,27 +528,7 @@ IMMPC_GetTypeMessage(
 	return (messageType_e);
 }
 
-/*-------------------------------------------------------------------------*//**
- * @author	Mickle Isaev
- * @date	01-ноя-2019
- *
- * @brief	Функция вычисляет контрольную сумму
- *
- * @param[in] 	*pData: 	Указатель на область памяти, в которой содержится
- * 							пакет данных
- * @param[in]   len:	Количество байт пакета данных
- *
- * @return    { description_of_the_return_value }
- */
-static uint16_t
-IMMPC_GetCRC_Generic(
-	uint8_t *pData,
-	uint16_t len)
-{
-	return (CRC_XOR_CCITT_Poly0x1021_Crc16(
-				(uint8_t*)&pData[2u],
-				len - 4u));
-}
+
 
 /* Пакет 9dof_main_raw_pack_s -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
