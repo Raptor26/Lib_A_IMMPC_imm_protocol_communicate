@@ -248,7 +248,7 @@
 #define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM 			((uint32_t)(IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Msk))
 // next 													(20u)
 
-/* биты Sensor status */
+/* Sensors_status */
 #define IMMPC_ACC_X_SELF_TEST								(((uint16_t)(0b10000000) << 8) & 0xFF00)
 #define IMMPC_ACC_Y_SELF_TEST								(((uint16_t)(0b01000000) << 8) & 0xFF00)
 #define IMMPC_ACC_Z_SELF_TEST								(((uint16_t)(0b00100000) << 8) & 0xFF00)
@@ -269,24 +269,51 @@
 #define IMMPC_USART_BAUDRATE_VERY_FAST						(921600U)
 #define IMMPC_USART_BAUDRATE_DEFAULT						(IMMPC_USART_BAUDRATE_LOW)
 
-/* идентификаторы */
+/* Message ID */
 typedef enum
 {
 	/**/
 	IMMPC_MESSAGE_ID_UNKNOWN = 0u,
-	/**/
+
+	/**
+	 * @brief 	Идентификатор основных измерителей
+	 */
 	IMMPC_MESSAGE_ID_9DOF_PACK_MAIN,
+
+	/**
+	 * @brief 	Идентификатор резервных измерителей
+	 */
 	IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE,
-	/**/
+
+	/**
+	 * @brief 	Идентификатор калибровочной матрицы акселерометра
+	 */
 	IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+
+	/**
+	 * @brief 	Идентификатор калибровочной матрицы гироскопов
+	 */
 	IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+
+	/**
+	 * @brief 	Идентификаторы калибровочной матрицы магнитометров
+	 */
 	IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX,
-	/**/
+
+	/**
+	 * @brief 	Идентификатор измерений магнитометра
+	 * @note 	Для магнитометра нет деления на основной и резервный
+	 */
 	IMMPC_MESSAGE_ID_MAG3DOF_PACK,
-	/**/
+
+	/**
+	 * @brief 	Идентификатор для записи всех калибровочных матриц из
+	 * 			оперативной памяти контроллера в EEPROM
+	 */
 	IMMPC_MESSAGE_ID_WRITE_ALL_CALIBMATRIX,
-	/* коды ответных сообщений */
-	IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR = 200u,
+
+	/* Коды ответных сообщений */
+	IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR 		= 200u,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBRATION_MATRIX_FROM_EEPROM,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_OK,
@@ -484,19 +511,25 @@ typedef enum
 		__IMMPC_SetMessageType(
 			IMMPC_MESSAGE_ID_RESPONSE_CODE_OK,
 			IMMPC_RESPONCE_END_FRAME),
-} immpc_message_pack_type_e;
+} immpc_id_and_pack_requests_e;
 
-typedef enum
-{
-	IMMPC_PACK_REQUESTS_9dof_main_calib_pack,
-} immpcs_pack_requests_e;
-
-/* заголовок пакета */
+/**
+ * @brief Заголовок пакета данных
+ */
 typedef struct
 {
 	uint16_t 	startFrame;
-	uint8_t 	messageID;
-	uint8_t 	packRequests;
+
+	union
+	{
+		uint16_t idAndPackRequests;
+		struct
+		{
+			uint8_t messageID;
+			uint8_t packRequests;
+		};
+	};
+
 	uint16_t 	sensorsStatus;
 }
 #if defined (__GNUC__)
@@ -506,10 +539,37 @@ typedef struct
 #endif
 immpc_head_s;
 
+typedef struct
+{
+	uint16_t startFrame;
+
+	union
+	{
+		uint16_t idAndPackRequests;
+		struct
+		{
+			uint8_t messageID;
+			uint8_t packRequests;
+		};
+	};
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+	__attribute__((__packed__))
+#else
+	#error "Please, define compiler"
+#endif
+immpc_request_cmd_s;
+
 /* пакет "сырых" данных основных измерителей */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	/**
+	 * @brief Заголовок пакета данных
+	 */
+	immpc_head_s head_s;
+
 	int16_t acc_a[3u];
 	int16_t gyr_a[3u];
 	int16_t mag_a[3u];
@@ -530,7 +590,11 @@ immpc_9dof_main_raw_pack_s;
 /* пакет калиброванных данных основных измерителей */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	/**
+	 * @brief Заголовок пакета данных
+	 */
+	immpc_head_s head_s;
+
 	__IMMPC_FPT__ acc[3u];
 	__IMMPC_FPT__ gyr[3u];
 	__IMMPC_FPT__ mag[3u];
@@ -551,7 +615,11 @@ immpc_9dof_main_calib_pack_s;
 /* пакет "сырых" данных резервных измерителей */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	/**
+	 * @brief Заголовок пакета данных
+	 */
+	immpc_head_s head_s;
+
 	int16_t acc_a[3u];
 	int16_t gyr_a[3u];
 	int16_t mag_a[3u];
@@ -572,7 +640,11 @@ immpc_9dof_reserve_raw_pack_s;
 /* пакет калиброванных данных резервных измерителей */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	/**
+	 * @brief Заголовок пакета данных
+	 */
+	immpc_head_s head_s;
+
 	__IMMPC_FPT__ acc[3u];
 	__IMMPC_FPT__ gyr[3u];
 	__IMMPC_FPT__ mag[3u];
@@ -593,7 +665,11 @@ immpc_9dof_reserve_calib_pack_s;
 /* пакет "сырых" данных магнитометра */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	/**
+	 * @brief Заголовок пакета данных
+	 */
+	immpc_head_s head_s;
+
 	int16_t mag_a[3u];
 	int16_t magSelfTest_a[3u];
 
@@ -609,7 +685,7 @@ immpc_mag3dof_raw_pack_s;
 /* пакет калиброванных данных магнитометра */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	immpc_head_s head_s;
 	int16_t mag[3u];
 	int16_t magSelfTest[3u];
 
@@ -625,7 +701,7 @@ immpc_mag3dof_calib_pack_s;
 /* пакет калибровочной матрицы основных акселерометров */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	immpc_head_s head_s;
 	double matrix[3u][4u];
 
 	uint16_t crc;
@@ -640,7 +716,7 @@ immpc_acc3dof_main_calibmatrix_pack_s;
 /* пакет калибровочной матрицы резервных акселерометров */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	immpc_head_s head_s;
 	double matrix[3u][4u];
 
 	uint16_t crc;
@@ -655,7 +731,7 @@ immpc_acc3dof_reserve_calibmatrix_pack_s;
 /* пакет калибровочной матрицы основных гироскопов */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	immpc_head_s head_s;
 	double matrix[3u][4u];
 
 	uint16_t crc;
@@ -670,7 +746,7 @@ immpc_gyr3dof_main_calibmatrix_pack_s;
 /* пакет калибровочной матрицы резервных гироскопов */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	immpc_head_s head_s;
 	double matrix[3u][4u];
 
 	uint16_t crc;
@@ -685,7 +761,7 @@ immpc_gyr3dof_reserve_calibmatrix_pack_s;
 /* пакет калибровочной матрицы магнитометров */
 typedef struct
 {
-	immpc_head_s headMessage_s;
+	immpc_head_s head_s;
 	double matrix[3u][4u];
 
 	uint16_t crc;
@@ -713,6 +789,19 @@ typedef struct
 	#error "Please, define compiler"
 #endif
 immpc_request_or_cmd_pack_s;
+
+typedef struct
+{
+	uint16_t 	startFrame;
+	uint8_t 	messageID;
+	uint8_t 	endFrame;
+}
+#if defined (__GNUC__)
+	__attribute__((__packed__))
+#else
+	#error "Please, define compiler"
+#endif
+immpc_response_cmd_s;
 
 /* структура "сырых" данных акселерометра и гироскопа
  * основных датчиков
@@ -1026,13 +1115,15 @@ IMMPC_SetMag3DofNeedFlag(
 
 /* Работа с флагами --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
-extern immpc_message_pack_type_e
-IMMPC_GetDataMessage(
-	immpc_meas_raw_data_s *pIMMPC_RawData_s,
-	uint8_t *pDataIn,
-	size_t 	buffSizeIn,
-	uint8_t *pDataOut,
-	size_t 	*pLengthOut);
+extern immpc_id_and_pack_requests_e
+IMMPC_ParseInputMessageAndGenerateOutputMessage(
+	immpc_meas_raw_data_s 	*pRawSensMeas_s,
+
+	uint8_t 				*pInputBuff,
+	size_t 					inputBuffSize,
+
+	uint8_t 				*pOutBuff,
+	size_t 					*pOutBuffByteNumbForTx);
 
 extern size_t
 IMMPC_Generate_9dof_main_raw_pack(
