@@ -490,7 +490,7 @@ IMMPC_GetTypeMessage(
 	immpc_head_s 	*pMessageHead)
 {
 	/* присвоение стартовых значений */
-	immpc_id_and_pack_requests_e messageType_e = IMMPC_MESSAGE_PACK_UNKNOWN;
+	immpc_id_and_pack_requests_e messageType_e = IMMPC_ID_AND_PACK_REQUESTS_error_e;
 
 	/* Установка адреса в NULL */
 	pMessageHead = NULL;
@@ -1446,7 +1446,8 @@ IMMPC_GenerateResponseMessage(
 	pResponseCmd->startFrame 	= IMMPC_START_FRAME;
 	pResponseCmd->messageID 	= idResponse;
 	pResponseCmd->endFrame 		= IMMPC_RESPONCE_END_FRAME;
-	return ((size_t) 4u);
+
+	return ((size_t) sizeof(immpc_response_cmd_s));
 }
 
 /*-------------------------------------------------------------------------*//**
@@ -1494,57 +1495,64 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	immpc_meas_raw_data_s 	*pRawSensMeas_s,
 
 	uint8_t 				*pInputBuff,
-	size_t 					inputBuffSize,
+	uint16_t 				inputBuffSize,
 
 	uint8_t 				*pOutBuff,
-	size_t 					*pOutBuffByteNumbForTx)
+	uint16_t 				*pOutBuffByteNumbForTx)
 {
-	immpc_head_s *pHeadMessage_s;
+	/* Сброс количества байт для передачи */
+	*pOutBuffByteNumbForTx = 0u;
+
+	immpc_head_s *pHeadMessage_s = NULL;
 	immpc_id_and_pack_requests_e messageType_e =
 		IMMPC_GetTypeMessage(
 			pInputBuff,
 			inputBuffSize,
 			pHeadMessage_s);
 
-	/* Если пришла команда на запрос данных */
-	if (__IMMPC_PACK_REQUESTS_BITS_IsSetDataRequest(pHeadMessage_s->idAndPackRequests))
-	{
-		/* Проверить контрольную сумму */
-		immpc_request_cmd_s *pRequestCmd_s =
-			(immpc_request_cmd_s*) pHeadMessage_s;
-		if (pRequestCmd_s->crc = IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s), (uint16_t) sizeof(pRequestCmd_s))
-		{
-			/* Если запрос "сырых" данных резервных измерителей */
-			if (__IIMPC_PACK_REQUESTS_BITS_IsSetReservMeas(pHeadMessage_s->idAndPackRequests))
-			{
-				/* Генерация пакета данных */
-				*pOutBuffByteNumbForTx =
-					IMMPC_Generate_9dof_reserve_raw_pack(
-						pRawSensMeas_s,
-						(immpc_9dof_reserve_raw_pack_s*) pOutBuff);
-				break;
-			}
-		}
-		/* Контрольная сумма не верна */
-		else
-		{
-			/* Генерация пакета данных */
-			*pOutBuffByteNumbForTx =
-				IMMPC_GenerateResponseMessage(
-					(immpc_response_cmd_s*) pOutBuff,
-					IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
-			break;
-		}
-	}
-	/* Если пришла команда и содержит payload */
-	else
-	{
-		/* Если необходимо разобрать пакет, содержащий payload и записать эту payload в оперативную память ИИМ */
-		if (!(__IIMPC_PACK_REQUESTS_BITS_IsSetReadFlag(pHeadMessage_s->idAndPackRequests)))
-		{
+	/* Использовать конструкцию switc-case */
 
-		}
-	}
+	/* Если пришла команда на запрос данных */
+//	if (__IMMPC_PACK_REQUESTS_BITS_IsSetRequestData(pHeadMessage_s->packRequests))
+//	{
+//		/* Проверить контрольную сумму */
+//		immpc_request_cmd_s *pRequestCmd_s =
+//			(immpc_request_cmd_s*) pHeadMessage_s;
+//		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, (uint16_t) sizeof(pRequestCmd_s)))
+//		{
+//			/* Если запрос "сырых" данных резервных измерителей */
+//			if (__IIMPC_PACK_REQUESTS_BITS_IsSetReservMeas(pHeadMessage_s->packRequests))
+//			{
+//				/* Генерация пакета данных */
+//				*pOutBuffByteNumbForTx =
+//					IMMPC_Generate_9dof_reserve_raw_pack(
+//						pRawSensMeas_s,
+//						(immpc_9dof_reserve_raw_pack_s*) pOutBuff);
+//			}
+//		}
+//		/* Контрольная сумма не верна */
+//		else
+//		{
+//			/* Генерация пакета данных */
+//			*pOutBuffByteNumbForTx =
+//				IMMPC_GenerateResponseMessage(
+//					(immpc_response_cmd_s*) pOutBuff,
+//					IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+//
+//			messageType_e = IMMPC_ID_AND_PACK_REQUESTS_invalid_crc_e;
+//		}
+//	}
+//	/* Если пришла команда и содержит payload */
+//	else
+//	{
+//		/* Если необходимо разобрать пакет, содержащий payload и записать эту payload в оперативную память ИИМ */
+//		if (!(__IIMPC_PACK_REQUESTS_BITS_IsSetReadFlag(pHeadMessage_s->idAndPackRequests)))
+//		{
+//
+//		}
+//	}
+
+	return (messageType_e);
 }
 
 /*-------------------------------------------------------------------------*//**
@@ -1573,7 +1581,7 @@ IMMPC_Generate_9dof_main_raw_pack(
 	pPackForTx_s->head_s.startFrame = IMMPC_START_FRAME;
 
 	/* запись типа сообщения (Message ID + Pack requests) */
-	pPackForTx_s->head_s.messageID = IMMPC_MESSAGE_ID_9DOF_PACK_MAIN;
+	pPackForTx_s->head_s.messageID = IMMPC_ID_9dof_main;
 
 	__IMMPC_WRITE_REG(
 		/* Переменная для записи битовых масок */
@@ -1660,7 +1668,7 @@ IMMPC_Generate_9dof_reserve_raw_pack(
 	pPackForTx_s->head_s.startFrame = IMMPC_START_FRAME;
 
 	/* запись типа сообщения (Message ID + Pack requests) */
-	pPackForTx_s->head_s.messageID = IMMPC_MESSAGE_ID_9DOF_PACK_RESERVE;
+	pPackForTx_s->head_s.messageID = IMMPC_ID_9dof_raw;
 
 	__IMMPC_WRITE_REG(
 		/* Переменная для записи битовых масок */
