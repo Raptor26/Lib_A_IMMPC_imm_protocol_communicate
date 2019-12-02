@@ -355,6 +355,18 @@ typedef enum
 	/* #### Пакеты с данными от резервных измерителей #### --<<<<<<<<<<<<<<<< */
 	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ####################### */
 
+	/* #### Запросы от внешнего устройства #### -->>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_9dof_main,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_raw_request_cmd_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_9dof_reserve,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* #### Запросы от внешнего устройства #### --<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
 
 	/* #### Пакеты с калибровочными матрицами #### -->>>>>>>>>>>>>>>>>>>>>>>> */
 	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ############################### */
@@ -418,6 +430,27 @@ typedef struct
 	#error "Please, define compiler"
 #endif
 immpc_head_s;
+
+typedef struct
+{
+	uint16_t 	startFrame;
+
+	union
+	{
+		uint16_t idAndPackRequests;
+		struct
+		{
+			uint8_t messageID;
+			uint8_t packRequests;
+		};
+	};
+}
+#if defined (__GNUC__)
+	__attribute__((__packed__))
+#else
+	#error "Please, define compiler"
+#endif
+immpc_head_calib_matrix_s;
 
 typedef struct
 {
@@ -578,82 +611,6 @@ typedef struct
 #endif
 immpc_mag3dof_calib_pack_s;
 
-/* пакет калибровочной матрицы основных акселерометров */
-typedef struct
-{
-	immpc_head_s head_s;
-	double matrix[3u][4u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_acc3dof_main_calibmatrix_pack_s;
-
-/* пакет калибровочной матрицы резервных акселерометров */
-typedef struct
-{
-	immpc_head_s head_s;
-	double matrix[3u][4u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_acc3dof_reserve_calibmatrix_pack_s;
-
-/* пакет калибровочной матрицы основных гироскопов */
-typedef struct
-{
-	immpc_head_s head_s;
-	double matrix[3u][4u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_gyr3dof_main_calibmatrix_pack_s;
-
-/* пакет калибровочной матрицы резервных гироскопов */
-typedef struct
-{
-	immpc_head_s head_s;
-	double matrix[3u][4u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_gyr3dof_reserve_calibmatrix_pack_s;
-
-/* пакет калибровочной матрицы магнитометров */
-typedef struct
-{
-	immpc_head_s head_s;
-	double matrix[3u][4u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_mag3dof_calibmatrix_pack_s;
-
-
 /* пакет запросов или команд */
 typedef struct
 {
@@ -682,6 +639,19 @@ typedef struct
 	#error "Please, define compiler"
 #endif
 immpc_response_cmd_s;
+
+typedef struct
+{
+	immpc_head_calib_matrix_s head_s;
+	iscm_3dof_acc_calib_matrix_s calib_s;
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+	__attribute__((__packed__))
+#else
+	#error "Please, define compiler"
+#endif
+immpc_calibmatrix_pack_generic_s;
 
 /* структура "сырых" данных акселерометра и гироскопа
  * основных датчиков
@@ -1016,17 +986,20 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 extern size_t
 IMMPC_Generate_9dof_main_raw_pack(
 	immpc_meas_raw_data_s 		*pSourceData_s,
-	immpc_9dof_main_raw_pack_s	*pPackForTx_s);
+	immpc_9dof_main_raw_pack_s	*pPackForTx_s)
+__IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
 IMMPC_Generate_9dof_reserve_raw_pack(
 	immpc_meas_raw_data_s 			*pSourceData_s,
-	immpc_9dof_reserve_raw_pack_s	*pPackForTx_s) __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
+	immpc_9dof_reserve_raw_pack_s	*pPackForTx_s)
+__IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
 IMMPC_Generate_3dof_mag_raw_pack(
 	immpc_meas_raw_data_s 		*pSourceData_s,
-	immpc_mag3dof_raw_pack_s	*pPackForTx_s);
+	immpc_mag3dof_raw_pack_s	*pPackForTx_s)
+__IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
