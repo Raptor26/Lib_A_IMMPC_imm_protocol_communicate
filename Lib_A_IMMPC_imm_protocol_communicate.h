@@ -138,6 +138,8 @@
 #endif
 /*==== |End| --> Секция - Локальная оптимизация функций ======================*/
 
+#define __IMMPC_RemapTwoBytes(IMMPC_macrosByte)	((int16_t)((((IMMPC_macrosByte) << 8) & 0xFF00) | (((IMMPC_macrosByte) >> 8) & 0x00FF)))
+
 #define __IMMPC_SET_BIT(REG, BIT)   	((REG) |= (BIT))
 #define __IMMPC_CLEAR_BIT(REG, BIT) 	((REG) &= ~(BIT))
 #define __IMMPC_READ_BIT(REG, BIT)  	((REG) & (BIT))
@@ -321,8 +323,9 @@ typedef enum
 #define __IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq)	(((uint16_t) 	(bitsInPackReq)) & 0x00fFF)
 
 #define __IMMPC_SetIDandPackRequests(bitsInID, bitsInPackReq)			\
-	((__IMMPC_SetMessageTypeHelper_SetID(bitsInID)) 					\
-	 | (__IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq)))
+	__IMMPC_RemapTwoBytes(												\
+		((__IMMPC_SetMessageTypeHelper_SetID(bitsInID)) | 				\
+		 (__IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq))))
 
 typedef enum
 {
@@ -739,9 +742,10 @@ IMMPC_GetCRC_Generic(
 	uint8_t *pData,
 	uint16_t len)
 {
-	return (CRC_XOR_CCITT_Poly0x1021_Crc16(
-				(uint8_t*)&pData[2u],
-				len - 4u));
+	return __IMMPC_RemapTwoBytes(
+			   (CRC_XOR_CCITT_Poly0x1021_Crc16(
+					(uint8_t*)&pData[2u],
+					len - 4u)));
 }
 
 
@@ -972,6 +976,11 @@ IMMPC_SetMag3DofNeedFlag(
 }
 
 /* Работа с флагами --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+extern size_t
+IMMPC_EXTDEV_SetRequestMessageGeneric(
+	immpc_request_cmd_s 			*pOutputData_s,
+	immpc_id_and_pack_requests_e 	idAndPackRequests);
 
 extern immpc_id_and_pack_requests_e
 IMMPC_ParseInputMessageAndGenerateOutputMessage(

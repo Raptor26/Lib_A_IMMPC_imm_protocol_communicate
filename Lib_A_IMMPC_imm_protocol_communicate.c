@@ -22,11 +22,10 @@
 
 
 /*#### |Begin| --> Секция - "Прототипы локальных функций" ####################*/
-static immpc_id_and_pack_requests_e
+static immpc_head_s*
 IMMPC_GetTypeMessage(
 	const uint8_t 	*pData,
-	size_t 			buffSize,
-	immpc_head_s 	*pMessageHead);
+	size_t 			buffSize);
 
 static size_t
 IMMPC_SetCalibMatrixMessageGeneric(
@@ -37,6 +36,21 @@ IMMPC_SetCalibMatrixMessageGeneric(
 
 
 /*#### |Begin| --> Секция - "Описание глобальных функций" ####################*/
+
+size_t
+IMMPC_EXTDEV_SetRequestMessageGeneric(
+	immpc_request_cmd_s 			*pOutputData_s,
+	immpc_id_and_pack_requests_e 	idAndPackRequests)
+{
+	pOutputData_s->startFrame 			= IMMPC_START_FRAME;
+	pOutputData_s->idAndPackRequests 	= idAndPackRequests;
+	pOutputData_s->crc =
+		IMMPC_GetCRC_Generic(
+			(uint8_t*) pOutputData_s,
+			(uint16_t) sizeof(immpc_request_cmd_s));
+
+	return (sizeof(immpc_request_cmd_s));
+}
 
 /*-------------------------------------------------------------------------*//**
  * @author	Dmitry Tanikeev
@@ -116,17 +130,21 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	*pOutBuffByteNumbForTx = 0u;
 
 	immpc_head_s *pHeadMessage_s = NULL;
-	immpc_id_and_pack_requests_e messageType_e =
+	pHeadMessage_s =
 		IMMPC_GetTypeMessage(
 			pInputBuff,
-			inputBuffSize,
-			pHeadMessage_s);
+			inputBuffSize);
+
+	if (pHeadMessage_s == NULL)
+	{
+		return (0u);
+	}
 
 	/* Указатель на сообщения запросов */
 	immpc_request_cmd_s *pRequestCmd_s =
 		(immpc_request_cmd_s*) pHeadMessage_s;
 
-	switch (messageType_e)
+	switch (pRequestCmd_s->idAndPackRequests)
 	{
 	/* #### 9dof_main_raw_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 	case (IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd):
@@ -175,7 +193,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		break;
 	}
 
-	return (messageType_e);
+	return (pRequestCmd_s->idAndPackRequests);
 }
 
 /*-------------------------------------------------------------------------*//**
@@ -424,23 +442,22 @@ IMMPC_Generate_3dof_mag_raw_pack(
  *
  * @return	Тип сообщения (см. immpc_message_pack_type_e)
  */
-static immpc_id_and_pack_requests_e
+static immpc_head_s*
 IMMPC_GetTypeMessage(
 	const uint8_t 	*pData,
-	size_t 			buffSize,
-	immpc_head_s 	*pMessageHead)
+	size_t 			buffSize)
 {
 	/* присвоение стартовых значений */
 	immpc_id_and_pack_requests_e messageType_e = IMMPC_ID_AND_PACK_REQUESTS_error_e;
 
 	/* Установка адреса в NULL */
-	pMessageHead = NULL;
+	immpc_head_s *pMessageHead = NULL;
 
 	/* Минимальное количество данных необходимое для поиска */
 	if (buffSize < ((size_t) 4u))
 	{
 		/* выход из функции */
-		return (messageType_e);
+		return (NULL);
 	}
 
 	size_t j;
@@ -465,7 +482,7 @@ IMMPC_GetTypeMessage(
 	}
 
 	/* выход */
-	return (messageType_e);
+	return (pMessageHead);
 }
 /*#### |End  | <-- Секция - "Описание локальных функций" #####################*/
 
