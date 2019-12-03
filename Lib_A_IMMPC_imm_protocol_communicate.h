@@ -330,6 +330,8 @@ typedef enum
 		((__IMMPC_SetMessageTypeHelper_SetID(bitsInID)) | 				\
 		 (__IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq))))
 
+#define __IMMPC_GetIDFromIdAndPackRequest(idAndPackRequest)()
+
 typedef enum
 {
 	IMMPC_MESSAGE_PACK_UNKNOWN = 0u,
@@ -731,7 +733,7 @@ typedef struct
 //	immpc_raw_mag_data_s 				dataMag;
 
 	/* флаги (см. выше #define IMMPC_FLAG_NEED...) */
-	uint32_t flagsUseData;
+	immpc_id_and_pack_requests_e whatPackageIsNeeded;
 } immpc_inert_meas_all_data_s;
 
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
@@ -929,7 +931,7 @@ IMMPC_IsMain6DofNeed(
 	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
-	return (IMMPC_IsMain6DofNeedByVar(pMeasRawData_s->flagsUseData));
+	return (IMMPC_IsMain6DofNeedByVar(pMeasRawData_s->whatPackageIsNeeded));
 }
 
 __IMMPC_ALWAYS_INLINE void
@@ -937,7 +939,7 @@ IMMPC_SetMain6DofNeedFlag(
 	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	__IMMPC_SET_BIT(
-		pMeasRawData_s->flagsUseData,
+		pMeasRawData_s->whatPackageIsNeeded,
 		(IMMPC_FLAG_NEED_RAW_MAIN_ACC | IMMPC_FLAG_NEED_RAW_MAIN_GYR));
 }
 
@@ -957,7 +959,7 @@ IMMPC_IsReserve6DofNeed(
 	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
-	return (IMMPC_IsReserve6DofNeedByVar(pMeasRawData_s->flagsUseData));
+	return (IMMPC_IsReserve6DofNeedByVar(pMeasRawData_s->whatPackageIsNeeded));
 }
 
 __IMMPC_ALWAYS_INLINE void
@@ -965,7 +967,7 @@ IMMPC_SetReserve6DofNeedFlag(
 	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	__IMMPC_SET_BIT(
-		pMeasRawData_s->flagsUseData,
+		pMeasRawData_s->whatPackageIsNeeded,
 		(IMMPC_FLAG_NEED_RAW_RESERVE_ACC | IMMPC_FLAG_NEED_RAW_RESERVE_GYR));
 }
 
@@ -992,7 +994,7 @@ IMMPC_IsMag3DofNeed(
 	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
-	return (IMMPC_IsMag3DofNeedByVar(pMeasRawData_s->flagsUseData));
+	return (IMMPC_IsMag3DofNeedByVar(pMeasRawData_s->whatPackageIsNeeded));
 }
 
 __IMMPC_ALWAYS_INLINE void
@@ -1000,7 +1002,7 @@ IMMPC_SetMag3DofNeedFlag(
 	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	__IMMPC_SET_BIT(
-		pMeasRawData_s->flagsUseData,
+		pMeasRawData_s->whatPackageIsNeeded,
 		(IMMPC_FLAG_NEED_RAW_MAG));
 }
 

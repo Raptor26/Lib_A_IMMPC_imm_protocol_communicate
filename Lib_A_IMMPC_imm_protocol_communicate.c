@@ -497,6 +497,13 @@ IMMPC_GetTypeMessage(
 	/* выход */
 	return (pMessageHead);
 }
+
+uint32_t
+IMMPC_ConvertIDandPackRequest2FlagNeed(
+	immpc_id_and_pack_requests_e idAndPackRequest)
+{
+
+}
 /*#### |End  | <-- Секция - "Описание локальных функций" #####################*/
 
 

@@ -40,20 +40,6 @@ IMMPC_EXTDEV_SetRequestMessageGeneric(
 	return (sizeof(immpc_request_cmd_s));
 }
 
-uint16_t
-IMMPC_EXTDEV_GetInputMessagePackageType(
-	uint8_t *pInputBuff,
-	size_t 	inputBuffSize)
-{
-	immpc_head_s *pHeadMessage_s = NULL;
-	pHeadMessage_s =
-		IMMPC_GetTypeMessage(
-			pInputBuff,
-			inputBuffSize);
-
-	return (pHeadMessage_s->idAndPackRequests);
-}
-
 immpc_message_id_e
 IMMPC_EXTDEV_ParseMain9dofRawPack(
 	immpc_inert_meas_all_data_s *pInertMeas_s,

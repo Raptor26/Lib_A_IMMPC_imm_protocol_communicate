@@ -159,6 +159,16 @@ IMMPC_EXTDEV_Main9dof_SetInertMeasMagSelfTest_Int16(
 /* #### ---- Копирование измерений магнитометра в "Generic IMM" #### <<<<<<<< */
 /* #### ---- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ############# */
 
+
+extern immpc_message_id_e
+IMMPC_EXTDEV_ParseMain9dofRawPack(
+	immpc_inert_meas_all_data_s *pInertMeas_s,
+	immpc_9dof_main_raw_pack_s 	*pInputBuff_s);
+/* -------------------------------------------------------------------------- */
+extern immpc_message_id_e
+IMMPC_EXTDEV_ParseReserve9dofRawPack(
+	immpc_inert_meas_all_data_s 	*pInertMeas_s,
+	immpc_9dof_reserve_raw_pack_s 	*pInputBuff_s);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
