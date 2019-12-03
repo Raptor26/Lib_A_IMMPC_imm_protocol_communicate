@@ -22,11 +22,6 @@
 
 
 /*#### |Begin| --> Секция - "Прототипы локальных функций" ####################*/
-static immpc_head_s*
-IMMPC_GetTypeMessage(
-	const uint8_t 	*pData,
-	size_t 			buffSize);
-
 static size_t
 IMMPC_SetCalibMatrixMessageGeneric(
 	immpc_calibmatrix_pack_generic_s 	*pOutputMessage,
@@ -37,88 +32,7 @@ IMMPC_SetCalibMatrixMessageGeneric(
 
 /*#### |Begin| --> Секция - "Описание глобальных функций" ####################*/
 
-size_t
-IMMPC_EXTDEV_SetRequestMessageGeneric(
-	immpc_request_cmd_s 			*pOutputData_s,
-	immpc_id_and_pack_requests_e 	idAndPackRequests)
-{
-	pOutputData_s->startFrame 			= IMMPC_START_FRAME;
-	pOutputData_s->idAndPackRequests 	= idAndPackRequests;
-	pOutputData_s->crc =
-		IMMPC_GetCRC_Generic(
-			(uint8_t*) pOutputData_s,
-			(uint16_t) sizeof(immpc_request_cmd_s));
 
-	return (sizeof(immpc_request_cmd_s));
-}
-
-uint16_t
-IMMPC_EXTDEV_GetInputMessagePackageType(
-	uint8_t *pInputBuff,
-	size_t 	inputBuffSize)
-{
-	immpc_head_s *pHeadMessage_s = NULL;
-	pHeadMessage_s =
-		IMMPC_GetTypeMessage(
-			pInputBuff,
-			inputBuffSize);
-
-	return (pHeadMessage_s->idAndPackRequests);
-}
-
-immpc_message_id_e
-IMMPC_EXTDEV_ParseMain9dofRawPack(
-	immpc_inert_meas_all_data_s *pInertMeas_s,
-	immpc_9dof_main_raw_pack_s 	*pInputBuff)
-{
-	if (IMMPC_GetCRC_Generic(
-			(uint8_t*) pInputBuff,
-			(uint16_t) sizeof(immpc_9dof_main_raw_pack_s)) == pInputBuff->crc)
-	{
-		IMMPC_Main9dof_SetInertMeasAcc_Int16			(pInertMeas_s, pInputBuff->acc_a);
-		IMMPC_Main9dof_SetInertMeasAccTemperature_Int16	(pInertMeas_s, pInputBuff->accTemp_a);
-
-		IMMPC_Main9dof_SetInertMeasGyr_Int16			(pInertMeas_s, pInputBuff->gyr_a);
-		IMMPC_Main9dof_SetInertMeasGyrTemperature_Int16	(pInertMeas_s, pInputBuff->gyrTemp_a);
-
-		IMMPC_Main9dof_SetInertMeasMag_Int16			(pInertMeas_s, pInputBuff->mag_a);
-		IMMPC_Main9dof_SetInertMeasMagSelfTest_Int16	(pInertMeas_s, pInputBuff->magSelfTest_a);
-	}
-	else
-	{
-		/* Контрольная сумма не верна */
-		return (IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
-	}
-
-	return (IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
-}
-
-immpc_message_id_e
-IMMPC_EXTDEV_ParseReserve9dofRawPack(
-	immpc_inert_meas_all_data_s 	*pInertMeas_s,
-	immpc_9dof_reserve_raw_pack_s 	*pInputBuff)
-{
-	if (IMMPC_GetCRC_Generic(
-			(uint8_t*) pInputBuff,
-			(uint16_t) sizeof(immpc_9dof_reserve_raw_pack_s)) == pInputBuff->crc)
-	{
-		IMMPC_Reserve9dof_SetInertMeasAcc_Int16				(pInertMeas_s, pInputBuff->acc_a);
-		IMMPC_Reserve9dof_SetInertMeasAccTemperature_Int16	(pInertMeas_s, pInputBuff->accTemp_a);
-
-		IMMPC_Reserve9dof_SetInertMeasGyr_Int16				(pInertMeas_s, pInputBuff->gyr_a);
-		IMMPC_Reserve9dof_SetInertMeasGyrTemperature_Int16	(pInertMeas_s, pInputBuff->gyrTemp_a);
-
-		IMMPC_Main9dof_SetInertMeasMag_Int16			(pInertMeas_s, pInputBuff->mag_a);
-		IMMPC_Main9dof_SetInertMeasMagSelfTest_Int16	(pInertMeas_s, pInputBuff->magSelfTest_a);
-	}
-	else
-	{
-		/* Контрольная сумма не верна */
-		return (IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
-	}
-
-	return (IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
-}
 
 /*-------------------------------------------------------------------------*//**
  * @author	Dmitry Tanikeev
@@ -546,7 +460,7 @@ IMMPC_SetMain3dofMagRawDataPack(
  *
  * @return	Тип сообщения (см. immpc_message_pack_type_e)
  */
-static immpc_head_s*
+immpc_head_s*
 IMMPC_GetTypeMessage(
 	const uint8_t 	*pData,
 	size_t 			buffSize)

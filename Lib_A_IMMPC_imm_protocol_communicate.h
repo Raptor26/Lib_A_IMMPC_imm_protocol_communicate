@@ -900,7 +900,7 @@ IMMPC_Reserve9dof_SetInertMeasGyrTemperature_Int16(
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_Reserve9dof_SetInertMeasAccTemperature_Int16	(
+IMMPC_Reserve9dof_SetInertMeasAccTemperature_Int16(
 	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pAccTemperature)
 {
@@ -1038,6 +1038,11 @@ IMMPC_SetMain3dofMagRawDataPack(
 	immpc_inert_meas_all_data_s 		*pSourceData_s,
 	immpc_mag3dof_raw_pack_s	*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
+
+extern immpc_head_s*
+IMMPC_GetTypeMessage(
+	const uint8_t 	*pData,
+	size_t 			buffSize);
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
