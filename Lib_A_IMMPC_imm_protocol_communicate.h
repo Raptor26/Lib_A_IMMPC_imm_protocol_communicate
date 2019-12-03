@@ -138,7 +138,8 @@
 #endif
 /*==== |End| --> Секция - Локальная оптимизация функций ======================*/
 
-#define __IMMPC_RemapTwoBytes(IMMPC_macrosByte)	((int16_t)((((IMMPC_macrosByte) << 8) & 0xFF00) | (((IMMPC_macrosByte) >> 8) & 0x00FF)))
+/* @todo добавить макроопределение для выбора big endian и little endian */
+#define __IMMPC_RemapTwoBytes(IMMPC_macrosByte)	((uint16_t)((((IMMPC_macrosByte) << 8) & 0xFF00) | (((IMMPC_macrosByte) >> 8) & 0x00FF)))
 
 #define __IMMPC_SET_BIT(REG, BIT)   	((REG) |= (BIT))
 #define __IMMPC_CLEAR_BIT(REG, BIT) 	((REG) &= ~(BIT))
@@ -147,6 +148,7 @@
 #define __IMMPC_WRITE_REG(REG, VAL) 	((REG) = (VAL))
 #define __IMMPC_READ_REG(REG)      		((REG))
 #define __IMMPC_IS_SET_BIT(REG, BIT)	(((REG) & (BIT)) == (BIT))
+#define __IMMPC_MODIFY_REG(REG, CLEARMASK, SETMASK)  __IMMPC_WRITE_REG((REG), (((__IMMPC_READ_REG(REG)) & (~(CLEARMASK))) | (SETMASK)))
 
 #define IMMPC_START_FRAME									((uint16_t)	0xAAAA)
 #define IMMPC_RESPONCE_END_FRAME							((uint8_t)	0x55)
@@ -315,6 +317,7 @@ typedef enum
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR 		= 200u,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBRATION_MATRIX_FROM_EEPROM,
+	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_MESSAGE_FORMATE,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_OK,
 } immpc_message_id_e;
 
@@ -477,6 +480,30 @@ typedef struct
 	#error "Please, define compiler"
 #endif
 immpc_request_cmd_s;
+
+typedef struct
+{
+	/**
+	 * @brief Заголовок пакета данных
+	 */
+	immpc_head_s head_s;
+
+	int16_t acc_a[3u];
+	int16_t gyr_a[3u];
+	int16_t mag_a[3u];
+
+	int16_t accTemp_a[3u];
+	int16_t gyrTemp_a[3u];
+	int16_t magSelfTest_a[3u];
+
+	uint16_t crc;
+}
+#if defined (__GNUC__)
+	__attribute__((__packed__))
+#else
+	#error "Please, define compiler"
+#endif
+immpc_9dof_generic_raw_pack_s;
 
 /* пакет "сырых" данных основных измерителей */
 typedef struct
@@ -661,14 +688,16 @@ immpc_calibmatrix_pack_generic_s;
  */
 typedef struct
 {
-	int16_t rawMainAcc_a[3u];
-	int16_t rawMainGyr_a[3u];
+	int16_t acc_a[3u];
+	int16_t gyr_a[3u];
+	int16_t mag_a[3u];
 
-	int16_t rawMainTempAcc_a[3u];
-	int16_t rawMainTempGyr_a[3u];
+	int16_t accTemp_a[3u];
+	int16_t gyrTemp_a[3u];
+	int16_t magSelfTest_a[3u];
 
 	uint16_t sensorStatus;
-} immpc_raw_main_acc_gyr_data_s;
+} immpc_main9dof_raw_data_s;
 
 /* структура "сырых" данных магнитометра */
 typedef struct
@@ -684,26 +713,26 @@ typedef struct
  */
 typedef struct
 {
-	int16_t rawReserveAcc_a[3u];
-	int16_t rawReserveGyr_a[3u];
+	int16_t acc_a[3u];
+	int16_t gyr_a[3u];
 
-	int16_t rawReserveTempAcc_a[3u];
-	int16_t rawReserveTempGyr_a[3u];
+	int16_t accTemp_a[3u];
+	int16_t gyrTemp_a[3u];
 
 	uint16_t sensorStatus;
-} immpc_raw_reserve_acc_gyr_data_s;
+} immpc_reserve6dof_raw_data_s;
 
 /* структура данных */
 typedef struct
 {
 	/* "сырые" данные */
-	immpc_raw_main_acc_gyr_data_s 		dataMainAccGyr;
-	immpc_raw_reserve_acc_gyr_data_s 	dataReserveAccGyr;
-	immpc_raw_mag_data_s 				dataMag;
+	immpc_main9dof_raw_data_s 		main9dof;
+	immpc_reserve6dof_raw_data_s 	reserve6dof;
+//	immpc_raw_mag_data_s 				dataMag;
 
 	/* флаги (см. выше #define IMMPC_FLAG_NEED...) */
 	uint32_t flagsUseData;
-} immpc_meas_raw_data_s;
+} immpc_inert_meas_all_data_s;
 
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
 
@@ -752,132 +781,132 @@ IMMPC_GetCRC_Generic(
 /* Запись данных в структуру -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetMainRawAcc(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Main9dof_SetInertMeasAcc_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pRawAcc)
 {
-	pRawData_s->dataMainAccGyr.rawMainAcc_a[0u] = *pRawAcc++;
-	pRawData_s->dataMainAccGyr.rawMainAcc_a[1u] = *pRawAcc++;
-	pRawData_s->dataMainAccGyr.rawMainAcc_a[2u] = *pRawAcc;
+	pRawData_s->main9dof.acc_a[0u] = *pRawAcc++;
+	pRawData_s->main9dof.acc_a[1u] = *pRawAcc++;
+	pRawData_s->main9dof.acc_a[2u] = *pRawAcc;
 
-	/* @todo Установить бит обновления данных гироскопа */
+	/* Установить бит обновления данных гироскопа */
 	__IMMPC_SET_BIT(
-		pRawData_s->dataMainAccGyr.sensorStatus,
+		pRawData_s->main9dof.sensorStatus,
 		IMMPC_ACC_XYZ_DATA_WAS_UPDATE);
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetMainRawGyr(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Main9dof_SetInertMeasGyr_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pRawGyr)
 {
-	pRawData_s->dataMainAccGyr.rawMainGyr_a[0u] = *pRawGyr++;
-	pRawData_s->dataMainAccGyr.rawMainGyr_a[1u] = *pRawGyr++;
-	pRawData_s->dataMainAccGyr.rawMainGyr_a[2u] = *pRawGyr;
+	pRawData_s->main9dof.gyr_a[0u] = *pRawGyr++;
+	pRawData_s->main9dof.gyr_a[1u] = *pRawGyr++;
+	pRawData_s->main9dof.gyr_a[2u] = *pRawGyr;
 
-	/* @todo Установить бит обновления данных акселерометра */
+	/* Установить бит обновления данных акселерометра */
 	__IMMPC_SET_BIT(
-		pRawData_s->dataMainAccGyr.sensorStatus,
+		pRawData_s->main9dof.sensorStatus,
 		IMMPC_GYR_XYZ_DATA_WAS_UPDATE);
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetMainRawGyrTemperature(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Main9dof_SetInertMeasGyrTemperature_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pGyrTemperature)
 {
-	pRawData_s->dataMainAccGyr.rawMainTempGyr_a[0u] = *pGyrTemperature++;
-	pRawData_s->dataMainAccGyr.rawMainTempGyr_a[1u] = *pGyrTemperature++;
-	pRawData_s->dataMainAccGyr.rawMainTempGyr_a[2u] = *pGyrTemperature;
+	pRawData_s->main9dof.gyrTemp_a[0u] = *pGyrTemperature++;
+	pRawData_s->main9dof.gyrTemp_a[1u] = *pGyrTemperature++;
+	pRawData_s->main9dof.gyrTemp_a[2u] = *pGyrTemperature;
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetMainRawAccTemperature(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Main9dof_SetInertMeasAccTemperature_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pAccTemperature)
 {
-	pRawData_s->dataMainAccGyr.rawMainTempAcc_a[0u] = *pAccTemperature++;
-	pRawData_s->dataMainAccGyr.rawMainTempAcc_a[1u] = *pAccTemperature++;
-	pRawData_s->dataMainAccGyr.rawMainTempAcc_a[2u] = *pAccTemperature;
+	pRawData_s->main9dof.accTemp_a[0u] = *pAccTemperature++;
+	pRawData_s->main9dof.accTemp_a[1u] = *pAccTemperature++;
+	pRawData_s->main9dof.accTemp_a[2u] = *pAccTemperature;
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetMag(
-	immpc_meas_raw_data_s *pRawData_s,
-	int16_t *pRawAcc)
+IMMPC_Main9dof_SetInertMeasMag_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
+	int16_t *pRawMag)
 {
-	pRawData_s->dataMag.rawMag_a[0u] = *pRawAcc++;
-	pRawData_s->dataMag.rawMag_a[1u] = *pRawAcc++;
-	pRawData_s->dataMag.rawMag_a[2u] = *pRawAcc;
+	pRawData_s->main9dof.mag_a[0u] = *pRawMag++;
+	pRawData_s->main9dof.mag_a[1u] = *pRawMag++;
+	pRawData_s->main9dof.mag_a[2u] = *pRawMag;
 
-	/* @todo Установить бит обновления данных гироскопа */
+	/* Установить бит обновления данных гироскопа */
 	__IMMPC_SET_BIT(
-		pRawData_s->dataMainAccGyr.sensorStatus,
+		pRawData_s->main9dof.sensorStatus,
 		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
 
 	__IMMPC_SET_BIT(
-		pRawData_s->dataReserveAccGyr.sensorStatus,
+		pRawData_s->reserve6dof.sensorStatus,
 		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetMagSelfTest(
-	immpc_meas_raw_data_s *pRawData_s,
-	int16_t *pRawGyr)
+IMMPC_Main9dof_SetInertMeasMagSelfTest_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
+	int16_t *pRawMagSelfTest)
 {
-	pRawData_s->dataMag.rawMagSelfTest[0u] = *pRawGyr++;
-	pRawData_s->dataMag.rawMagSelfTest[1u] = *pRawGyr++;
-	pRawData_s->dataMag.rawMagSelfTest[2u] = *pRawGyr;
+	pRawData_s->main9dof.magSelfTest_a[0u] = *pRawMagSelfTest++;
+	pRawData_s->main9dof.magSelfTest_a[1u] = *pRawMagSelfTest++;
+	pRawData_s->main9dof.magSelfTest_a[2u] = *pRawMagSelfTest;
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetReserveRawAcc(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Reserve9dof_SetInertMeasAcc_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pRawAcc)
 {
-	pRawData_s->dataReserveAccGyr.rawReserveAcc_a[0u] = *pRawAcc++;
-	pRawData_s->dataReserveAccGyr.rawReserveAcc_a[1u] = *pRawAcc++;
-	pRawData_s->dataReserveAccGyr.rawReserveAcc_a[2u] = *pRawAcc;
+	pRawData_s->reserve6dof.acc_a[0u] = *pRawAcc++;
+	pRawData_s->reserve6dof.acc_a[1u] = *pRawAcc++;
+	pRawData_s->reserve6dof.acc_a[2u] = *pRawAcc;
 
 	/* @todo Установить бит обновления данных гироскопа */
 	__IMMPC_SET_BIT(
-		pRawData_s->dataReserveAccGyr.sensorStatus,
+		pRawData_s->reserve6dof.sensorStatus,
 		IMMPC_ACC_XYZ_DATA_WAS_UPDATE);
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetReserveRawGyr(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Reserve9dof_SetInertMeasGyr_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pRawGyr)
 {
-	pRawData_s->dataReserveAccGyr.rawReserveGyr_a[0u] = *pRawGyr++;
-	pRawData_s->dataReserveAccGyr.rawReserveGyr_a[1u] = *pRawGyr++;
-	pRawData_s->dataReserveAccGyr.rawReserveGyr_a[2u] = *pRawGyr;
+	pRawData_s->reserve6dof.gyr_a[0u] = *pRawGyr++;
+	pRawData_s->reserve6dof.gyr_a[1u] = *pRawGyr++;
+	pRawData_s->reserve6dof.gyr_a[2u] = *pRawGyr;
 
 	/* @todo Установить бит обновления данных акселерометра */
 	__IMMPC_SET_BIT(
-		pRawData_s->dataReserveAccGyr.sensorStatus,
+		pRawData_s->reserve6dof.sensorStatus,
 		IMMPC_GYR_XYZ_DATA_WAS_UPDATE);
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetReserveRawGyrTemperature(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Reserve9dof_SetInertMeasGyrTemperature_Int16(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pGyrTemperature)
 {
-	pRawData_s->dataReserveAccGyr.rawReserveTempGyr_a[0u] = *pGyrTemperature++;
-	pRawData_s->dataReserveAccGyr.rawReserveTempGyr_a[1u] = *pGyrTemperature++;
-	pRawData_s->dataReserveAccGyr.rawReserveTempGyr_a[2u] = *pGyrTemperature;
+	pRawData_s->reserve6dof.gyr_a[0u] = *pGyrTemperature++;
+	pRawData_s->reserve6dof.gyr_a[1u] = *pGyrTemperature++;
+	pRawData_s->reserve6dof.gyr_a[2u] = *pGyrTemperature;
 }
 
 __IMMPC_ALWAYS_INLINE void
-IMMPC_SetReserveRawAccTemperature(
-	immpc_meas_raw_data_s *pRawData_s,
+IMMPC_Reserve9dof_SetInertMeasAccTemperature_Int16	(
+	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pAccTemperature)
 {
-	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[0u] = *pAccTemperature++;
-	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[1u] = *pAccTemperature++;
-	pRawData_s->dataReserveAccGyr.rawReserveTempAcc_a[2u] = *pAccTemperature;
+	pRawData_s->reserve6dof.acc_a[0u] = *pAccTemperature++;
+	pRawData_s->reserve6dof.acc_a[1u] = *pAccTemperature++;
+	pRawData_s->reserve6dof.acc_a[2u] = *pAccTemperature;
 }
 
 /* Запись данных в структуру --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
@@ -897,7 +926,7 @@ IMMPC_IsMain6DofNeedByVar(
 
 __IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsMain6DofNeed(
-	immpc_meas_raw_data_s *pMeasRawData_s)
+	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
 	return (IMMPC_IsMain6DofNeedByVar(pMeasRawData_s->flagsUseData));
@@ -905,7 +934,7 @@ IMMPC_IsMain6DofNeed(
 
 __IMMPC_ALWAYS_INLINE void
 IMMPC_SetMain6DofNeedFlag(
-	immpc_meas_raw_data_s *pMeasRawData_s)
+	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	__IMMPC_SET_BIT(
 		pMeasRawData_s->flagsUseData,
@@ -925,7 +954,7 @@ IMMPC_IsReserve6DofNeedByVar(
 
 __IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsReserve6DofNeed(
-	immpc_meas_raw_data_s *pMeasRawData_s)
+	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
 	return (IMMPC_IsReserve6DofNeedByVar(pMeasRawData_s->flagsUseData));
@@ -933,7 +962,7 @@ IMMPC_IsReserve6DofNeed(
 
 __IMMPC_ALWAYS_INLINE void
 IMMPC_SetReserve6DofNeedFlag(
-	immpc_meas_raw_data_s *pMeasRawData_s)
+	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	__IMMPC_SET_BIT(
 		pMeasRawData_s->flagsUseData,
@@ -942,7 +971,7 @@ IMMPC_SetReserve6DofNeedFlag(
 
 __IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsNeedReserve6dofRawPack(
-	immpc_meas_raw_data_s *pMeasRawData_s)
+	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	/* @todo добавить проверку */
 	return (1u);
@@ -960,7 +989,7 @@ IMMPC_IsMag3DofNeedByVar(
 
 __IMMPC_ALWAYS_INLINE size_t
 IMMPC_IsMag3DofNeed(
-	immpc_meas_raw_data_s *pMeasRawData_s)
+	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	/* Возвращает 1 если нужны данные от резервного измерителя */
 	return (IMMPC_IsMag3DofNeedByVar(pMeasRawData_s->flagsUseData));
@@ -968,7 +997,7 @@ IMMPC_IsMag3DofNeed(
 
 __IMMPC_ALWAYS_INLINE void
 IMMPC_SetMag3DofNeedFlag(
-	immpc_meas_raw_data_s *pMeasRawData_s)
+	immpc_inert_meas_all_data_s *pMeasRawData_s)
 {
 	__IMMPC_SET_BIT(
 		pMeasRawData_s->flagsUseData,
@@ -984,7 +1013,7 @@ IMMPC_EXTDEV_SetRequestMessageGeneric(
 
 extern immpc_id_and_pack_requests_e
 IMMPC_ParseInputMessageAndGenerateOutputMessage(
-	immpc_meas_raw_data_s 	*pRawSensMeas_s,
+	immpc_inert_meas_all_data_s 	*pRawSensMeas_s,
 
 	uint8_t 				*pInputBuff,
 	uint16_t 				inputBuffSize,
@@ -993,20 +1022,20 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	uint16_t 				*pOutBuffByteNumbForTx);
 
 extern size_t
-IMMPC_Generate_9dof_main_raw_pack(
-	immpc_meas_raw_data_s 		*pSourceData_s,
+IMMPC_SetMain9dofRawDataPack(
+	immpc_inert_meas_all_data_s 		*pSourceData_s,
 	immpc_9dof_main_raw_pack_s	*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
-IMMPC_Generate_9dof_reserve_raw_pack(
-	immpc_meas_raw_data_s 			*pSourceData_s,
+IMMPC_SetReserve9dofRawDataPack(
+	immpc_inert_meas_all_data_s 			*pSourceData_s,
 	immpc_9dof_reserve_raw_pack_s	*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
-IMMPC_Generate_3dof_mag_raw_pack(
-	immpc_meas_raw_data_s 		*pSourceData_s,
+IMMPC_SetMain3dofMagRawDataPack(
+	immpc_inert_meas_all_data_s 		*pSourceData_s,
 	immpc_mag3dof_raw_pack_s	*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
