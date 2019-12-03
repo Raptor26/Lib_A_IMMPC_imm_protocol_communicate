@@ -250,18 +250,55 @@
 // next 													(20u)
 
 /* Sensors_status */
-#define IMMPC_ACC_X_SELF_TEST								(((uint16_t)(0b10000000) << 8) & 0xFF00)
-#define IMMPC_ACC_Y_SELF_TEST								(((uint16_t)(0b01000000) << 8) & 0xFF00)
-#define IMMPC_ACC_Z_SELF_TEST								(((uint16_t)(0b00100000) << 8) & 0xFF00)
-#define IMMPC_GYR_X_SELF_TEST								(((uint16_t)(0b00010000) << 8) & 0xFF00)
-#define IMMPC_GYR_Y_SELF_TEST								(((uint16_t)(0b00001000) << 8) & 0xFF00)
-#define IMMPC_GYR_Z_SELF_TEST								(((uint16_t)(0b00000100) << 8) & 0xFF00)
-#define IMMPC_MAG_X_SELF_TEST								(((uint16_t)(0b00000010) << 8) & 0xFF00)
-#define IMMPC_MAG_Y_SELF_TEST								(((uint16_t)(0b00000001) << 8) & 0xFF00)
-#define IMMPC_MAG_Z_SELF_TEST								((uint16_t)(0b10000000) & 0x00FF)
-#define IMMPC_ACC_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b01000000) & 0x00FF)
-#define IMMPC_GYR_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b00100000) & 0x00FF)
-#define IMMPC_MAG_XYZ_DATA_WAS_UPDATE						((uint16_t)(0b00010000) & 0x00FF)
+#define IMMPC_ACC_X_SELF_TEST_Pos							(15u)
+#define IMMPC_ACC_X_SELF_TEST_Msk							(0x1u << IMMPC_ACC_X_SELF_TEST_Pos)
+#define IMMPC_ACC_X_SELF_TEST								((uint16_t) IMMPC_ACC_X_SELF_TEST_Msk)
+
+#define IMMPC_ACC_Y_SELF_TEST_Pos							(14u)
+#define IMMPC_ACC_Y_SELF_TEST_Msk							(0x1u << IMMPC_ACC_Y_SELF_TEST_Pos)
+#define IMMPC_ACC_Y_SELF_TEST								((uint16_t) IMMPC_ACC_Y_SELF_TEST_Msk)
+
+#define IMMPC_ACC_Z_SELF_TEST_Pos							(13u)
+#define IMMPC_ACC_Z_SELF_TEST_Msk							(0x1u << IMMPC_ACC_Z_SELF_TEST_Pos)
+#define IMMPC_ACC_Z_SELF_TEST								((uint16_t) IMMPC_ACC_Z_SELF_TEST_Msk)
+
+#define IMMPC_GYR_X_SELF_TEST_Pos							(12u)
+#define IMMPC_GYR_X_SELF_TEST_Msk							(0x1u << IMMPC_GYR_X_SELF_TEST_Pos)
+#define IMMPC_GYR_X_SELF_TEST								((uint16_t) IMMPC_GYR_X_SELF_TEST_Msk)
+
+#define IMMPC_GYR_Y_SELF_TEST_Pos							(11u)
+#define IMMPC_GYR_Y_SELF_TEST_Msk							(0x1u << IMMPC_GYR_Y_SELF_TEST_Pos)
+#define IMMPC_GYR_Y_SELF_TEST								((uint16_t) IMMPC_GYR_Y_SELF_TEST_Msk)
+
+#define IMMPC_GYR_Z_SELF_TEST_Pos							(10u)
+#define IMMPC_GYR_Z_SELF_TEST_Msk							(0x1u << IMMPC_GYR_Z_SELF_TEST_Pos)
+#define IMMPC_GYR_Z_SELF_TEST								((uint16_t) IMMPC_GYR_Z_SELF_TEST_Msk)
+
+#define IMMPC_MAG_X_SELF_TEST_Pos							(9u)
+#define IMMPC_MAG_X_SELF_TEST_Msk							(0x1u << IMMPC_MAG_X_SELF_TEST_Pos)
+#define IMMPC_MAG_X_SELF_TEST								((uint16_t) IMMPC_MAG_X_SELF_TEST_Msk)
+
+#define IMMPC_MAG_Y_SELF_TEST_Pos							(8u)
+#define IMMPC_MAG_Y_SELF_TEST_Msk							(0x1u << IMMPC_MAG_Y_SELF_TEST_Pos)
+#define IMMPC_MAG_Y_SELF_TEST								((uint16_t) IMMPC_MAG_Y_SELF_TEST_Msk)
+
+#define IMMPC_MAG_Z_SELF_TEST_Pos							(7u)
+#define IMMPC_MAG_Z_SELF_TEST_Msk							(0x1u << IMMPC_MAG_Z_SELF_TEST_Pos)
+#define IMMPC_MAG_Z_SELF_TEST								((uint16_t) IMMPC_MAG_Z_SELF_TEST_Msk)
+
+#define IMMPC_ACC_XYZ_DATA_WAS_UPDATE_Pos					(6u)
+#define IMMPC_ACC_XYZ_DATA_WAS_UPDATE_Msk					(0x1u << IMMPC_ACC_XYZ_DATA_WAS_UPDATE_Pos)
+#define IMMPC_ACC_XYZ_DATA_WAS_UPDATE						((uint16_t) IMMPC_ACC_XYZ_DATA_WAS_UPDATE_Msk)
+
+#define IMMPC_GYR_XYZ_DATA_WAS_UPDATE_Pos					(5u)
+#define IMMPC_GYR_XYZ_DATA_WAS_UPDATE_Msk					(0x1u << IMMPC_GYR_XYZ_DATA_WAS_UPDATE_Pos)
+#define IMMPC_GYR_XYZ_DATA_WAS_UPDATE						((uint16_t) IMMPC_GYR_XYZ_DATA_WAS_UPDATE_Msk)
+
+#define IMMPC_MAG_XYZ_DATA_WAS_UPDATE_Pos					(4u)
+#define IMMPC_MAG_XYZ_DATA_WAS_UPDATE_Msk					(0x1u << IMMPC_MAG_XYZ_DATA_WAS_UPDATE_Pos)
+#define IMMPC_MAG_XYZ_DATA_WAS_UPDATE						((uint16_t) IMMPC_MAG_XYZ_DATA_WAS_UPDATE_Msk)
+
+
 
 /* скорости передачи данных при использовании USART */
 #define IMMPC_USART_BAUDRATE_LOW							(57600U)
@@ -323,14 +360,18 @@ typedef enum
 
 
 #define __IMMPC_SetMessageTypeHelper_SetID(bitsInID) 				(((((uint16_t) 	((bitsInID))) << 8u) & 0xFF00))
-#define __IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq)	(((uint16_t) 	(bitsInPackReq)) & 0x00fFF)
+#define __IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq)	(((uint16_t) 	(bitsInPackReq)) & 0x00FF)
 
 #define __IMMPC_SetIDandPackRequests(bitsInID, bitsInPackReq)			\
 	__IMMPC_RemapTwoBytes(												\
 		((__IMMPC_SetMessageTypeHelper_SetID(bitsInID)) | 				\
 		 (__IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq))))
 
-#define __IMMPC_GetIDFromIdAndPackRequest(idAndPackRequest)()
+/* @todo если активен макрос __IMMPC_RemapTwoBytes() */
+#define __IMMPC_GetIdFromIdAndPackRequest(idAndPackRequest)				(((idAndPackRequest)) & 0x00FF)
+
+/* @todo Иначе */
+// #define __IMMPC_GetIDFromIdAndPackRequest(idAndPackRequest)			(((idAndPackRequest) >> 8u) & 0x00FF)
 
 typedef enum
 {
@@ -896,9 +937,9 @@ IMMPC_Reserve9dof_SetInertMeasGyrTemperature_Int16(
 	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pGyrTemperature)
 {
-	pRawData_s->reserve6dof.gyr_a[0u] = *pGyrTemperature++;
-	pRawData_s->reserve6dof.gyr_a[1u] = *pGyrTemperature++;
-	pRawData_s->reserve6dof.gyr_a[2u] = *pGyrTemperature;
+	pRawData_s->reserve6dof.gyrTemp_a[0u] = *pGyrTemperature++;
+	pRawData_s->reserve6dof.gyrTemp_a[1u] = *pGyrTemperature++;
+	pRawData_s->reserve6dof.gyrTemp_a[2u] = *pGyrTemperature;
 }
 
 __IMMPC_ALWAYS_INLINE void
@@ -906,9 +947,9 @@ IMMPC_Reserve9dof_SetInertMeasAccTemperature_Int16(
 	immpc_inert_meas_all_data_s *pRawData_s,
 	int16_t *pAccTemperature)
 {
-	pRawData_s->reserve6dof.acc_a[0u] = *pAccTemperature++;
-	pRawData_s->reserve6dof.acc_a[1u] = *pAccTemperature++;
-	pRawData_s->reserve6dof.acc_a[2u] = *pAccTemperature;
+	pRawData_s->reserve6dof.accTemp_a[0u] = *pAccTemperature++;
+	pRawData_s->reserve6dof.accTemp_a[1u] = *pAccTemperature++;
+	pRawData_s->reserve6dof.accTemp_a[2u] = *pAccTemperature;
 }
 
 /* Запись данных в структуру --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
@@ -1045,6 +1086,12 @@ extern immpc_head_s*
 IMMPC_GetTypeMessage(
 	const uint8_t 	*pData,
 	size_t 			buffSize);
+
+__IMMPC_ALWAYS_INLINE uint16_t
+IMMPC_CLEAR_BIT(uint16_t REG, uint16_t BIT)
+{
+	return (((REG) &= ~(BIT)));
+}
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 

@@ -119,6 +119,11 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 
 	if (pHeadMessage_s == NULL)
 	{
+		*pOutBuffByteNumbForTx =
+			(uint16_t) IMMPC_SetResponseMessage(
+				(immpc_response_cmd_s*) pOutBuff,
+				IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_MESSAGE_FORMATE);
+
 		return (0u);
 	}
 
@@ -141,7 +146,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		{
 			*pOutBuffByteNumbForTx =
 				(uint16_t) IMMPC_SetResponseMessage(
-					(immpc_response_cmd_s*) pInputBuff,
+					(immpc_response_cmd_s*) pOutBuff,
 					IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
 		}
 		break;
@@ -164,7 +169,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		{
 			*pOutBuffByteNumbForTx =
 				(uint16_t) IMMPC_SetResponseMessage(
-					(immpc_response_cmd_s*) pInputBuff,
+					(immpc_response_cmd_s*) pOutBuff,
 					IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
 		}
 		break;
@@ -174,8 +179,10 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	default:
 		*pOutBuffByteNumbForTx =
 			(uint16_t) IMMPC_SetResponseMessage(
-				(immpc_response_cmd_s*) pInputBuff,
+				(immpc_response_cmd_s*) pOutBuff,
 				IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_MESSAGE_FORMATE);
+
+		pRequestCmd_s->idAndPackRequests = 0u;
 		break;
 	}
 
@@ -293,6 +300,9 @@ IMMPC_SetReserve9dofRawDataPack(
 	/* ID и Pack requests */
 	pPackForTx_s->head_s.idAndPackRequests =
 		IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_raw_pack_e;
+
+
+	pPackForTx_s->head_s.sensorsStatus = 0u;
 
 	/* запись статусов сенсора (Sensors status) */
 	__IMMPC_WRITE_REG(
