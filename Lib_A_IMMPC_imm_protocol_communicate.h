@@ -416,16 +416,29 @@ typedef enum
 	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ####################### */
 
 	/* #### Запросы от внешнего устройства #### -->>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################################## */
 	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_9dof_main,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
 	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_calib_request_cmd =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_9dof_main,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* ---------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------- */
 	IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_raw_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_9dof_reserve,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_calib_request_cmd_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_9dof_reserve,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
 	/* #### Запросы от внешнего устройства #### --<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ################################## */
 
 
 	/* #### Пакеты с калибровочными матрицами #### -->>>>>>>>>>>>>>>>>>>>>>>> */
@@ -1077,19 +1090,19 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 
 extern size_t
 IMMPC_SetMain9dofRawDataPack(
-	immpc_inert_meas_all_data_s 		*pSourceData_s,
-	immpc_9dof_main_raw_pack_s	*pPackForTx_s)
+	immpc_inert_meas_all_data_s 	*pSourceData_s,
+	immpc_9dof_main_raw_pack_s		*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
 IMMPC_SetReserve9dofRawDataPack(
-	immpc_inert_meas_all_data_s 			*pSourceData_s,
+	immpc_inert_meas_all_data_s 	*pSourceData_s,
 	immpc_9dof_reserve_raw_pack_s	*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
 IMMPC_SetMain3dofMagRawDataPack(
-	immpc_inert_meas_all_data_s 		*pSourceData_s,
+	immpc_inert_meas_all_data_s *pSourceData_s,
 	immpc_mag3dof_raw_pack_s	*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
