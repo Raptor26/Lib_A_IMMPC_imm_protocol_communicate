@@ -138,8 +138,17 @@
 #endif
 /*==== |End| --> Секция - Локальная оптимизация функций ======================*/
 
-/* @todo добавить макроопределение для выбора big endian и little endian */
-#define __IMMPC_RemapTwoBytes(IMMPC_macrosByte)	((uint16_t)((((IMMPC_macrosByte) << 8) & 0xFF00) | (((IMMPC_macrosByte) >> 8) & 0x00FF)))
+#if defined (__IMMPC_BIG_ENDIAN__)
+	#if !defined (__IMMPC_RemapTwoBytes)
+		#define __IMMPC_RemapTwoBytes(IMMPC_macrosByte) 	(IMMPC_macrosByte)
+	#endif
+#elif defined (__IMMPC_LITTLE_ENDIAN__)
+	#if !defined (__IMMPC_RemapTwoBytes)
+		#define __IMMPC_RemapTwoBytes(IMMPC_macrosByte)		((uint16_t)((((IMMPC_macrosByte) << 8) & 0xFF00) | (((IMMPC_macrosByte) >> 8) & 0x00FF)))
+	#endif
+#else
+	#error "Please, set __IMMPC_BIG_ENDIAN__ or __IMMPC_LITTLE_ENDIAN__"
+#endif
 
 #define __IMMPC_SET_BIT(REG, BIT)   	((REG) |= (BIT))
 #define __IMMPC_CLEAR_BIT(REG, BIT) 	((REG) &= ~(BIT))
@@ -367,11 +376,13 @@ typedef enum
 		((__IMMPC_SetMessageTypeHelper_SetID(bitsInID)) | 				\
 		 (__IMMPC_SetMessageTypeHelper_SetPackRequest(bitsInPackReq))))
 
-/* @todo если активен макрос __IMMPC_RemapTwoBytes() */
-#define __IMMPC_GetIdFromIdAndPackRequest(idAndPackRequest)				(((idAndPackRequest)) & 0x00FF)
+#if defined (__IMMPC_LITTLE_ENDIAN__)
+	/* Если активен макрос __IMMPC_RemapTwoBytes() */
+	#define __IMMPC_GetIdFromIdAndPackRequest(idAndPackRequest)			(((idAndPackRequest)) & 0x00FF)
 
-/* @todo Иначе */
-// #define __IMMPC_GetIDFromIdAndPackRequest(idAndPackRequest)			(((idAndPackRequest) >> 8u) & 0x00FF)
+#else
+	#define __IMMPC_GetIDFromIdAndPackRequest(idAndPackRequest)			(((idAndPackRequest) >> 8u) & 0x00FF)
+#endif
 
 typedef enum
 {
