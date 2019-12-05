@@ -369,6 +369,7 @@ typedef enum
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBRATION_MATRIX_FROM_EEPROM,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_MESSAGE_FORMATE,
+	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBMATRIX,
 	IMMPC_MESSAGE_ID_RESPONSE_CODE_OK,
 } immpc_message_id_e;
 
@@ -794,16 +795,30 @@ typedef struct
 	uint16_t sensorStatus;
 } immpc_reserve6dof_raw_data_s;
 
+typedef struct
+{
+	/**
+	 * @brief 	Флаги валидности калибровочных матриц
+	 */
+	uint32_t calibMatValidFlags;
+	uint32_t crc;
+} immpc_inert_meas_calibmat_s;
+
 /* структура данных */
 typedef struct
 {
 	/* "сырые" данные */
 	immpc_main9dof_raw_data_s 		main9dof;
 	immpc_reserve6dof_raw_data_s 	reserve6dof;
-//	immpc_raw_mag_data_s 				dataMag;
 
 	/* флаги (см. выше #define IMMPC_FLAG_NEED...) */
 	immpc_id_and_pack_requests_e whatPackageIsNeeded;
+
+	/**
+	 * @brief 	Калибровочные матрицы для инерциальных измерителей
+	 * 			@note Эта структура записывается в eeprom
+	 */
+	immpc_inert_meas_calibmat_s calibMat_s;
 } immpc_inert_meas_all_data_s;
 
 /*#### |End  | <-- Секция - "Определение констант" ###########################*/
