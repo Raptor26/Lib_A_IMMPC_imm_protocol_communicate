@@ -333,6 +333,11 @@ typedef enum
 	IMMPC_ID_9dof_reserve,
 
 	/**
+	 * @brief 	Идентификатор основных и резервных измерителей
+	 */
+	IMMPC_ID_9dof_main_and_9dof_reserve,
+
+	/**
 	 * @brief 	Идентификатор калибровочной матрицы акселерометра
 	 */
 	IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
