@@ -212,47 +212,46 @@
 
 
 /* флаги необходимости "сырых" данных */
-// #define IMMPC_FLAG_NEED_RAW_MAIN_ACC						(((uint32_t)(0b10000000) << 24) & 0xFF000000)
 #define IMMPC_FLAG_NEED_RAW_MAIN_ACC_Pos					(31u)
 #define IMMPC_FLAG_NEED_RAW_MAIN_ACC_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_ACC_Pos)
 #define IMMPC_FLAG_NEED_RAW_MAIN_ACC 						((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_ACC_Msk))
-//#define IMMPC_FLAG_NEED_RAW_MAIN_GYR						(((uint32_t)(0b01000000) << 24) & 0xFF000000)
+
 #define IMMPC_FLAG_NEED_RAW_MAIN_GYR_Pos					(30u)
 #define IMMPC_FLAG_NEED_RAW_MAIN_GYR_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_GYR_Pos)
 #define IMMPC_FLAG_NEED_RAW_MAIN_GYR 						((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_GYR_Msk))
-//#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC					(((uint32_t)(0b00100000) << 24) & 0xFF000000)
+
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Pos				(29u)
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Msk				(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Pos)
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC 					((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_TEMP_ACC_Msk))
-//#define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR					(((uint32_t)(0b00010000) << 24) & 0xFF000000)
+
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Pos				(28u)
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Msk				(0x1u << IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Pos)
 #define IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR 					((uint32_t)(IMMPC_FLAG_NEED_RAW_MAIN_TEMP_GYR_Msk))
-//#define IMMPC_FLAG_NEED_RAW_MAG							(((uint32_t)(0b00001000) << 24) & 0xFF000000)
+
 #define IMMPC_FLAG_NEED_RAW_MAG_Pos							(27u)
 #define IMMPC_FLAG_NEED_RAW_MAG_Msk							(0x1u << IMMPC_FLAG_NEED_RAW_MAG_Pos)
 #define IMMPC_FLAG_NEED_RAW_MAG 							((uint32_t)(IMMPC_FLAG_NEED_RAW_MAG_Msk))
-//#define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST					(((uint32_t)(0b00000100) << 24) & 0xFF000000)
+
 #define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Pos				(26u)
 #define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Msk				(0x1u << IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Pos)
 #define IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST					((uint32_t)(IMMPC_FLAG_NEED_RAW_MAG_SELF_TEST_Msk))
-//#define IMMPC_FLAG_NEED_RAW_RESERVE_ACC					(((uint32_t)(0b00000010) << 24) & 0xFF000000)
+
 #define IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Pos					(25u)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Pos)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_ACC 					((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_ACC_Msk))
-//#define IMMPC_FLAG_NEED_RAW_RESERVE_GYR					(((uint32_t)(0b00000001) << 24) & 0xFF000000)
+
 #define IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Pos					(24u)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Msk					(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Pos)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_GYR 					((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_GYR_Msk))
-//#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC				(((uint32_t)(0b10000000) << 16) & 0x00FF0000)
+
 #define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Pos			(23u)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Msk			(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Pos)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC 				((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_ACC_Msk))
-//#define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR				(((uint32_t)(0b01000000) << 16) & 0x00FF0000)
+
 #define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Pos			(22u)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Msk			(0x1u << IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Pos)
 #define IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR 				((uint32_t)(IMMPC_FLAG_NEED_RAW_RESERVE_TEMP_GYR_Msk))
-//#define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM		(((uint32_t)(0b00100000) << 16) & 0x00FF0000)
+
 #define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Pos		(21u)
 #define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Msk		(0x1u << IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Pos)
 #define IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM 			((uint32_t)(IMMPC_FLAG_NEED_SET_CALIB_MATRIX_TO_EEPROM_Msk))
@@ -307,7 +306,47 @@
 #define IMMPC_MAG_XYZ_DATA_WAS_UPDATE_Msk					(0x1u << IMMPC_MAG_XYZ_DATA_WAS_UPDATE_Pos)
 #define IMMPC_MAG_XYZ_DATA_WAS_UPDATE						((uint16_t) IMMPC_MAG_XYZ_DATA_WAS_UPDATE_Msk)
 
+/* флаги валидности калибровочных матриц */
+#define IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC_Pos				(31u)
+#define IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC_Msk				(0x1u << IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC_Pos)
+#define IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC 					((uint32_t)(IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC_Msk))
+#define __IMMPC_FLAG_VALID_CALIBMAT_SetMainAcc(var)    		__IMMPC_SET_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC)
+#define __IMMPC_FLAG_VALID_CALIBMAT_ClearMainAcc(var)      	__IMMPC_CLEAR_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC)
 
+#define IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR_Pos				(30u)
+#define IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR_Msk				(0x1u << IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR_Pos)
+#define IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR 					((uint32_t)(IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR_Msk))
+#define __IMMPC_FLAG_VALID_CALIBMAT_SetMainGyr(var)    		__IMMPC_SET_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR)
+#define __IMMPC_FLAG_VALID_CALIBMAT_ClearMainGyr(var)      	__IMMPC_CLEAR_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR)
+
+#define IMMPC_FLAG_VALID_CALIBMAT_MAG_Pos					(29u)
+#define IMMPC_FLAG_VALID_CALIBMAT_MAG_Msk					(0x1u << IMMPC_FLAG_VALID_CALIBMAT_MAG_Pos)
+#define IMMPC_FLAG_VALID_CALIBMAT_MAG 						((uint32_t)(IMMPC_FLAG_VALID_CALIBMAT_MAG_Msk))
+#define __IMMPC_FLAG_VALID_CALIBMAT_SetMag(var)    			__IMMPC_SET_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_MAG)
+#define __IMMPC_FLAG_VALID_CALIBMAT_ClearMag(var)      		__IMMPC_CLEAR_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_MAG)
+
+#define IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC_Pos			(28u)
+#define IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC_Msk			(0x1u << IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC_Pos)
+#define IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC 				((uint32_t)(IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC_Msk))
+#define __IMMPC_FLAG_VALID_CALIBMAT_SetReserveAcc(var)    	__IMMPC_SET_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC)
+#define __IMMPC_FLAG_VALID_CALIBMAT_ClearReserveAcc(var)	__IMMPC_CLEAR_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC)
+
+#define IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR_Pos			(27u)
+#define IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR_Msk			(0x1u << IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR_Pos)
+#define IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR 				((uint32_t)(IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR_Msk))
+#define __IMMPC_FLAG_VALID_CALIBMAT_SetReserveGyr(var)    	__IMMPC_SET_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR)
+#define __IMMPC_FLAG_VALID_CALIBMAT_ClearReserveGyr(var)	__IMMPC_CLEAR_BIT(var, 	IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR)
+// next 													(26u)
+#define __IMMPC_FLAG_VALID_CALIBMAT_ClearAll(var)			__IMMPC_CLEAR_BIT(var,	IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC		| \
+																					IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR		| \
+																					IMMPC_FLAG_VALID_CALIBMAT_MAG			| \
+																					IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC	| \
+																					IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR)
+#define __IMMPC_FLAG_VALID_CALIBMAT_SetAll(var)				__IMMPC_SET_BIT(var,	IMMPC_FLAG_VALID_CALIBMAT_MAIN_ACC		| \
+																					IMMPC_FLAG_VALID_CALIBMAT_MAIN_GYR		| \
+																					IMMPC_FLAG_VALID_CALIBMAT_MAG			| \
+																					IMMPC_FLAG_VALID_CALIBMAT_RESERVE_ACC	| \
+																					IMMPC_FLAG_VALID_CALIBMAT_RESERVE_GYR)
 
 /* скорости передачи данных при использовании USART */
 #define IMMPC_USART_BAUDRATE_LOW							(57600U)
@@ -421,6 +460,7 @@ typedef enum
 	/* #### Пакеты с данными от резервных измерителей #### --<<<<<<<<<<<<<<<< */
 	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ####################### */
 
+
 	/* #### Запросы от внешнего устройства #### -->>>>>>>>>>>>>>>>>>>>>>>>>>> */
 	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################################## */
 	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd =
@@ -474,6 +514,16 @@ typedef enum
 	/* #### ---- Пакет с калибровочными матрицами акселерометров #### --<<<<< */
 	/* #### ---- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ############ */
 
+
+	/* #### Команды от внешнего устройства #### -->>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################################## */
+	/* запись калибровочных матриц из ОЗУ в EEPROM */
+	IMMPC_ID_AND_PACK_REQUESTS_write_all_calibmatrix_in_eeprom_cmd_s =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_MESSAGE_ID_WRITE_ALL_CALIBMATRIX,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_READ_MEAS | IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* #### Команды от внешнего устройства #### --<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ################################## */
 
 
 	/* Коды ответный сообщений  */
@@ -797,11 +847,15 @@ typedef struct
 
 typedef struct
 {
-	/**
-	 * @brief 	Флаги валидности калибровочных матриц
-	 */
-	uint32_t calibMatValidFlags;
-	uint32_t crc;
+	iscm_3dof_acc_calib_matrix_s	mainAccCalibMatrix;
+	iscm_3dof_gyr_calib_matrix_s	mainGyrCalibMatrix;
+	iscm_3dof_mag_calib_matrix_s	magCalibMatrix;
+
+	iscm_3dof_acc_calib_matrix_s	reserveAccCalibMatrix;
+	iscm_3dof_gyr_calib_matrix_s	reserveGyrCalibMatrix;
+
+	uint32_t	calibMatValidFlags; /* флаги валидности калибровочных матриц */
+	uint32_t	crc;
 } immpc_inert_meas_calibmat_s;
 
 /* структура данных */
