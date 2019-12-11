@@ -918,6 +918,27 @@ IMMPC_GetCRC_Generic(
 					len - 4u)));
 }
 
+/*-------------------------------------------------------------------------*//**
+ * @author	Dmitry Tanikeev
+ * @date	11-дек-2019
+ *
+ * @brief	Функция вычисляет контрольную сумму
+ *
+ * @param[in] 	*pData: 	Указатель на область памяти, в которой содержится
+ * 							пакет данных
+ * @param[in]   len:	Количество байт пакета данных
+ *
+ * @return    { description_of_the_return_value }
+ */
+__IMMPC_ALWAYS_INLINE uint32_t
+IMMPC_GetCRC32_Generic(
+	uint8_t *pData,
+	uint16_t len)
+{
+	return CRC_XOR_CCITT_Poly0x04C11DB7_Crc32(
+			(uint8_t*) &pData,
+			len);
+}
 
 /* Запись данных в структуру -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
