@@ -102,10 +102,10 @@ IMMPC_EXTDEV_ParseMain9dofRawPack(
 	else
 	{
 		/* Контрольная сумма не верна */
-		return (IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+		return (IMMPC_ID_response_code_invalid_crc);
 	}
 
-	return (IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+	return (IMMPC_ID_response_code_ok);
 }
 
 immpc_message_id_e
@@ -169,10 +169,10 @@ IMMPC_EXTDEV_ParseReserve9dofRawPack(
 	else
 	{
 		/* Контрольная сумма не верна */
-		return (IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+		return (IMMPC_ID_response_code_invalid_crc);
 	}
 
-	return (IMMPC_MESSAGE_ID_RESPONSE_CODE_OK);
+	return (IMMPC_ID_response_code_ok);
 }
 /*#### |End  | <-- Секция - "Описание глобальных функций" ####################*/
 

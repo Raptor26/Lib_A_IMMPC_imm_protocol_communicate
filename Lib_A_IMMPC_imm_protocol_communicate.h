@@ -379,37 +379,39 @@ typedef enum
 	/**
 	 * @brief 	Идентификатор калибровочной матрицы акселерометра
 	 */
-	IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+	IMMPC_ID_3dof_acc_calibmatrix,
 
 	/**
 	 * @brief 	Идентификатор калибровочной матрицы гироскопов
 	 */
-	IMMPC_MESSAGE_ID_GYR3DOF_CALIBMATRIX,
+	IMMPC_ID_3dof_gyr_calibmatrix,
 
 	/**
 	 * @brief 	Идентификаторы калибровочной матрицы магнитометров
 	 */
-	IMMPC_MESSAGE_ID_MAG3DOF_CALIBMATRIX,
+	IMMPC_ID_3dof_mag_calibmatrix,
 
 	/**
 	 * @brief 	Идентификатор измерений магнитометра
 	 * @note 	Для магнитометра нет деления на основной и резервный
 	 */
-	IMMPC_MESSAGE_ID_MAG3DOF_PACK,
+	IMMPC_ID_3dof_mag,
 
 	/**
 	 * @brief 	Идентификатор для записи всех калибровочных матриц из
 	 * 			оперативной памяти контроллера в EEPROM
 	 */
-	IMMPC_MESSAGE_ID_WRITE_ALL_CALIBMATRIX,
+	IMMPC_ID_write_all_calibmatrix,
 
-	/* Коды ответных сообщений */
-	IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR 		= 200u,
-	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC,
-	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBRATION_MATRIX_FROM_EEPROM,
-	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_MESSAGE_FORMATE,
-	IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CALIBMATRIX,
-	IMMPC_MESSAGE_ID_RESPONSE_CODE_OK,
+	/**
+	 * @brief 	Коды ответных сообщений
+	 */
+	IMMPC_ID_response_code_error = 200u,
+	IMMPC_ID_response_code_invalid_crc,
+	IMMPC_ID_response_code_invalid_calibmatrix_from_eeprom,
+	IMMPC_ID_response_code_invalid_message_format,
+	IMMPC_ID_response_code_invalid_calibmatrix,
+	IMMPC_ID_response_code_ok,
 } immpc_message_id_e;
 
 
@@ -461,6 +463,21 @@ typedef enum
 	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ####################### */
 
 
+	/* #### Пакеты с данными от магнитометра #### -->>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ####################### */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_raw_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_mag,
+			0u),
+
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_calib_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_mag,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	/* #### Пакеты с данными от резервных измерителей #### --<<<<<<<<<<<<<<<< */
+	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ####################### */
+
+
 	/* #### Запросы от внешнего устройства #### -->>>>>>>>>>>>>>>>>>>>>>>>>>> */
 	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################################## */
 	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd =
@@ -471,7 +488,8 @@ typedef enum
 	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_calib_request_cmd =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_9dof_main,
-			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
 	/* ---------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------- */
 	IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_raw_request_cmd_e =
@@ -482,7 +500,55 @@ typedef enum
 	IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_calib_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_9dof_reserve,
-			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* ---------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_raw_request_cmd_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_mag,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_calib_request_cmd_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_mag,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+	/* ---------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_main_calibmatrix_request_cmd =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_acc_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_reserve_calibmatrix_request_cmd =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_acc_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST	|
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS		|
+            IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+	/* ---------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_main_calibmatrix_request_cmd =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_gyr_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_reserve_calibmatrix_request_cmd =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_gyr_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST	|
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS		|
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+	/* ---------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_calibmatrix_request_cmd =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_mag_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
 	/* #### Запросы от внешнего устройства #### --<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ################################## */
 
@@ -493,25 +559,71 @@ typedef enum
 	/* #### ---- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ############ */
 	IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_read_pack_e =
 		__IMMPC_SetIDandPackRequests(
-			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
+			IMMPC_ID_3dof_acc_calibmatrix,
 			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
 	/* ---------------------------------------------------------------------- */
 	IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_write_pack_e =
 		__IMMPC_SetIDandPackRequests(
-			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
-			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_READ_MEAS),
+			IMMPC_ID_3dof_acc_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS),
 	/* ---------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------- */
 	IMMPC_ID_AND_PACK_REQUESTS_acc3dof_reserve_calibmatrix_read_pack_e =
 		__IMMPC_SetIDandPackRequests(
-			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
-			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+			IMMPC_ID_3dof_acc_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
 	/* ---------------------------------------------------------------------- */
 	IMMPC_ID_AND_PACK_REQUESTS_acc3dof_reserve_calibmatrix_write_pack_e =
 		__IMMPC_SetIDandPackRequests(
-			IMMPC_MESSAGE_ID_ACC3DOF_CALIBMATRIX,
-			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_READ_MEAS | IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+			IMMPC_ID_3dof_acc_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS	|
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS	|
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
 	/* #### ---- Пакет с калибровочными матрицами акселерометров #### --<<<<< */
+
+	/* #### ---- Пакет с калибровочными матрицами гироскопов #### -->>>>>>>>> */
+	/* #### ---- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ############ */
+	IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_main_calibmatrix_read_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_gyr_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_main_calibmatrix_write_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_gyr_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS),
+	/* ---------------------------------------------------------------------- */
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_reserve_calibmatrix_read_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_gyr_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_reserve_calibmatrix_write_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_gyr_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS	|
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS	|
+			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
+	/* #### ---- Пакет с калибровочными матрицами гироскопов #### --<<<<<<<<< */
+
+	/* #### ---- Пакет с калибровочными матрицами магнитометров #### -->>>>>> */
+	/* #### ---- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ############ */
+	IMMPC_ID_AND_PACK_REQUESTS_mag3dof_calibmatrix_read_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_mag_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_mag3dof_calibmatrix_write_pack_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_3dof_mag_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS	|
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS),
+	/* #### ---- Пакет с калибровочными матрицами магнитометров #### --<<<<<< */
 	/* #### ---- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ############ */
 
 
@@ -520,18 +632,47 @@ typedef enum
 	/* запись калибровочных матриц из ОЗУ в EEPROM */
 	IMMPC_ID_AND_PACK_REQUESTS_write_all_calibmatrix_in_eeprom_cmd_s =
 		__IMMPC_SetIDandPackRequests(
-			IMMPC_MESSAGE_ID_WRITE_ALL_CALIBMATRIX,
-			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS | IMMPC_PACK_REQUESTS_BITS_READ_MEAS | IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
+			IMMPC_ID_write_all_calibmatrix,
+			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS	|
+			IMMPC_PACK_REQUESTS_BITS_READ_MEAS	|
+			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
 	/* #### Команды от внешнего устройства #### --<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ################################## */
 
 
-	/* Коды ответный сообщений  */
+	/* #### Коды ответных сообщений #### -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################################## */
 	IMMPC_ID_AND_PACK_REQUESTS_error_e =
-		__IMMPC_SetIDandPackRequests(IMMPC_MESSAGE_ID_RESPONSE_CODE_ERROR, 0u),
-
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_response_code_error,
+			0u),
+	/* ---------------------------------------------------------------------- */
 	IMMPC_ID_AND_PACK_REQUESTS_invalid_crc_e =
-		__IMMPC_SetIDandPackRequests(IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC, 0u),
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_response_code_invalid_crc,
+			0u),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_invalid_calibmatrix_from_eeprom_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_response_code_invalid_calibmatrix_from_eeprom,
+			0u),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_invalid_message_format_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_response_code_invalid_message_format,
+			0u),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_invalid_calibmatrix_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_response_code_invalid_calibmatrix,
+			0u),
+	/* ---------------------------------------------------------------------- */
+	IMMPC_ID_AND_PACK_REQUESTS_ok_e =
+		__IMMPC_SetIDandPackRequests(
+			IMMPC_ID_response_code_ok,
+			0u),
+	/* #### Коды ответных сообщений #### --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+	/* #### <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ################################## */
 } immpc_id_and_pack_requests_e;
 
 /**

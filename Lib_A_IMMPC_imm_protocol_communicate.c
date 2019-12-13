@@ -122,7 +122,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		*pOutBuffByteNumbForTx =
 			(uint16_t) IMMPC_SetResponseMessage(
 				(immpc_response_cmd_s*) pOutBuff,
-				IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_MESSAGE_FORMATE);
+				IMMPC_ID_response_code_invalid_message_format);
 
 		return (0u);
 	}
@@ -147,7 +147,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 			*pOutBuffByteNumbForTx =
 				(uint16_t) IMMPC_SetResponseMessage(
 					(immpc_response_cmd_s*) pOutBuff,
-					IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+					IMMPC_ID_response_code_invalid_crc);
 		}
 		break;
 	/* #### 9dof_main_raw_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
@@ -170,7 +170,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 			*pOutBuffByteNumbForTx =
 				(uint16_t) IMMPC_SetResponseMessage(
 					(immpc_response_cmd_s*) pOutBuff,
-					IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_CRC);
+					IMMPC_ID_response_code_invalid_crc);
 		}
 		break;
 	/* #### 9dof_reserve_raw_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
@@ -180,7 +180,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		*pOutBuffByteNumbForTx =
 			(uint16_t) IMMPC_SetResponseMessage(
 				(immpc_response_cmd_s*) pOutBuff,
-				IMMPC_MESSAGE_ID_RESPONSE_CODE_INVALID_MESSAGE_FORMATE);
+				IMMPC_ID_response_code_invalid_message_format);
 
 		pRequestCmd_s->idAndPackRequests = 0u;
 		break;
@@ -409,7 +409,7 @@ IMMPC_SetMain3dofMagRawDataPack(
 	pPackForTx_s->head_s.startFrame = IMMPC_START_FRAME;
 
 	/* запись типа сообщения (Message ID + Pack requests) */
-	pPackForTx_s->head_s.messageID = IMMPC_MESSAGE_ID_MAG3DOF_PACK;
+	pPackForTx_s->head_s.messageID = IMMPC_ID_3dof_mag;
 
 	__IMMPC_WRITE_REG(
 		/* Переменная для записи битовых масок */
