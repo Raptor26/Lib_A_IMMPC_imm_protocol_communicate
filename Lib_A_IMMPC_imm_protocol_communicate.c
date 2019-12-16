@@ -59,6 +59,15 @@ IMMPC_SetResponseMessage(
 	return ((size_t) sizeof(immpc_response_cmd_s));
 }
 
+
+/*-------------------------------------------------------------------------*//**
+ * @author
+ * @date	08-ноя-2019
+ *
+ * @brief	Функция формирует ответ с калибровочными матрицами
+ *
+ * @return Количество байт данных
+ */
 static size_t
 IMMPC_SetCalibMatrixMessageGeneric(
 	immpc_calibmatrix_pack_generic_s 	*pOutputMessage,
@@ -134,7 +143,8 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	switch (pRequestCmd_s->idAndPackRequests)
 	{
 	/* #### 9dof_main_raw_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-	case (IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd):
+	/* Команда на запрос данных "сырых" основных измерителей */
+	case (IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd_e):
 		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, (uint16_t) sizeof(immpc_request_cmd_s)))
 		{
 			*pOutBuffByteNumbForTx =
@@ -151,6 +161,25 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		}
 		break;
 	/* #### 9dof_main_raw_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 9dof_main_calib_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос данных калиброванных основных измерителей */
+	case (IMMPC_ID_AND_PACK_REQUESTS_9dof_main_calib_request_cmd_e):
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, (uint16_t) sizeof(immpc_request_cmd_s)))
+		{
+			/* @todo ормирование пакета с калиброванными данными основных измерителей */
+			/* .... */
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 9dof_main_calib_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
 
 	/* #### 9dof_reserve_raw_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
@@ -174,6 +203,187 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		}
 		break;
 	/* #### 9dof_reserve_raw_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+	/* #### 9dof_reserve_calib_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос данных калиброванных резервных измерителей */
+	case (IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_calib_request_cmd_e):
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, (uint16_t) sizeof(immpc_request_cmd_s)))
+		{
+			/* @todo ормирование пакета с калиброванными данными резервных измерителей */
+			/* .... */
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 9dof_reserve_calib_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_mag_raw_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос данных "сырых" магнитометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_raw_request_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		{
+			/* Формирование ответного сообщения */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetMain3dofMagRawDataPack(
+					pRawSensMeas_s,
+					(immpc_mag3dof_raw_pack_s*) pOutBuff);
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 3dof_mag_raw_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_mag_calib_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос данных калиброванных магнитометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_calib_request_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		{
+			/* @todo формирование пакета с калиброванными данными магнитометра */
+			/* .... */
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 3dof_mag_calib_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_acc_main_calibmatrix_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос калибровочных матриц основного акселерометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_main_calibmatrix_request_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		{
+			/* Формирование ответного сообщения */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
+					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
+					IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_read_pack_e,
+					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).mainAccCalibMatrix));
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 3dof_acc_main_calibmatrix_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_acc_reserve_calibmatrix_request_cmd -->>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос калибровочных матриц резервного акселерометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_reserve_calibmatrix_request_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		{
+			/* Формирование ответного сообщения */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
+					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
+					IMMPC_ID_AND_PACK_REQUESTS_acc3dof_reserve_calibmatrix_read_pack_e,
+					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).reserveAccCalibMatrix));
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 3dof_acc_reserve_calibmatrix_request_cmd --<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_gyr_main_calibmatrix_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос калибровочных матриц основного гироскопа */
+	case (IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_main_calibmatrix_request_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		{
+			/* Формирование ответного сообщения */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
+					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
+					IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_main_calibmatrix_read_pack_e,
+					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).mainGyrCalibMatrix));
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 3dof_gyr_main_calibmatrix_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_gyr_reserve_calibmatrix_request_cmd -->>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос калибровочных матриц резервного гироскопа */
+	case (IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_reserve_calibmatrix_request_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		{
+			/* Формирование ответного сообщения */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
+					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
+					IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_reserve_calibmatrix_read_pack_e,
+					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).reserveGyrCalibMatrix));
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 3dof_gyr_reserve_calibmatrix_request_cmd --<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_mag_calibmatrix_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда на запрос калибровочных матриц магнитометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_calibmatrix_request_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		{
+			/* Формирование ответного сообщения */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
+					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
+					IMMPC_ID_AND_PACK_REQUESTS_mag3dof_calibmatrix_read_pack_e,
+					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).magCalibMatrix));
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+		break;
+	/* #### 3dof_mag_calibmatrix_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
 
 	default:
@@ -409,7 +619,8 @@ IMMPC_SetMain3dofMagRawDataPack(
 	pPackForTx_s->head_s.startFrame = IMMPC_START_FRAME;
 
 	/* запись типа сообщения (Message ID + Pack requests) */
-	pPackForTx_s->head_s.messageID = IMMPC_ID_3dof_mag;
+	pPackForTx_s->head_s.messageID =
+		IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_raw_pack_e;
 
 	__IMMPC_WRITE_REG(
 		/* Переменная для записи битовых масок */

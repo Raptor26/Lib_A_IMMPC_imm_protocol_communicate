@@ -480,12 +480,12 @@ typedef enum
 
 	/* #### Запросы от внешнего устройства #### -->>>>>>>>>>>>>>>>>>>>>>>>>>> */
 	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################################## */
-	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd =
+	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_9dof_main,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
 	/* ---------------------------------------------------------------------- */
-	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_calib_request_cmd =
+	IMMPC_ID_AND_PACK_REQUESTS_9dof_main_calib_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_9dof_main,
 			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS |
@@ -516,13 +516,13 @@ typedef enum
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST),
 	/* ---------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------- */
-	IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_main_calibmatrix_request_cmd =
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_main_calibmatrix_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_3dof_acc_calibmatrix,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
 			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
 	/* ---------------------------------------------------------------------- */
-	IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_reserve_calibmatrix_request_cmd =
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_acc_reserve_calibmatrix_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_3dof_acc_calibmatrix,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST	|
@@ -530,13 +530,13 @@ typedef enum
             IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
 	/* ---------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------- */
-	IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_main_calibmatrix_request_cmd =
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_main_calibmatrix_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_3dof_gyr_calibmatrix,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
 			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS),
 	/* ---------------------------------------------------------------------- */
-	IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_reserve_calibmatrix_request_cmd =
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_gyr_reserve_calibmatrix_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_3dof_gyr_calibmatrix,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST	|
@@ -544,7 +544,7 @@ typedef enum
 			IMMPC_PACK_REQUESTS_BITS_RESERVE_MEAS),
 	/* ---------------------------------------------------------------------- */
 	/* ---------------------------------------------------------------------- */
-	IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_calibmatrix_request_cmd =
+	IMMPC_ID_AND_PACK_REQUESTS_3dof_mag_calibmatrix_request_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_3dof_mag_calibmatrix,
 			IMMPC_PACK_REQUESTS_BITS_DATA_REQUEST |
@@ -630,7 +630,7 @@ typedef enum
 	/* #### Команды от внешнего устройства #### -->>>>>>>>>>>>>>>>>>>>>>>>>>> */
 	/* #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################################## */
 	/* запись калибровочных матриц из ОЗУ в EEPROM */
-	IMMPC_ID_AND_PACK_REQUESTS_write_all_calibmatrix_in_eeprom_cmd_s =
+	IMMPC_ID_AND_PACK_REQUESTS_write_all_calibmatrix_in_eeprom_cmd_e =
 		__IMMPC_SetIDandPackRequests(
 			IMMPC_ID_write_all_calibmatrix,
 			IMMPC_PACK_REQUESTS_BITS_CALIB_MEAS	|
@@ -937,7 +937,11 @@ immpc_response_cmd_s;
 typedef struct
 {
 	immpc_head_calib_matrix_s head_s;
+
+	/* @todo т.к. структура iscm_3dof_acc_calib_matrix_s на все калибровочные
+	 * матрицы м.б. ее по другому назвать, например, iscm_3dof_alib_matrix_s */
 	iscm_3dof_acc_calib_matrix_s calib_s;
+
 	uint16_t crc;
 }
 #if defined (__GNUC__)
