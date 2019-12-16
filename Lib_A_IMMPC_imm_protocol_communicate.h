@@ -1341,6 +1341,12 @@ IMMPC_SetReserve9dofRawDataPack(
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t
+IMMPC_SetReserve9dofCalibDataPack(
+	immpc_inert_meas_all_data_s 	*pInertMeas_s,
+	immpc_9dof_reserve_calib_pack_s	*pPackForTx_s)
+__IMMPC_FNC_LOOP_OPTIMIZE_MODE;
+
+extern size_t
 IMMPC_SetMain3dofMagRawDataPack(
 	immpc_inert_meas_all_data_s *pSourceData_s,
 	immpc_mag3dof_raw_pack_s	*pPackForTx_s)
@@ -1356,10 +1362,25 @@ IMMPC_CLEAR_BIT(uint16_t REG, uint16_t BIT)
 {
 	return (((REG) &= ~(BIT)));
 }
+
+
 /*#### |End  | <-- Секция - "Прототипы глобальных функций" ###################*/
 
 
 /*#### |Begin| --> Секция - "Определение макросов" ###########################*/
+#if defined (__IMMPC_RESERVE_SENS_IS_ICM20608__)
+#include "Lib_H_ICM20608_inertial_sensor.h"
+#define IMMPC_RawToFptReserveTemperatureGeneric(pRawData, pFptData)				\
+	ICM20608_ConvertRawTemperatureData(((__IMMPC_FPT__) 1.0 / (__IMMPC_FPT__) 326.8), pRawData, pFptData)
+
+#define IMMPC_RawToFptReserveAccTemperature(pRawData, pFptData)					\
+	IMMPC_RawToFptReserveTemperatureGeneric(pRawData, pFptData)
+
+#define IMMPC_RawToFptReserveGyrTemperature(pRawData, pFptData)					\
+	IMMPC_RawToFptReserveTemperatureGeneric(pRawData, pFptData)
+#else
+#error "You must define reserve sens type for convert temperature from raw to float (or double)"
+#endif
 /*#### |End  | <-- Секция - "Определение макросов" ###########################*/
 
 

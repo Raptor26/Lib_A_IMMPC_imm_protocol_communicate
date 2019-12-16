@@ -209,8 +209,10 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	case (IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_calib_request_cmd_e):
 		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, (uint16_t) sizeof(immpc_request_cmd_s)))
 		{
-			/* @todo ормирование пакета с калиброванными данными резервных измерителей */
-			/* .... */
+			/* Формирование сообщения калиброванных данных резервных измерителей */
+			IMMPC_SetReserve9dofCalibDataPack(
+				pRawSensMeas_s,
+				(immpc_9dof_reserve_calib_pack_s*) pOutBuff);
 		}
 		else
 		{
@@ -277,7 +279,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_read_pack_e,
-					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).mainAccCalibMatrix));
+					(iscm_calibmatrix_generic_s*) & ((pRawSensMeas_s->calibMat_s).mainAccCalibMatrix));
 		}
 		else
 		{
@@ -301,7 +303,9 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_acc3dof_reserve_calibmatrix_read_pack_e,
-					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).reserveAccCalibMatrix));
+					(iscm_calibmatrix_generic_s*) & ((pRawSensMeas_s->calibMat_s).reserveAccCalibMatrix));
+			immpc_calibmatrix_pack_generic_s *pTest_s = (immpc_calibmatrix_pack_generic_s*) pOutBuff;
+			pTest_s->crc = 0x00;
 		}
 		else
 		{
@@ -325,7 +329,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_main_calibmatrix_read_pack_e,
-					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).mainGyrCalibMatrix));
+					(iscm_calibmatrix_generic_s*) & ((pRawSensMeas_s->calibMat_s).mainGyrCalibMatrix));
 		}
 		else
 		{
@@ -349,7 +353,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_reserve_calibmatrix_read_pack_e,
-					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).reserveGyrCalibMatrix));
+					(iscm_calibmatrix_generic_s*) & ((pRawSensMeas_s->calibMat_s).reserveGyrCalibMatrix));
 		}
 		else
 		{
@@ -373,7 +377,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_mag3dof_calibmatrix_read_pack_e,
-					(iscm_calibmatrix_generic_s*) &((pRawSensMeas_s->calibMat_s).magCalibMatrix));
+					(iscm_calibmatrix_generic_s*) & ((pRawSensMeas_s->calibMat_s).magCalibMatrix));
 		}
 		else
 		{
@@ -482,6 +486,15 @@ IMMPC_SetMain9dofRawDataPack(
 	return (sizeof(immpc_9dof_main_raw_pack_s));
 }
 
+/* @todo написать функцию */
+size_t
+IMMPC_SetMain9dofCalibDataPack(
+	immpc_inert_meas_all_data_s 	*pInertMeas_s,
+	immpc_9dof_main_calib_pack_s	*pPackForTx_s)
+{
+
+}
+
 /*-------------------------------------------------------------------------*//**
  * @author		Dmitry Tanikeev
  * @date		27-ноя-2019
@@ -579,7 +592,7 @@ IMMPC_SetReserve9dofRawDataPack(
 	pPackForTx_s->mag_a[1u] = pInertMeas_s->main9dof.mag_a[1u];
 	pPackForTx_s->mag_a[2u] = pInertMeas_s->main9dof.mag_a[2u];
 
-	/* Запись измерений температуры гироскопа */
+	/* Запись измерений selfTest магнитометра (вместо температуры) */
 	pPackForTx_s->magSelfTest_a[0u] = pInertMeas_s->main9dof.magSelfTest_a[0u];
 	pPackForTx_s->magSelfTest_a[1u] = pInertMeas_s->main9dof.magSelfTest_a[1u];
 	pPackForTx_s->magSelfTest_a[2u] = pInertMeas_s->main9dof.magSelfTest_a[2u];
@@ -591,6 +604,99 @@ IMMPC_SetReserve9dofRawDataPack(
 			(uint16_t) sizeof(immpc_9dof_reserve_raw_pack_s));
 
 	return (sizeof(immpc_9dof_reserve_raw_pack_s));
+}
+
+size_t
+IMMPC_SetReserve9dofCalibDataPack(
+	immpc_inert_meas_all_data_s 	*pInertMeas_s,
+	immpc_9dof_reserve_calib_pack_s	*pPackForTx_s)
+{
+	/* запись стартовых байт (Start frame) */
+	pPackForTx_s->head_s.startFrame = IMMPC_START_FRAME;
+
+	/* ID и Pack requests */
+	pPackForTx_s->head_s.idAndPackRequests =
+		IMMPC_ID_AND_PACK_REQUESTS_9dof_reserve_calib_pack_e;
+
+	pPackForTx_s->head_s.sensorsStatus = 0u;
+
+	/* запись статусов сенсора (Sensors status) */
+	__IMMPC_WRITE_REG(
+		pPackForTx_s->head_s.sensorsStatus,
+
+		__IMMPC_CLEAR_BIT(
+			pInertMeas_s->main9dof.sensorStatus,
+			(!(IMMPC_MAG_X_SELF_TEST 				|
+			   IMMPC_MAG_Y_SELF_TEST 				|
+			   IMMPC_MAG_Z_SELF_TEST  				|
+			   IMMPC_MAG_XYZ_DATA_WAS_UPDATE))) 	|
+
+		__IMMPC_CLEAR_BIT(
+			pInertMeas_s->reserve6dof.sensorStatus,
+			(!(IMMPC_ACC_X_SELF_TEST 			|
+			   IMMPC_ACC_Y_SELF_TEST 			|
+			   IMMPC_ACC_Z_SELF_TEST			|
+			   IMMPC_GYR_X_SELF_TEST 			|
+			   IMMPC_GYR_Y_SELF_TEST 			|
+			   IMMPC_GYR_Z_SELF_TEST			|
+			   IMMPC_ACC_XYZ_DATA_WAS_UPDATE 	|
+			   IMMPC_GYR_XYZ_DATA_WAS_UPDATE)))
+	);
+
+	/* сброс статусов сенсора */
+	__IMMPC_CLEAR_BIT(
+		/* Статусы резервных измерителей */
+		pInertMeas_s->reserve6dof.sensorStatus,
+
+		/* Сброс флагов обновления данных: acc, gyr, mag */
+		IMMPC_ACC_XYZ_DATA_WAS_UPDATE |
+		IMMPC_GYR_XYZ_DATA_WAS_UPDATE |
+		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
+
+	__IMMPC_CLEAR_BIT(
+		/* Статусы основных измерителей */
+		pInertMeas_s->main9dof.sensorStatus,
+
+		/* Сброс флагов обновления данных: mag */
+		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
+
+	/* Запись измерений акселерометра */
+	ISCM_GetCalibDataFromRawGeneric(
+		pInertMeas_s->reserve6dof.acc_a,
+		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.reserveAccCalibMatrix,
+		pPackForTx_s->acc);
+
+	/* Запись измерений температуры акселерометра */
+	IMMPC_RawToFptReserveAccTemperature(&pInertMeas_s->reserve6dof.accTemp_a[0u], &pPackForTx_s->accTemp[0u]);
+	pInertMeas_s->reserve6dof.accTemp_a[1u] = pInertMeas_s->reserve6dof.accTemp_a[0u];
+	pInertMeas_s->reserve6dof.accTemp_a[2u] = pInertMeas_s->reserve6dof.accTemp_a[0u];
+
+	/* Запись измерений 3-х осей гироскопа (калиброванные данные) */
+	ISCM_GetCalibDataFromRawGeneric(
+		pInertMeas_s->reserve6dof.gyr_a,
+		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.reserveAccCalibMatrix,
+		pPackForTx_s->gyr);
+
+	/* Запись измерений температуры гироскопа */
+	IMMPC_RawToFptReserveGyrTemperature(&pInertMeas_s->reserve6dof.gyrTemp_a[0u], &pPackForTx_s->gyrTemp[0u]);
+	pInertMeas_s->reserve6dof.gyrTemp_a[1u] = pPackForTx_s->gyrTemp[0u];
+	pInertMeas_s->reserve6dof.gyrTemp_a[2u] = pPackForTx_s->gyrTemp[0u];
+
+	/* Запись измерений 3-х осей магнитометра (калиброванные данные) */
+	ISCM_GetCalibDataFromRawGeneric(
+		pInertMeas_s->main9dof.mag_a,
+		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.magCalibMatrix,
+		pPackForTx_s->mag);
+
+	/* @todo написать номрирование self test магнитометра */
+
+	/* расчет CRC */
+	pPackForTx_s->crc =
+		(uint16_t) IMMPC_GetCRC_Generic(
+			(uint8_t*) pPackForTx_s,
+			(uint16_t) sizeof(immpc_9dof_reserve_calib_pack_s));
+
+	return (sizeof(immpc_9dof_reserve_calib_pack_s));
 }
 
 /*-------------------------------------------------------------------------*//**
