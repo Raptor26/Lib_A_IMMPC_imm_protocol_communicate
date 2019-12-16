@@ -936,13 +936,11 @@ immpc_response_cmd_s;
 
 typedef struct
 {
-	immpc_head_calib_matrix_s head_s;
+	immpc_head_calib_matrix_s 	head_s;
 
-	/* @todo т.к. структура iscm_3dof_acc_calib_matrix_s на все калибровочные
-	 * матрицы м.б. ее по другому назвать, например, iscm_3dof_alib_matrix_s */
-	iscm_3dof_acc_calib_matrix_s calib_s;
+	iscm_calibmatrix_generic_s 	calib_s;
 
-	uint16_t crc;
+	uint16_t 					crc;
 }
 #if defined (__GNUC__)
 	__attribute__((__packed__))

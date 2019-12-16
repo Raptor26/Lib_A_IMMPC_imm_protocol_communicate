@@ -27,6 +27,11 @@ IMMPC_SetCalibMatrixMessageGeneric(
 	immpc_calibmatrix_pack_generic_s 	*pOutputMessage,
 	immpc_id_and_pack_requests_e 		idAndPackRequets,
 	iscm_calibmatrix_generic_s 			*pCalibMatrix_s);
+
+static void
+IMMPc_GetCalibMatrixFromMessageGeneric(
+	iscm_calibmatrix_generic_s			*pCalibMatInRAM,
+	immpc_calibmatrix_pack_generic_s 	*pInputMessagePack);
 /*#### |End  | <-- Секция - "Прототипы локальных функций" ####################*/
 
 
@@ -92,6 +97,17 @@ IMMPC_SetCalibMatrixMessageGeneric(
 	return (sizeof(immpc_calibmatrix_pack_generic_s));
 }
 
+static void
+IMMPc_GetCalibMatrixFromMessageGeneric(
+	iscm_calibmatrix_generic_s			*pCalibMatInRAM,
+	immpc_calibmatrix_pack_generic_s 	*pInputMessagePack)
+{
+	memcpy(
+		(void*) &pCalibMatInRAM->matrix_a[0u],
+		(void*) &pInputMessagePack->calib_s.matrix_a[0],
+		sizeof(iscm_calibmatrix_generic_s));
+}
+
 /*-------------------------------------------------------------------------*//**
  * @author    Mickle Isaev
  * @date      29-ноя-2019
@@ -139,6 +155,9 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	/* Указатель на сообщения запросов */
 	immpc_request_cmd_s *pRequestCmd_s =
 		(immpc_request_cmd_s*) pHeadMessage_s;
+
+	immpc_calibmatrix_pack_generic_s *pCalibMatPackGeneric_s =
+		(immpc_calibmatrix_pack_generic_s*) pHeadMessage_s;
 
 	switch (pRequestCmd_s->idAndPackRequests)
 	{
@@ -388,6 +407,26 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		}
 		break;
 	/* #### 3dof_mag_calibmatrix_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+	/* Пакет, содержащий калибровочную матрицу основного акселерометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_write_pack_e):
+		/* Если контрольная сумма верна */
+		if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
+		{
+			/* Записать в общую структуру данных инерциальных измерителей */
+			IMMPc_GetCalibMatrixFromMessageGeneric(
+				(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.mainAccCalibMatrix,
+				pCalibMatPackGeneric_s);
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+
+		break;
 
 
 	default:
