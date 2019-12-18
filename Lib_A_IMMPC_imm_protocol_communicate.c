@@ -103,8 +103,8 @@ IMMPc_GetCalibMatrixFromMessageGeneric(
 	immpc_calibmatrix_pack_generic_s 	*pInputMessagePack)
 {
 	memcpy(
-		(void*) &pCalibMatInRAM->matrix_a[0u],
-		(void*) &pInputMessagePack->calib_s.matrix_a[0],
+		(void*) &pCalibMatInRAM->matrix_a[0u][0u],
+		(void*) &pInputMessagePack->calib_s.matrix_a[0u][0u],
 		sizeof(iscm_calibmatrix_generic_s));
 }
 
@@ -149,7 +149,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(immpc_response_cmd_s*) pOutBuff,
 				IMMPC_ID_response_code_invalid_message_format);
 
-		return (0u);
+		return (IMMPC_ID_AND_PACK_UNKNOWN_e);
 	}
 
 	/* Указатель на сообщения запросов */
@@ -222,6 +222,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		}
 		break;
 	/* #### 9dof_reserve_raw_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
 
 	/* #### 9dof_reserve_calib_request_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 	/* Команда на запрос данных калиброванных резервных измерителей */
@@ -298,7 +299,8 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(uint16_t) IMMPC_SetCalibMatrixMessageGeneric(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_read_pack_e,
-					(iscm_calibmatrix_generic_s*) & ((pRawSensMeas_s->calibMat_s).mainAccCalibMatrix));
+					(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.mainAccCalibMatrix);
+					//&tmpMainAccCalibMatrix);
 		}
 		else
 		{
@@ -323,8 +325,9 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_acc3dof_reserve_calibmatrix_read_pack_e,
 					(iscm_calibmatrix_generic_s*) & ((pRawSensMeas_s->calibMat_s).reserveAccCalibMatrix));
-			immpc_calibmatrix_pack_generic_s *pTest_s = (immpc_calibmatrix_pack_generic_s*) pOutBuff;
-			pTest_s->crc = 0x00;
+
+//			immpc_calibmatrix_pack_generic_s *pTest_s = (immpc_calibmatrix_pack_generic_s*) pOutBuff;
+//			pTest_s->crc = 0x00;
 		}
 		else
 		{
@@ -408,6 +411,8 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		break;
 	/* #### 3dof_mag_calibmatrix_request_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
+
+	/* #### 3dof_acc_main_calibmatrix_write_pack -->>>>>>>>>>>>>>>>>>>>>>>>>> */
 	/* Пакет, содержащий калибровочную матрицу основного акселерометра */
 	case (IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_write_pack_e):
 		/* Если контрольная сумма верна */
@@ -417,6 +422,12 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 			IMMPc_GetCalibMatrixFromMessageGeneric(
 				(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.mainAccCalibMatrix,
 				pCalibMatPackGeneric_s);
+
+			/* Отправить ответ */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_ok);
 		}
 		else
 		{
@@ -427,6 +438,148 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		}
 
 		break;
+	/* #### 3dof_acc_main_calibmatrix_write_pack --<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_acc_reserve_calibmatrix_write_pack -->>>>>>>>>>>>>>>>>>>>>>> */
+	/* Пакет, содержащий калибровочную матрицу резервного акселерометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_acc3dof_reserve_calibmatrix_write_pack_e):
+		/* Если контрольная сумма верна */
+		if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
+		{
+			/* Записать в общую структуру данных инерциальных измерителей */
+			IMMPc_GetCalibMatrixFromMessageGeneric(
+				(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.reserveAccCalibMatrix,
+				pCalibMatPackGeneric_s);
+
+			/* Отправить ответ */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_ok);
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+
+		break;
+	/* #### 3dof_acc_reserve_calibmatrix_write_pack --<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_gyr_main_calibmatrix_write_pack -->>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Пакет, содержащий калибровочную матрицу основного гироскопа */
+	case (IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_main_calibmatrix_write_pack_e):
+		/* Если контрольная сумма верна */
+		if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
+		{
+			/* Записать в общую структуру данных инерциальных измерителей */
+			IMMPc_GetCalibMatrixFromMessageGeneric(
+				(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.mainGyrCalibMatrix,
+				pCalibMatPackGeneric_s);
+
+			/* Отправить ответ */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_ok);
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+
+		break;
+	/* #### 3dof_gyr_main_calibmatrix_write_pack --<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_gyr_reserve_calibmatrix_write_pack -->>>>>>>>>>>>>>>>>>>>>>> */
+	/* Пакет, содержащий калибровочную матрицу резервного гироскопа */
+	case (IMMPC_ID_AND_PACK_REQUESTS_gyr3dof_reserve_calibmatrix_write_pack_e):
+		/* Если контрольная сумма верна */
+		if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
+		{
+			/* Записать в общую структуру данных инерциальных измерителей */
+			IMMPc_GetCalibMatrixFromMessageGeneric(
+				(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.reserveGyrCalibMatrix,
+				pCalibMatPackGeneric_s);
+
+			/* Отправить ответ */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_ok);
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+
+		break;
+	/* #### 3dof_gyr_reserve_calibmatrix_write_pack --<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### 3dof_mag_calibmatrix_write_pack -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Пакет, содержащий калибровочную матрицу магнитометра */
+	case (IMMPC_ID_AND_PACK_REQUESTS_mag3dof_calibmatrix_write_pack_e):
+		/* Если контрольная сумма верна */
+		if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
+		{
+			/* Записать в общую структуру данных инерциальных измерителей */
+			IMMPc_GetCalibMatrixFromMessageGeneric(
+				(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.magCalibMatrix,
+				pCalibMatPackGeneric_s);
+
+			/* Отправить ответ */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_ok);
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+		}
+
+		break;
+	/* #### 3dof_mag_calibmatrix_write_pack --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
+
+
+	/* #### write_all_calibmatrix_cmd -->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+	/* Команда для записи всех калибровочных матриц из ОЗУ в EEPROM */
+	case (IMMPC_ID_AND_PACK_REQUESTS_write_all_calibmatrix_in_eeprom_cmd_e):
+		/* Если контрольная сумма верна */
+		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
+		//if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_ok);
+		}
+		else
+		{
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetResponseMessage(
+					(immpc_response_cmd_s*) pOutBuff,
+					IMMPC_ID_response_code_invalid_crc);
+
+			pRequestCmd_s->idAndPackRequests = IMMPC_ID_AND_PACK_UNKNOWN_e;
+		}
+		break;
+	/* #### write_all_calibmatrix_cmd --<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< */
 
 
 	default:
@@ -435,7 +588,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 				(immpc_response_cmd_s*) pOutBuff,
 				IMMPC_ID_response_code_invalid_message_format);
 
-		pRequestCmd_s->idAndPackRequests = 0u;
+		pRequestCmd_s->idAndPackRequests = IMMPC_ID_AND_PACK_UNKNOWN_e;
 		break;
 	}
 
