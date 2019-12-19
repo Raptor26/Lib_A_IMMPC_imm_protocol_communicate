@@ -1054,7 +1054,7 @@ IMMPC_GetMessageIDFromIDandPackRequests(
  */
 __IMMPC_ALWAYS_INLINE uint16_t
 IMMPC_GetCRC_Generic(
-	uint8_t *pData,
+	const uint8_t *pData,
 	uint16_t len)
 {
 	return __IMMPC_RemapTwoBytes(
@@ -1370,14 +1370,20 @@ IMMPC_CLEAR_BIT(uint16_t REG, uint16_t BIT)
 /*#### |Begin| --> Секция - "Определение макросов" ###########################*/
 #if defined (__IMMPC_RESERVE_SENS_IS_ICM20608__)
 #include "Lib_H_ICM20608_inertial_sensor.h"
-#define IMMPC_RawToFptReserveTemperatureGeneric(pRawData, pFptData)				\
-	ICM20608_ConvertRawTemperatureData(((__IMMPC_FPT__) 1.0 / (__IMMPC_FPT__) 326.8), pRawData, pFptData)
+__IMMPC_ALWAYS_INLINE void
+IMMPC_ICM20608_ConvertRawTemperatureData(
+	int16_t				*pTemperatureRaw,
+	__IMMPC_FPT__		*pTemperatureNorm)
+{
+	*pTemperatureNorm =
+		(((__IMMPC_FPT__)(*pTemperatureRaw)) * ((__IMMPC_FPT__) 1.0 / (__IMMPC_FPT__) 326.8)) + (__ICM20608_FPT__)25.0;
+}
 
 #define IMMPC_RawToFptReserveAccTemperature(pRawData, pFptData)					\
-	IMMPC_RawToFptReserveTemperatureGeneric(pRawData, pFptData)
+		IMMPC_ICM20608_ConvertRawTemperatureData(pRawData, pFptData)
 
 #define IMMPC_RawToFptReserveGyrTemperature(pRawData, pFptData)					\
-	IMMPC_RawToFptReserveTemperatureGeneric(pRawData, pFptData)
+		IMMPC_ICM20608_ConvertRawTemperatureData(pRawData, pFptData)
 #else
 #error "You must define reserve sens type for convert temperature from raw to float (or double)"
 #endif

@@ -230,9 +230,10 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, (uint16_t) sizeof(immpc_request_cmd_s)))
 		{
 			/* Формирование сообщения калиброванных данных резервных измерителей */
-			IMMPC_SetReserve9dofCalibDataPack(
-				pRawSensMeas_s,
-				(immpc_9dof_reserve_calib_pack_s*) pOutBuff);
+			*pOutBuffByteNumbForTx =
+				IMMPC_SetReserve9dofCalibDataPack(
+					pRawSensMeas_s,
+					(immpc_9dof_reserve_calib_pack_s*) pOutBuff);
 		}
 		else
 		{
@@ -300,7 +301,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 					(immpc_calibmatrix_pack_generic_s*) pOutBuff,
 					IMMPC_ID_AND_PACK_REQUESTS_acc3dof_main_calibmatrix_read_pack_e,
 					(iscm_calibmatrix_generic_s*) &pRawSensMeas_s->calibMat_s.mainAccCalibMatrix);
-					//&tmpMainAccCalibMatrix);
+			//&tmpMainAccCalibMatrix);
 		}
 		else
 		{
@@ -562,7 +563,7 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	case (IMMPC_ID_AND_PACK_REQUESTS_write_all_calibmatrix_in_eeprom_cmd_e):
 		/* Если контрольная сумма верна */
 		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, sizeof(immpc_request_cmd_s)))
-		//if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
+			//if (pCalibMatPackGeneric_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pCalibMatPackGeneric_s, sizeof(immpc_calibmatrix_pack_generic_s)))
 		{
 			*pOutBuffByteNumbForTx =
 				(uint16_t) IMMPC_SetResponseMessage(
@@ -853,13 +854,13 @@ IMMPC_SetReserve9dofCalibDataPack(
 		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
 
 	/* Массив для храненния нормированных значений */
-	__IMMPC_FPT__ calibDataTmp_a[3u];
+	__ISCM_FPT__ calibDataTmp_a[3u];
 
 	/* Запись измерений акселерометра */
 	ISCM_GetCalibDataFromRawGeneric(
-		pInertMeas_s->reserve6dof.acc_a,
+		(int16_t*) &pInertMeas_s->reserve6dof.acc_a[0u],
 		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.reserveAccCalibMatrix,
-		calibDataTmp_a);
+		(__ISCM_FPT__*) &calibDataTmp_a[0u]);
 	pPackForTx_s->acc[0u] = calibDataTmp_a[0u];
 	pPackForTx_s->acc[1u] = calibDataTmp_a[1u];
 	pPackForTx_s->acc[2u] = calibDataTmp_a[2u];
