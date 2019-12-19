@@ -852,6 +852,8 @@ typedef struct
 	 */
 	immpc_head_s head_s;
 
+//	uint16_t dummyBytes;
+
 	__IMMPC_FPT__ acc[3u];
 	__IMMPC_FPT__ gyr[3u];
 	__IMMPC_FPT__ mag[3u];
