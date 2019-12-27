@@ -692,7 +692,7 @@ typedef struct
 		};
 	};
 
-	uint16_t 	sensorsStatus;
+	uint32_t 	sensorsStatus;
 }
 #if defined (__GNUC__)
 	__attribute__((__packed__))
@@ -802,12 +802,12 @@ typedef struct
 	 */
 	immpc_head_s head_s;
 
-	__IMMPC_FPT__ acc[3u];
-	__IMMPC_FPT__ gyr[3u];
-	__IMMPC_FPT__ mag[3u];
+	__IMMPC_FPT__ acc_a[3u];
+	__IMMPC_FPT__ gyr_a[3u];
+	__IMMPC_FPT__ mag_a[3u];
 
-	__IMMPC_FPT__ accTemp[3u];
-	__IMMPC_FPT__ gyrTemp[3u];
+	__IMMPC_FPT__ accTemp_a[3u];
+	__IMMPC_FPT__ gyrTemp_a[3u];
 	int16_t magSelfTest_a[3u];
 
 	uint16_t crc;
@@ -819,30 +819,30 @@ typedef struct
 #endif
 immpc_9dof_main_calib_pack_s;
 
-/* пакет "сырых" данных резервных измерителей */
-typedef struct
-{
-	/**
-	 * @brief Заголовок пакета данных
-	 */
-	immpc_head_s head_s;
-
-	int16_t acc_a[3u];
-	int16_t gyr_a[3u];
-	int16_t mag_a[3u];
-
-	int16_t accTemp_a[3u];
-	int16_t gyrTemp_a[3u];
-	int16_t magSelfTest_a[3u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_9dof_reserve_raw_pack_s;
+///* пакет "сырых" данных резервных измерителей */
+//typedef struct
+//{
+//	/**
+//	 * @brief Заголовок пакета данных
+//	 */
+//	immpc_head_s head_s;
+//
+//	int16_t acc_a[3u];
+//	int16_t gyr_a[3u];
+//	int16_t mag_a[3u];
+//
+//	int16_t accTemp_a[3u];
+//	int16_t gyrTemp_a[3u];
+//	int16_t magSelfTest_a[3u];
+//
+//	uint16_t crc;
+//}
+//#if defined (__GNUC__)
+//	__attribute__((__packed__))
+//#else
+//	#error "Please, define compiler"
+//#endif
+//immpc_9dof_reserve_raw_pack_s;
 
 /* пакет калиброванных данных резервных измерителей */
 typedef struct
@@ -852,15 +852,13 @@ typedef struct
 	 */
 	immpc_head_s head_s;
 
-//	uint16_t dummyBytes;
+	__IMMPC_FPT__ acc_a[3u];
+	__IMMPC_FPT__ gyr_a[3u];
+	__IMMPC_FPT__ mag_a[3u];
 
-	__IMMPC_FPT__ acc[3u];
-	__IMMPC_FPT__ gyr[3u];
-	__IMMPC_FPT__ mag[3u];
-
-	__IMMPC_FPT__ accTemp[3u];
-	__IMMPC_FPT__ gyrTemp[3u];
-	int16_t magSelfTest_a[3u];
+	__IMMPC_FPT__ accTemp_a[3u];
+	__IMMPC_FPT__ gyrTemp_a[3u];
+	__IMMPC_FPT__ magSelfTest_a[3u];
 
 	uint16_t crc;
 }
@@ -870,6 +868,8 @@ typedef struct
 	#error "Please, define compiler"
 #endif
 immpc_9dof_reserve_calib_pack_s;
+
+#define immpc_9dof_reserve_raw_pack_s immpc_9dof_reserve_calib_pack_s
 
 /* пакет "сырых" данных магнитометра */
 typedef struct
@@ -895,7 +895,7 @@ immpc_mag3dof_raw_pack_s;
 typedef struct
 {
 	immpc_head_s head_s;
-	int16_t mag[3u];
+	int16_t mag_a[3u];
 	int16_t magSelfTest[3u];
 
 	uint16_t crc;
@@ -956,15 +956,15 @@ immpc_calibmatrix_pack_generic_s;
  */
 typedef struct
 {
-	int16_t acc_a[3u];
-	int16_t gyr_a[3u];
-	int16_t mag_a[3u];
+	__IMMPC_FPT__ acc_a[3u];
+	__IMMPC_FPT__ gyr_a[3u];
+	__IMMPC_FPT__ mag_a[3u];
 
-	int16_t accTemp_a[3u];
-	int16_t gyrTemp_a[3u];
-	int16_t magSelfTest_a[3u];
+	__IMMPC_FPT__ accTemp_a[3u];
+	__IMMPC_FPT__ gyrTemp_a[3u];
+	__IMMPC_FPT__ magSelfTest_a[3u];
 
-	uint16_t sensorStatus;
+	uint32_t sensorStatus;
 } immpc_main9dof_raw_data_s;
 
 /* структура "сырых" данных магнитометра */
@@ -973,7 +973,7 @@ typedef struct
 	int16_t rawMag_a[3u];
 	int16_t rawMagSelfTest[3u];
 
-	uint16_t sensorStatus;
+	uint32_t sensorStatus;
 } immpc_raw_mag_data_s;
 
 /* структура "сырых" данных акселерометра и гироскопа
@@ -981,13 +981,13 @@ typedef struct
  */
 typedef struct
 {
-	int16_t acc_a[3u];
-	int16_t gyr_a[3u];
+	__IMMPC_FPT__ acc_a[3u];
+	__IMMPC_FPT__ gyr_a[3u];
 
-	int16_t accTemp_a[3u];
-	int16_t gyrTemp_a[3u];
+	__IMMPC_FPT__ accTemp_a[3u];
+	__IMMPC_FPT__ gyrTemp_a[3u];
 
-	uint16_t sensorStatus;
+	uint32_t sensorStatus;
 } immpc_reserve6dof_raw_data_s;
 
 typedef struct
