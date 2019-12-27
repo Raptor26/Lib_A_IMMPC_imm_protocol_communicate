@@ -861,39 +861,39 @@ IMMPC_SetReserve9dofCalibDataPack(
 		(int16_t*) &pInertMeas_s->reserve6dof.acc_a[0u],
 		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.reserveAccCalibMatrix,
 		(__ISCM_FPT__*) &calibDataTmp_a[0u]);
-	pPackForTx_s->acc[0u] = calibDataTmp_a[0u];
-	pPackForTx_s->acc[1u] = calibDataTmp_a[1u];
-	pPackForTx_s->acc[2u] = calibDataTmp_a[2u];
+	pPackForTx_s->acc_a[0u] = calibDataTmp_a[0u];
+	pPackForTx_s->acc_a[1u] = calibDataTmp_a[1u];
+	pPackForTx_s->acc_a[2u] = calibDataTmp_a[2u];
 
 	/* Запись измерений температуры акселерометра */
 	IMMPC_RawToFptReserveAccTemperature(&pInertMeas_s->reserve6dof.accTemp_a[0u], &calibDataTmp_a[0u]);
-	pPackForTx_s->accTemp[0u] = calibDataTmp_a[0u];
-	pPackForTx_s->accTemp[1u] = calibDataTmp_a[0u];
-	pPackForTx_s->accTemp[2u] = calibDataTmp_a[0u];
+	pPackForTx_s->accTemp_a[0u] = calibDataTmp_a[0u];
+	pPackForTx_s->accTemp_a[1u] = calibDataTmp_a[0u];
+	pPackForTx_s->accTemp_a[2u] = calibDataTmp_a[0u];
 
 	/* Запись измерений 3-х осей гироскопа (калиброванные данные) */
 	ISCM_GetCalibDataFromRawGeneric(
 		pInertMeas_s->reserve6dof.gyr_a,
 		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.reserveAccCalibMatrix,
 		calibDataTmp_a);
-	pPackForTx_s->gyr[0u] = calibDataTmp_a[0u];
-	pPackForTx_s->gyr[1u] = calibDataTmp_a[1u];
-	pPackForTx_s->gyr[2u] = calibDataTmp_a[2u];
+	pPackForTx_s->gyr_a[0u] = calibDataTmp_a[0u];
+	pPackForTx_s->gyr_a[1u] = calibDataTmp_a[1u];
+	pPackForTx_s->gyr_a[2u] = calibDataTmp_a[2u];
 
 	/* Запись измерений температуры гироскопа */
 	IMMPC_RawToFptReserveGyrTemperature(&pInertMeas_s->reserve6dof.gyrTemp_a[0u], &calibDataTmp_a[0u]);
-	pPackForTx_s->gyrTemp[0u] = calibDataTmp_a[0u];
-	pPackForTx_s->gyrTemp[1u] = calibDataTmp_a[0u];
-	pPackForTx_s->gyrTemp[2u] = calibDataTmp_a[0u];
+	pPackForTx_s->gyrTemp_a[0u] = calibDataTmp_a[0u];
+	pPackForTx_s->gyrTemp_a[1u] = calibDataTmp_a[0u];
+	pPackForTx_s->gyrTemp_a[2u] = calibDataTmp_a[0u];
 
 	/* Запись измерений 3-х осей магнитометра (калиброванные данные) */
 	ISCM_GetCalibDataFromRawGeneric(
 		pInertMeas_s->main9dof.mag_a,
 		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.magCalibMatrix,
 		calibDataTmp_a);
-	pPackForTx_s->mag[0u] = calibDataTmp_a[0u];
-	pPackForTx_s->mag[1u] = calibDataTmp_a[1u];
-	pPackForTx_s->mag[2u] = calibDataTmp_a[2u];
+	pPackForTx_s->mag_a[0u] = calibDataTmp_a[0u];
+	pPackForTx_s->mag_a[1u] = calibDataTmp_a[1u];
+	pPackForTx_s->mag_a[2u] = calibDataTmp_a[2u];
 
 	/* @todo написать номрирование self test магнитометра */
 
