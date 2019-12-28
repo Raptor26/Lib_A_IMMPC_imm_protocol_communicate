@@ -752,13 +752,13 @@ typedef struct
 	 */
 	immpc_head_s head_s;
 
-	int16_t acc_a[3u];
-	int16_t gyr_a[3u];
-	int16_t mag_a[3u];
+	__IMMPC_FPT__ acc_a[3u];
+	__IMMPC_FPT__ gyr_a[3u];
+	__IMMPC_FPT__ mag_a[3u];
 
-	int16_t accTemp_a[3u];
-	int16_t gyrTemp_a[3u];
-	int16_t magSelfTest_a[3u];
+	__IMMPC_FPT__ accTemp_a[3u];
+	__IMMPC_FPT__ gyrTemp_a[3u];
+	__IMMPC_FPT__ magSelfTest_a[3u];
 
 	uint16_t crc;
 }
@@ -777,13 +777,13 @@ typedef struct
 	 */
 	immpc_head_s head_s;
 
-	int16_t acc_a[3u];
-	int16_t gyr_a[3u];
-	int16_t mag_a[3u];
+	__IMMPC_FPT__ acc_a[3u];
+	__IMMPC_FPT__ gyr_a[3u];
+	__IMMPC_FPT__ mag_a[3u];
 
-	int16_t accTemp_a[3u];
-	int16_t gyrTemp_a[3u];
-	int16_t magSelfTest_a[3u];
+	__IMMPC_FPT__ accTemp_a[3u];
+	__IMMPC_FPT__ gyrTemp_a[3u];
+	__IMMPC_FPT__ magSelfTest_a[3u];
 
 	uint16_t crc;
 }
@@ -808,7 +808,7 @@ typedef struct
 
 	__IMMPC_FPT__ accTemp_a[3u];
 	__IMMPC_FPT__ gyrTemp_a[3u];
-	int16_t magSelfTest_a[3u];
+	__IMMPC_FPT__ magSelfTest_a[3u];
 
 	uint16_t crc;
 }
@@ -1332,6 +1332,12 @@ extern size_t
 IMMPC_SetMain9dofRawDataPack(
 	immpc_inert_meas_all_data_s 	*pSourceData_s,
 	immpc_9dof_main_raw_pack_s		*pPackForTx_s)
+__IMMPC_FNC_LOOP_OPTIMIZE_MODE;
+
+extern size_t
+IMMPC_SetMain9dofCalibDataPack(
+	immpc_inert_meas_all_data_s 	*pInertMeas_s,
+	immpc_9dof_main_calib_pack_s	*pPackForTx_s)
 __IMMPC_FNC_LOOP_OPTIMIZE_MODE;
 
 extern size_t

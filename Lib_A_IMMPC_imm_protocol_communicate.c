@@ -187,7 +187,10 @@ IMMPC_ParseInputMessageAndGenerateOutputMessage(
 	case (IMMPC_ID_AND_PACK_REQUESTS_9dof_main_calib_request_cmd_e):
 		if (pRequestCmd_s->crc == IMMPC_GetCRC_Generic((uint8_t*) pRequestCmd_s, (uint16_t) sizeof(immpc_request_cmd_s)))
 		{
-			/* @todo ормирование пакета с калиброванными данными основных измерителей */
+			*pOutBuffByteNumbForTx =
+				(uint16_t) IMMPC_SetMain9dofCalibDataPack(
+					pRawSensMeas_s,
+					(immpc_9dof_main_calib_pack_s*) pOutBuff);
 			/* .... */
 		}
 		else
@@ -679,13 +682,70 @@ IMMPC_SetMain9dofRawDataPack(
 	return (sizeof(immpc_9dof_main_raw_pack_s));
 }
 
-/* @todo написать функцию */
 size_t
 IMMPC_SetMain9dofCalibDataPack(
 	immpc_inert_meas_all_data_s 	*pInertMeas_s,
 	immpc_9dof_main_calib_pack_s	*pPackForTx_s)
 {
+	/* запись стартовых байт (Start frame) */
+	pPackForTx_s->head_s.startFrame = IMMPC_START_FRAME;
 
+	/* ID и Pack requests */
+	pPackForTx_s->head_s.idAndPackRequests =
+		IMMPC_ID_AND_PACK_REQUESTS_9dof_main_raw_pack_e;
+
+	/* запись статусов сенсора (Sensors status) */
+	__IMMPC_WRITE_REG(
+		/* Переменная для записи битовых масок */
+		pPackForTx_s->head_s.sensorsStatus,
+
+		/* Битовые маски для записи в переменную */
+		pInertMeas_s->main9dof.sensorStatus);
+
+	/* сброс статусов сенсора */
+	__IMMPC_CLEAR_BIT(
+		pInertMeas_s->main9dof.sensorStatus,
+		IMMPC_ACC_XYZ_DATA_WAS_UPDATE |
+		IMMPC_GYR_XYZ_DATA_WAS_UPDATE |
+		IMMPC_MAG_XYZ_DATA_WAS_UPDATE);
+
+	/* Запись измерений акселерометра */
+	ISCM_GetCalibDataFromRawGeneric(
+		(__ISCM_FPT__*) &pInertMeas_s->main9dof.acc_a[0u],
+		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.mainAccCalibMatrix,
+		(__ISCM_FPT__*) &pPackForTx_s->acc_a[0u]);
+
+	/* Запись измерений температуры акселерометра */
+	pPackForTx_s->accTemp_a[0u] = pInertMeas_s->main9dof.accTemp_a[0u];
+	pPackForTx_s->accTemp_a[1u] = pInertMeas_s->main9dof.accTemp_a[0u];
+	pPackForTx_s->accTemp_a[2u] = pInertMeas_s->main9dof.accTemp_a[0u];
+
+	/* Запись измерений 3-х осей гироскопа (калиброванные данные) */
+	ISCM_GetCalibDataFromRawGeneric(
+		pInertMeas_s->main9dof.gyr_a,
+		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.mainGyrCalibMatrix,
+		pPackForTx_s->gyr_a);
+
+	/* Запись измерений температуры гироскопа */
+	pPackForTx_s->gyrTemp_a[0u] = pInertMeas_s->main9dof.gyrTemp_a[0u];
+	pPackForTx_s->gyrTemp_a[1u] = pInertMeas_s->main9dof.gyrTemp_a[0u];
+	pPackForTx_s->gyrTemp_a[2u] = pInertMeas_s->main9dof.gyrTemp_a[0u];
+
+	/* Запись измерений 3-х осей магнитометра (калиброванные данные) */
+	ISCM_GetCalibDataFromRawGeneric(
+		pInertMeas_s->main9dof.mag_a,
+		(iscm_calibmatrix_generic_s*) &pInertMeas_s->calibMat_s.magCalibMatrix,
+		pPackForTx_s->mag_a);
+
+	/* @todo написать номрирование self test магнитометра */
+
+	/* расчет CRC */
+	pPackForTx_s->crc =
+		(uint16_t) IMMPC_GetCRC_Generic(
+			(uint8_t*) pPackForTx_s,
+			(uint16_t) sizeof(immpc_9dof_main_calib_pack_s));
+
+	return (sizeof(immpc_9dof_main_calib_pack_s));
 }
 
 /*-------------------------------------------------------------------------*//**
