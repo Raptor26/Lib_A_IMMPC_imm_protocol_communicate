@@ -745,6 +745,9 @@ typedef struct
 #endif
 immpc_request_cmd_s;
 
+/*-------------------------------------------------------------------------*//**
+ * @brief Структура пакета данных инерциальных измерителей
+ */
 typedef struct
 {
 	/**
@@ -767,57 +770,61 @@ typedef struct
 #else
 	#error "Please, define compiler"
 #endif
-immpc_9dof_generic_raw_pack_s;
+immpc_9dof_generic_pack_s;
 
-/* пакет "сырых" данных основных измерителей */
-typedef struct
-{
-	/**
-	 * @brief Заголовок пакета данных
-	 */
-	immpc_head_s head_s;
+///* пакет "сырых" данных основных измерителей */
+//typedef struct
+//{
+//	/**
+//	 * @brief Заголовок пакета данных
+//	 */
+//	immpc_head_s head_s;
+//
+//	__IMMPC_FPT__ acc_a[3u];
+//	__IMMPC_FPT__ gyr_a[3u];
+//	__IMMPC_FPT__ mag_a[3u];
+//
+//	__IMMPC_FPT__ accTemp_a[3u];
+//	__IMMPC_FPT__ gyrTemp_a[3u];
+//	__IMMPC_FPT__ magSelfTest_a[3u];
+//
+//	uint16_t crc;
+//}
+//#if defined (__GNUC__)
+//	__attribute__((__packed__))
+//#else
+//	#error "Please, define compiler"
+//#endif
+//immpc_9dof_main_raw_pack_s;
 
-	__IMMPC_FPT__ acc_a[3u];
-	__IMMPC_FPT__ gyr_a[3u];
-	__IMMPC_FPT__ mag_a[3u];
+#define immpc_9dof_main_raw_pack_s immpc_9dof_generic_pack_s
 
-	__IMMPC_FPT__ accTemp_a[3u];
-	__IMMPC_FPT__ gyrTemp_a[3u];
-	__IMMPC_FPT__ magSelfTest_a[3u];
+///* пакет калиброванных данных основных измерителей */
+//typedef struct
+//{
+//	/**
+//	 * @brief Заголовок пакета данных
+//	 */
+//	immpc_head_s head_s;
+//
+//	__IMMPC_FPT__ acc_a[3u];
+//	__IMMPC_FPT__ gyr_a[3u];
+//	__IMMPC_FPT__ mag_a[3u];
+//
+//	__IMMPC_FPT__ accTemp_a[3u];
+//	__IMMPC_FPT__ gyrTemp_a[3u];
+//	__IMMPC_FPT__ magSelfTest_a[3u];
+//
+//	uint16_t crc;
+//}
+//#if defined (__GNUC__)
+//	__attribute__((__packed__))
+//#else
+//	#error "Please, define compiler"
+//#endif
+//immpc_9dof_main_calib_pack_s;
 
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_9dof_main_raw_pack_s;
-
-/* пакет калиброванных данных основных измерителей */
-typedef struct
-{
-	/**
-	 * @brief Заголовок пакета данных
-	 */
-	immpc_head_s head_s;
-
-	__IMMPC_FPT__ acc_a[3u];
-	__IMMPC_FPT__ gyr_a[3u];
-	__IMMPC_FPT__ mag_a[3u];
-
-	__IMMPC_FPT__ accTemp_a[3u];
-	__IMMPC_FPT__ gyrTemp_a[3u];
-	__IMMPC_FPT__ magSelfTest_a[3u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_9dof_main_calib_pack_s;
+#define immpc_9dof_main_calib_pack_s immpc_9dof_generic_pack_s
 
 ///* пакет "сырых" данных резервных измерителей */
 //typedef struct
@@ -844,32 +851,34 @@ immpc_9dof_main_calib_pack_s;
 //#endif
 //immpc_9dof_reserve_raw_pack_s;
 
-/* пакет калиброванных данных резервных измерителей */
-typedef struct
-{
-	/**
-	 * @brief Заголовок пакета данных
-	 */
-	immpc_head_s head_s;
+///* пакет калиброванных данных резервных измерителей */
+//typedef struct
+//{
+//	/**
+//	 * @brief Заголовок пакета данных
+//	 */
+//	immpc_head_s head_s;
+//
+//	__IMMPC_FPT__ acc_a[3u];
+//	__IMMPC_FPT__ gyr_a[3u];
+//	__IMMPC_FPT__ mag_a[3u];
+//
+//	__IMMPC_FPT__ accTemp_a[3u];
+//	__IMMPC_FPT__ gyrTemp_a[3u];
+//	__IMMPC_FPT__ magSelfTest_a[3u];
+//
+//	uint16_t crc;
+//}
+//#if defined (__GNUC__)
+//	__attribute__((__packed__))
+//#else
+//	#error "Please, define compiler"
+//#endif
+//immpc_9dof_reserve_calib_pack_s;
 
-	__IMMPC_FPT__ acc_a[3u];
-	__IMMPC_FPT__ gyr_a[3u];
-	__IMMPC_FPT__ mag_a[3u];
+#define immpc_9dof_reserve_raw_pack_s 	immpc_9dof_generic_pack_s
 
-	__IMMPC_FPT__ accTemp_a[3u];
-	__IMMPC_FPT__ gyrTemp_a[3u];
-	__IMMPC_FPT__ magSelfTest_a[3u];
-
-	uint16_t crc;
-}
-#if defined (__GNUC__)
-	__attribute__((__packed__))
-#else
-	#error "Please, define compiler"
-#endif
-immpc_9dof_reserve_calib_pack_s;
-
-#define immpc_9dof_reserve_raw_pack_s immpc_9dof_reserve_calib_pack_s
+#define immpc_9dof_reserve_calib_pack_s immpc_9dof_generic_pack_s
 
 /* пакет "сырых" данных магнитометра */
 typedef struct
@@ -951,8 +960,8 @@ typedef struct
 #endif
 immpc_calibmatrix_pack_generic_s;
 
-/* структура "сырых" данных акселерометра и гироскопа
- * основных датчиков
+/*-------------------------------------------------------------------------*//**
+ * @brief 	Структура для хранения "сырых" данных основных измерителей
  */
 typedef struct
 {
@@ -967,7 +976,9 @@ typedef struct
 	uint32_t sensorStatus;
 } immpc_main9dof_raw_data_s;
 
-/* структура "сырых" данных магнитометра */
+/*-------------------------------------------------------------------------*//**
+ * @brief 	Структура для хранения "сырых" данных магнитометра
+ */
 typedef struct
 {
 	int16_t rawMag_a[3u];
@@ -976,8 +987,8 @@ typedef struct
 	uint32_t sensorStatus;
 } immpc_raw_mag_data_s;
 
-/* структура "сырых" данных акселерометра и гироскопа
- * резервных датчиков
+/*-------------------------------------------------------------------------*//**
+ * @brief 	Структура для хранения "сырых" данных резервных измерителей
  */
 typedef struct
 {
@@ -1003,7 +1014,10 @@ typedef struct
 	uint32_t	crc;
 } immpc_inert_meas_calibmat_s;
 
-/* структура данных */
+/*-------------------------------------------------------------------------*//**
+ * @brief 	Структура для хранения всех данных, относящихся к инерциальным 
+ * 			измерителям
+ */	
 typedef struct
 {
 	/* "сырые" данные */

@@ -25,6 +25,19 @@
 
 
 /*#### |Begin| --> Секция - "Описание глобальных функций" ####################*/
+
+/*-------------------------------------------------------------------------*//**
+ * @author    Mickle Isaev
+ * @date      07-янв-2020
+ *
+ * @brief 	Функция формирует сообщение запроса/ответа в соответствии с 
+ * 			протоколом обмена данными
+ *
+ * @param[out]	*pOutputData_s: 	Область памяти, в которую будет записано сообщение
+ * @param[in] 	idAndPackRequests:   Идентификатор и биты запросов
+ *
+ * @return 	Длина сообщения в байтах
+ */
 size_t
 IMMPC_EXTDEV_SetRequestMessageGeneric(
 	immpc_request_cmd_s 			*pOutputData_s,
@@ -40,6 +53,22 @@ IMMPC_EXTDEV_SetRequestMessageGeneric(
 	return (sizeof(immpc_request_cmd_s));
 }
 
+/*-------------------------------------------------------------------------*//**
+ * @author    Mickle Isaev
+ * @date      07-янв-2020
+ *
+ * @brief 	Функция выполняет разбор пакета "сырых" данных основных измерителей
+ * 			и записывает полученные  данные в общую структуру данных инерциальных 
+ * 			измерителей
+ * 			@note Функция интерпретирует принятый пакет как данные основных измерителей
+ *
+ * @param[out] 	*pInertMeas_s: 	Указатель на область памяти, в которой содержатся 
+ * 								данные инерциальных измерителей
+ * @param[in]   *pInputBuff_s:  Указатель на область памяти, в которой находится 
+ * 								принятый пакет данных
+ *
+ * @return 	Статус принятого сообщения
+ */
 immpc_message_id_e
 IMMPC_EXTDEV_ParseMain9dofRawPack(
 	immpc_inert_meas_all_data_s *pInertMeas_s,
@@ -60,10 +89,10 @@ IMMPC_EXTDEV_ParseMain9dofRawPack(
 				  IMMPC_ACC_X_SELF_TEST 		|
 				  IMMPC_ACC_Y_SELF_TEST 		|
 				  IMMPC_ACC_Z_SELF_TEST)));
-		IMMPC_EXTDEV_Main9dof_SetInertMeasAcc_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasAcc_fpt(
 			pInertMeas_s,
 			pInputBuff_s->acc_a);
-		IMMPC_EXTDEV_Main9dof_SetInertMeasAccTemperature_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasAccTemperature_fpt(
 			pInertMeas_s,
 			pInputBuff_s->accTemp_a);
 		/* __________________________________________________________________ */
@@ -76,10 +105,10 @@ IMMPC_EXTDEV_ParseMain9dofRawPack(
 				  IMMPC_GYR_X_SELF_TEST 		|
 				  IMMPC_GYR_Y_SELF_TEST 		|
 				  IMMPC_GYR_Z_SELF_TEST)));
-		IMMPC_EXTDEV_Main9dof_SetInertMeasGyr_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasGyr_fpt(
 			pInertMeas_s,
 			pInputBuff_s->gyr_a);
-		IMMPC_EXTDEV_Main9dof_SetInertMeasGyrTemperature_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasGyrTemperature_fpt(
 			pInertMeas_s,
 			pInputBuff_s->gyrTemp_a);
 		/* __________________________________________________________________ */
@@ -92,10 +121,10 @@ IMMPC_EXTDEV_ParseMain9dofRawPack(
 				  IMMPC_MAG_X_SELF_TEST 		|
 				  IMMPC_MAG_Y_SELF_TEST 		|
 				  IMMPC_MAG_Z_SELF_TEST)));
-		IMMPC_EXTDEV_Main9dof_SetInertMeasMag_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasMag_fpt(
 			pInertMeas_s,
 			pInputBuff_s->mag_a);
-		IMMPC_EXTDEV_Main9dof_SetInertMeasMagSelfTest_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasMagSelfTest_fpt(
 			pInertMeas_s,
 			pInputBuff_s->magSelfTest_a);
 	}
@@ -108,6 +137,22 @@ IMMPC_EXTDEV_ParseMain9dofRawPack(
 	return (IMMPC_ID_response_code_ok);
 }
 
+/*-------------------------------------------------------------------------*//**
+ * @author    Mickle Isaev
+ * @date      07-янв-2020
+ *
+ * @brief 	Функция выполняет разбор пакета "сырых" данных резервных измерителей
+ * 			и записывает полученные  данные в общую структуру данных инерциальных 
+ * 			измерителей
+ * 			@note Функция интерпретирует принятый пакет как данные резервных измерителей
+ *
+ * @param[out] 	*pInertMeas_s: 	Указатель на область памяти, в которой содержатся 
+ * 								данные инерциальных измерителей
+ * @param[in]   *pInputBuff_s:  Указатель на область памяти, в которой находится 
+ * 								принятый пакет данных
+ *
+ * @return 	Статус принятого сообщения
+ */
 immpc_message_id_e
 IMMPC_EXTDEV_ParseReserve9dofRawPack(
 	immpc_inert_meas_all_data_s 	*pInertMeas_s,
@@ -127,10 +172,10 @@ IMMPC_EXTDEV_ParseReserve9dofRawPack(
 				  IMMPC_ACC_X_SELF_TEST 		|
 				  IMMPC_ACC_Y_SELF_TEST 		|
 				  IMMPC_ACC_Z_SELF_TEST)));
-		IMMPC_EXTDEV_Reserve9dof_SetInertMeasAcc_Int16(
+		IMMPC_EXTDEV_Reserve9dof_SetInertMeasAcc_fpt(
 			pInertMeas_s,
 			pInputBuff_s->acc_a);
-		IMMPC_EXTDEV_Reserve9dof_SetInertMeasAccTemperature_Int16(
+		IMMPC_EXTDEV_Reserve9dof_SetInertMeasAccTemperature_fpt(
 			pInertMeas_s,
 			pInputBuff_s->accTemp_a);
 		/* __________________________________________________________________ */
@@ -143,10 +188,10 @@ IMMPC_EXTDEV_ParseReserve9dofRawPack(
 				  IMMPC_GYR_X_SELF_TEST 		|
 				  IMMPC_GYR_Y_SELF_TEST 		|
 				  IMMPC_GYR_Z_SELF_TEST)));
-		IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyr_Int16(
+		IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyr_fpt(
 			pInertMeas_s,
 			pInputBuff_s->gyr_a);
-		IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyrTemperature_Int16(
+		IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyrTemperature_fpt(
 			pInertMeas_s,
 			pInputBuff_s->gyrTemp_a);
 		/* __________________________________________________________________ */
@@ -159,10 +204,10 @@ IMMPC_EXTDEV_ParseReserve9dofRawPack(
 				  IMMPC_MAG_X_SELF_TEST 		|
 				  IMMPC_MAG_Y_SELF_TEST 		|
 				  IMMPC_MAG_Z_SELF_TEST)));
-		IMMPC_EXTDEV_Main9dof_SetInertMeasMag_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasMag_fpt(
 			pInertMeas_s,
 			pInputBuff_s->mag_a);
-		IMMPC_EXTDEV_Main9dof_SetInertMeasMagSelfTest_Int16(
+		IMMPC_EXTDEV_Main9dof_SetInertMeasMagSelfTest_fpt(
 			pInertMeas_s,
 			pInputBuff_s->magSelfTest_a);
 	}

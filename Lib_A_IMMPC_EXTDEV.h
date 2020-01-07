@@ -41,14 +41,14 @@
 
 /*#### |Begin| --> Секция - "Прототипы глобальных функций" ###################*/
 
-/* #### Копирвоание данных в "Generic IMM" #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* #### Копирование данных в "Generic IMM" #### >>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 
 /* #### ---- Копирование измерений акселерометра в "Generic IMM" #### >>>>>>> */
 /* #### ---- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ############ */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Main9dof_SetInertMeasAcc_Int16(
+IMMPC_EXTDEV_Main9dof_SetInertMeasAcc_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t 					*pRawAcc)
+	__IMMPC_FPT__ 				*pRawAcc)
 {
 	pRawData_s->main9dof.acc_a[0u] = *pRawAcc++;
 	pRawData_s->main9dof.acc_a[1u] = *pRawAcc++;
@@ -56,9 +56,9 @@ IMMPC_EXTDEV_Main9dof_SetInertMeasAcc_Int16(
 }
 /* -------------------------------------------------------------------------- */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Main9dof_SetInertMeasAccTemperature_Int16(
+IMMPC_EXTDEV_Main9dof_SetInertMeasAccTemperature_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t 					*pAccTemperature)
+	__IMMPC_FPT__ 				*pAccTemperature)
 {
 	pRawData_s->main9dof.accTemp_a[0u] = *pAccTemperature++;
 	pRawData_s->main9dof.accTemp_a[1u] = *pAccTemperature++;
@@ -67,9 +67,9 @@ IMMPC_EXTDEV_Main9dof_SetInertMeasAccTemperature_Int16(
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Reserve9dof_SetInertMeasAcc_Int16(
+IMMPC_EXTDEV_Reserve9dof_SetInertMeasAcc_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t 					*pRawAcc)
+	__IMMPC_FPT__ 				*pRawAcc)
 {
 	pRawData_s->reserve6dof.acc_a[0u] = *pRawAcc++;
 	pRawData_s->reserve6dof.acc_a[1u] = *pRawAcc++;
@@ -77,9 +77,9 @@ IMMPC_EXTDEV_Reserve9dof_SetInertMeasAcc_Int16(
 }
 /* -------------------------------------------------------------------------- */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Reserve9dof_SetInertMeasAccTemperature_Int16(
+IMMPC_EXTDEV_Reserve9dof_SetInertMeasAccTemperature_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t *pAccTemperature)
+	__IMMPC_FPT__ 				*pAccTemperature)
 {
 	pRawData_s->reserve6dof.acc_a[0u] = *pAccTemperature++;
 	pRawData_s->reserve6dof.acc_a[1u] = *pAccTemperature++;
@@ -92,9 +92,9 @@ IMMPC_EXTDEV_Reserve9dof_SetInertMeasAccTemperature_Int16(
 /* #### ---- Копирование измерений гироскопа в "Generic IMM" #### >>>>>>>>>>> */
 /* #### ---- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ################ */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Main9dof_SetInertMeasGyr_Int16(
+IMMPC_EXTDEV_Main9dof_SetInertMeasGyr_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t 					*pRawGyr)
+	__IMMPC_FPT__ 				*pRawGyr)
 {
 	pRawData_s->main9dof.gyr_a[0u] = *pRawGyr++;
 	pRawData_s->main9dof.gyr_a[1u] = *pRawGyr++;
@@ -102,9 +102,9 @@ IMMPC_EXTDEV_Main9dof_SetInertMeasGyr_Int16(
 }
 /* -------------------------------------------------------------------------- */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Main9dof_SetInertMeasGyrTemperature_Int16(
+IMMPC_EXTDEV_Main9dof_SetInertMeasGyrTemperature_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t *pGyrTemperature)
+	__IMMPC_FPT__ 				*pGyrTemperature)
 {
 	pRawData_s->main9dof.gyrTemp_a[0u] = *pGyrTemperature++;
 	pRawData_s->main9dof.gyrTemp_a[1u] = *pGyrTemperature++;
@@ -113,9 +113,9 @@ IMMPC_EXTDEV_Main9dof_SetInertMeasGyrTemperature_Int16(
 /* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyr_Int16(
+IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyr_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t *pRawGyr)
+	__IMMPC_FPT__ 				*pRawGyr)
 {
 	pRawData_s->reserve6dof.gyr_a[0u] = *pRawGyr++;
 	pRawData_s->reserve6dof.gyr_a[1u] = *pRawGyr++;
@@ -123,9 +123,9 @@ IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyr_Int16(
 }
 /* -------------------------------------------------------------------------- */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyrTemperature_Int16(
+IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyrTemperature_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t *pGyrTemperature)
+	__IMMPC_FPT__ 				*pGyrTemperature)
 {
 	pRawData_s->reserve6dof.gyr_a[0u] = *pGyrTemperature++;
 	pRawData_s->reserve6dof.gyr_a[1u] = *pGyrTemperature++;
@@ -138,9 +138,9 @@ IMMPC_EXTDEV_Reserve9dof_SetInertMeasGyrTemperature_Int16(
 /* #### ---- Копирование измерений магнитометра в "Generic IMM" #### >>>>>>>> */
 /* #### ---- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ############# */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Main9dof_SetInertMeasMag_Int16(
+IMMPC_EXTDEV_Main9dof_SetInertMeasMag_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t *pRawMag)
+	__IMMPC_FPT__ 				*pRawMag)
 {
 	pRawData_s->main9dof.mag_a[0u] = *pRawMag++;
 	pRawData_s->main9dof.mag_a[1u] = *pRawMag++;
@@ -148,9 +148,9 @@ IMMPC_EXTDEV_Main9dof_SetInertMeasMag_Int16(
 }
 /* -------------------------------------------------------------------------- */
 __IMMPC_ALWAYS_INLINE void
-IMMPC_EXTDEV_Main9dof_SetInertMeasMagSelfTest_Int16(
+IMMPC_EXTDEV_Main9dof_SetInertMeasMagSelfTest_fpt(
 	immpc_inert_meas_all_data_s *pRawData_s,
-	int16_t *pRawMagSelfTest)
+	__IMMPC_FPT__ 				*pRawMagSelfTest)
 {
 	pRawData_s->main9dof.magSelfTest_a[0u] = *pRawMagSelfTest++;
 	pRawData_s->main9dof.magSelfTest_a[1u] = *pRawMagSelfTest++;
